@@ -23,7 +23,6 @@ add to the NScripter reference with updated commands and ONScripter
 compatability charts later as well.
 
 这是对命令行实用程序的简短描述，这些实用程序包括NScripter SDK。
-
 bw2aconv是一个简单的阿尔法掩码生成工具；请参阅 examples/bw2aconv 了解更多详细信息。
 nsarc是一个arc*.nsa生成工具；你用它把你的资源打包到归档NScripter可读的文件。
 nscmake从0.txt生成一个nsccript.dat——这是您用来编译脚本。
