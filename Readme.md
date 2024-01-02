@@ -1,3 +1,4 @@
+`
 # image setting
 :a; 透明通道
 :a/<fps>,<time>,<0/1/2>;      //0-从左到右循环播放 1-播放一次 2-折返循环播放
@@ -84,3 +85,4 @@ setwindow <第一个文字x>,<第一个文字y>,<行字数>,<行数>,<文字宽>
 setwindow 20,370,20,3,30,30,0,0,20,0,1,":a;pic.png",10,200
 setwindow2 #rrggbb
 setwindow2 ":c;twindow2.bmp"
+`
