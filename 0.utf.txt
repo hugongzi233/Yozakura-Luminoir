@@ -1,0 +1,20 @@
+;mode800
+*define
+game
+
+*start
+setwindow 20,370,20,3,30,30,0,0,20,0,1
+rmenu "保存",save,"读取",load,"自动",automode,"跳过",skip,"隐藏文字",windowerase,"回想模式",lookback,"重置",reset
+
+bg "image/bg_test.jpg",10,200
+ld l,"ld/ld1.jpg",10,1000
+你好，今天是晴天@
+跟我出去玩吗!？\
+select "走啊",*option1,"算了",*option2
+*option1
+你走向了幸福的生活\
+end
+*option2
+结束了ｂａｄｅｎｄｉｎｇ．．＼
+quake 10,1000
+end
