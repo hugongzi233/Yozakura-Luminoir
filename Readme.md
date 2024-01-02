@@ -7,13 +7,30 @@
 
 ## nscript语法
 
-### 翻译//todo
-
-| 命令  | F/E/FE | 用法 |
+### 游戏开始/结束/退出
+| 命令  | F/E/R | 用法 |
 | :----- | :--: | :------- |
-| test | F  |test|
-| test | F  |test|
-| test | F  |test|
+| *define | R  |定义define块开始的标签|
+| game | F  |结束define块并开始执行游戏|
+| *start | R  |定义program块开始的标签|
+| reset | E |重置游戏|
+| definereset | E  |强制重置全部脚本|
+| end | FE  |结束游戏并关闭窗口|
+### 语法
+| 命令  | F/E/R/S | 用法 |
+| :----- | :--: | :------- |
+| * | R  |标签|
+| ; | R  |注释|
+| : | R  |在一行连续执行多条命令|
+| % | R  |数字变量|
+| $ | R  |字符串变量|
+| ? | R  |数组变量|
+| ~ | R  |jumpf/jumpb 的跳转点|
+| / | S  |ignore linefeed|
+|{} | S  |set variables within a text block|
+| ` | S  |enter single-byte text mode|
+| 0x| R  |provide a numeric literal in hexadecimal format|
+| ^ | S  |enter ponscripter text mode|
 
 ---
 
