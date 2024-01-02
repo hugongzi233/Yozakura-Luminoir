@@ -19,6 +19,6 @@ select "我不要！",*option1,"在",*option2
 你被打死了\
 end
 *option2
-哦呦 今天挺听话的嘛＼
+哦呦 今天挺听话的嘛\
 饶你了\
 end
