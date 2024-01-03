@@ -72,7 +72,23 @@
 | autoclick     |   E   | 在行末自动点击<?>            |                                   |
 | click         |   E   | 进入点击等待                 |                                   |
 | lrclick       |   E   | 进入左右点击等待             | getret %0 (0-right 1-left)        |
-| clickskippage |   F   | 文本刚输出时直接跳到下一页   |                                   |
+| clickskippage |   F   | 忽略未读文本                 |                                   |
+### 鼠标光标
+| 命令            |   C   | 描述 | 例子 |
+| :-------------- | :---: | :--- | :--- |
+| setcursor       |   E   | 在等待鼠标点击时的光标     |      |
+| abssetcursor    |   E   |      |      |
+| mousecursor     |   E   |      |      |
+| mousemode       |   E   |      |      |
+| movemousecursor |   E   |      |      |
+| getnextline     |   E   |      |      |
+
+### 影片
+| 命令     |   C   | 描述                     | 例子                                                           |
+| :------- | :---: | :----------------------- | :------------------------------------------------------------- |
+| avi      |   E   | avi <文件>,<是否可跳过>  | avi "1.avi",1                                                  |
+| mpegplay |   E   | mpeg <文件>,<是否可跳过> | mpegplay "1.mpg",1                                             |
+| movie    |   E   | 播放影片                 | movie STR[,'pos',NUM,NUM,NUM,NUM][,'click'][,'loop'][,'async'] |
 ---
 
 默认格式
