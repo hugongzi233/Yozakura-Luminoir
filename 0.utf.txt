@@ -1,5 +1,6 @@
 ;mode800
 *define
+effect 3,10,1000
 game
 
 *start
@@ -7,7 +8,7 @@ setwindow 20,370,20,3,30,30,0,0,20,0,1
 rmenu "保存",save,"读取",load,"自动",automode,"跳过",skip,"隐藏文字",windowerase,"回想模式",lookback,"重置",reset
 
 bg "image/bg_test.jpg",10,200
-ld l,"ld/ld1.png",10,1000
+ld l,"ld/ld1.png",3
 本小姐心情非常不好@
 思俊宇出来挨打！\
 select "我不要！",*option1,"在",*option2
