@@ -1,4 +1,3 @@
-;mode800
 *define
 effect 3,10,1000
 game
