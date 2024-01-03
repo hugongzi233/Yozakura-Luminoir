@@ -3,9 +3,9 @@
 ## 常用工具
 
 - [ONScripterAPI命令参考](https://kaisernet.org/onscripter/api/NScrAPI-framed.html)
-- [みんちりえ背景素材](https://kaisernet.org/onscripter/api/NScrAPI-framed.html)
+- [みんちりえ背景素材](https://min-chi.material.jp/)
 
-## nscript语法
+## nscript
 
 ### 游戏开始/结束/退出
 
