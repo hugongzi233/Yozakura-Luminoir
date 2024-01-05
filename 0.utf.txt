@@ -1,8 +1,12 @@
 ;$V4000G1500S1280,720
+;屏幕分辨率1280x720
+
+;define开始区域
 *define
 effect 3,10,1000
 game
 
+;游戏开始区域
 *start
 setwindow3 300,550,32,3,26,26,0,10,1,1,1,"",0,530
 
@@ -10,15 +14,15 @@ rmenu "保存",save,"读取",load,"自动",automode,"跳过",skip,"隐藏文字"
 bg "image/bg_test.jpg",10,200
 ld l,"ld/ld1.png",3
 测试@ %0 另外一个 %1@
-测试2
+文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试文本距离测试
 测试3
 测试4\
-select "我不要！",*option1,"在",*option2
+select "选项1",*option1,"选项2",*option2
 *option1
 什么？@
 我很生气\
 给我拖下去打50大棍\
-"GAME OVER"@
+·GAME OVER· @
 你被打死了\
 end
 *option2
