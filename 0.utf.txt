@@ -1,15 +1,18 @@
+;$V4000G1500S1280,720
 *define
 effect 3,10,1000
 game
 
 *start
-setwindow 20,370,20,3,30,30,0,0,20,0,1
-rmenu "保存",save,"读取",load,"自动",automode,"跳过",skip,"隐藏文字",windowerase,"回想模式",lookback,"重置",reset
+setwindow3 300,550,32,3,26,26,0,10,1,1,1,"",0,530
 
+rmenu "保存",save,"读取",load,"自动",automode,"跳过",skip,"隐藏文字",windowerase,"回想模式",lookback,"重置",reset
 bg "image/bg_test.jpg",10,200
 ld l,"ld/ld1.png",3
-本小姐心情非常不好@
-思俊宇出来挨打！\
+测试@ %0 另外一个 %1@
+测试2
+测试3
+测试4\
 select "我不要！",*option1,"在",*option2
 *option1
 什么？@
