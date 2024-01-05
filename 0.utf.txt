@@ -7,31 +7,31 @@ goto *define
 *start
 lsp 0,":s#888888#FFFFFFボタン１番",50,50
 
-setwindow3 300,550,32,3,24,24,0,10,1,1,1,"ui/windowframe_window.png",0,550
+setwindow3 300,560,32,3,24,24,0,10,1,1,1,"ui/windowframe_window.png",0,560
 
 bg "image/bg_test.jpg",10,200
 ld l,"ld/ld1.png",3
 测试
-[Girl] 「像你这样的，懦夫……最讨厌了……最差劲最坏的强奸混蛋……哈啊，咕呼……绝，绝对，饶不了你啊……咿啊啊……啊呼唔……！」
+[女孩] 「像你这样的，懦夫……最讨厌了……最差劲最坏的强奸混蛋……哈啊，咕呼……绝，绝对，饶不了你啊……咿啊啊……啊呼唔……！」
 你喜欢骂就骂吧。
 我反正是不痛不痒的。不仅这样，还是在享受最棒的快乐呢……
-[Girl] 测试4
+[女孩] 测试4
 select "选项1",*option1,"选项2",*option2
 *option1
-[Girl] 什么？
-[Girl] 我很生气
-[Girl] 给我拖下去打50大棍
+[女孩] 什么？
+[女孩] 我很生气
+[女孩] 给我拖下去打50大棍
 ·GAME OVER· @
 你被打死了
 end
 *option2
-[Girl] 哦呦 今天挺听话的嘛
+[女孩] 哦呦 今天挺听话的嘛
 饶你了
 end
 *define
 caption "Game1"
 nsa
-rubyon
+;rubyon2
 pretextgosub *func_pretext
 globalon
 usewheel
@@ -55,6 +55,6 @@ game
 *func_pretext
     gettag $Name
     ;bg #FFFFFF,10,100
-    lsp 500,":s,10,10,0,0;#FF0000$Name",280,500,255
+    lsp 500,":s,10,10,0,0;#FFFFFF$Name",260,560,255
     vsp 500 1
 return
