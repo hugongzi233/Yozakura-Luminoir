@@ -1,33 +1,40 @@
 ;$V4000G1500S1280,720
 
-;define开始区域
+
+;lsp id
+;0
+;1
+;500 face
+;501 name
+;跳转*define
 goto *define
 
 ;游戏开始区域
 *start
+;左上角章节信息 目前存在bug做测试用
 lsp 0,":s#888888#FFFFFFボタン１番",50,50
-
 setwindow3 300,560,32,3,24,24,0,10,1,1,1,"ui/windowframe_window.png",0,560
 
-bg "image/bg_test.jpg",10,200
-ld l,"ld/ld1.png",3
-测试
-[女孩] 「像你这样的，懦夫……最讨厌了……最差劲最坏的强奸混蛋……哈啊，咕呼……绝，绝对，饶不了你啊……咿啊啊……啊呼唔……！」
+bg "bg/bg_test.jpg",10,200
+ld l,"character/test/ld1.png",3
+哈啊
+[/女孩/] 「像你这样的，懦夫……最讨厌了……最差劲最坏的强奸混蛋……哈啊，咕呼……绝，绝对，饶不了你啊……咿啊啊……啊呼唔……！」
 你喜欢骂就骂吧。
 我反正是不痛不痒的。不仅这样，还是在享受最棒的快乐呢……
-[女孩] 测试4
+[/女孩/] 测试4
 select "选项1",*option1,"选项2",*option2
 *option1
-[女孩] 什么？
-[女孩] 我很生气
-[女孩] 给我拖下去打50大棍
+[/女孩/] 什么？
+[/女孩/] 我很生气
+[/女孩/] 给我拖下去打50大棍
 ·GAME OVER· @
 你被打死了
 end
 *option2
-[女孩] 哦呦 今天挺听话的嘛
+[/女孩/] 哦呦 今天挺听话的嘛
 饶你了
 end
+;*define区域
 *define
 caption "Game1"
 nsa
@@ -45,16 +52,32 @@ windoweffect 10,200
 transmode alpha
 shadedistance 1,2
 linepage
-;numalias
-numalias name2,810
-numalias Name,811
-numalias VOICE,812
+
+;numalias变量定义区域
+numalias face,100
+numalias name,101
+numalias namelen,102
+numalias voice,103
+
+;effect效果定义区域
 effect 3,10,1000
 game
 
+;*define pretextgosub -> *func_pretext
+;人物名字解析 格式 [$face/$name/$voice]
+;24.1.5 小狐
 *func_pretext
-    gettag $Name
-    ;bg #FFFFFF,10,100
-    lsp 500,":s,10,10,0,0;#FFFFFF$Name",260,560,255
-    vsp 500 1
+    gettag $face,$name,$voice
+    if $face="" vsp 500 0:print 1:jumpf
+    lsp 500,"character/"+$face+".png",0,255
+    ~
+    if $name="" vsp 501 0:print 1:return
+    len %namelen,$name
+    mul %namelen,10
+    div %namelen,2
+    lsp 501,":s,10,10,0,0;#FFFFFF$name",280-%namelen,560
+    vsp 501 1
+    if $voice="":dwavestop 0:return
+	dwavestop 0
+	dwave 0,"voice/"+$voice+".ogg"
 return
