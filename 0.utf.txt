@@ -1,7 +1,7 @@
 ;$V4000G1500S1280,720
+;gameid Game1
 
 ;time 24.1.1
-
 ;lsp id
 ;0
 ;1
@@ -37,11 +37,12 @@ end
 [/女孩/] 哦呦 今天挺听话的嘛
 饶你了
 end
+
 ;*define区域
 *define
 caption "Game1"
 nsa
-;rubyon2
+rubyon2
 pretextgosub *func_pretext
 globalon
 usewheel
@@ -90,5 +91,6 @@ return
 ;自定义选择肢 格式 csel "选项","*loc","选项2","*loc2"
 ;24.1.6 小狐
 *customsel
-
+	btndef clear
+	saveoff
 return
