@@ -1,18 +1,21 @@
 ;$V4000G1500S1280,720
 
+;time 24.1.1
 
 ;lsp id
 ;0
 ;1
 ;500 face
 ;501 name
+
+
 ;跳转*define
 goto *define
 
 ;游戏开始区域
 *start
-;左上角章节信息 目前存在bug做测试用
-lsp 0,":s#888888#FFFFFFボタン１番",50,50
+;左上角章节信息
+lsp 0,":s#FFFFFF第一章空想的虫鸣",50,50
 setwindow3 300,560,32,3,24,24,0,10,1,1,1,"ui/windowframe_window.png",0,560
 
 bg "bg/bg_test.jpg",10,200
@@ -60,7 +63,8 @@ numalias namelen,102
 numalias voice,103
 
 ;effect效果定义区域
-effect 3,10,1000
+;24.1.3 小狐
+effect 3,10,1000 ;测试用 请在上线后删除
 game
 
 ;*define pretextgosub -> *func_pretext
@@ -80,4 +84,11 @@ game
     if $voice="":dwavestop 0:return
 	dwavestop 0
 	dwave 0,"voice/"+$voice+".ogg"
+return
+
+;csel -> *customsel
+;自定义选择肢 格式 csel "选项","*loc","选项2","*loc2"
+;24.1.6 小狐
+*customsel
+
 return
