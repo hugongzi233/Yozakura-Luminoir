@@ -7,7 +7,7 @@ goto *define
 ;游戏开始区域
 *start
 ;lsp 0,":s#FFFFFF第一幕",50,50
-setwindow3 300,560,32,3,24,24,0,10,1,1,1,"ui/windowframe_window.png",0,560
+setwindow3 300,560,32,3,24,24,0,10,1,1,1,"ui/windowframe_window2.png",0,560
 
 [/第一幕/] 第一幕 彼与君的思恋之歌
 乡下巴士悠悠的向前行进着...
