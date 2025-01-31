@@ -3,6 +3,8 @@
 > script define
 > 「你真是一副不可靠的样子啊……收下今天满满的爱意后，加油『创作』哦！」
 
+[krkr KAG3教程](https://hydrozoa.felisworks.com/)
+
 ## 1-1 被禁锢的画作
 
 .effect 渐变
