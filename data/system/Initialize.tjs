@@ -273,8 +273,8 @@ if(Storages.isExistentStorage(System.exePath + "AfterInit2.tjs"))
 }
 
 /*
-	first.ks の実行
+	启动时的脚本
 */
 
-kag.process("first.ks");
+kag.process("start.ks");
 
