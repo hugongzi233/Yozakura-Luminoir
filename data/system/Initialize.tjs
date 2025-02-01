@@ -138,13 +138,13 @@ if(Storages.isExistentStorage("Config.tjs"))
 }
 else if(Storages.isExistentStorage("Config.~new"))
 {
-	System.inform("Config.tjs が見つかりません。\nsystem フォルダにある "
-		"Config.~new ファイルを Config.tjs に改名してください。");
+	System.inform("Config.tjs 文件未找到。\n请将 system 文件夹中的 "
+		"Config.~new 文件重命名为 Config.tjs。");
 	System.exit();
 }
 else
 {
-	throw new Exception("Config.tjs が見つかりません。");
+	throw new Exception("Config.tjs 文件未找到");
 }
 
 /*
@@ -164,7 +164,7 @@ if(typeof global.config_version == "undefined" || config_version != kagVersion)
 if(!System.createAppLock(System.exePath.replace(/[^A-Za-z]/g, '_')))
 {
 	// すでに起動している
-	System.inform(System.title + "はすでに起動しています");
+	System.inform(System.title + "已经在运行");
 	System.exit();
 }
 
@@ -183,7 +183,7 @@ property KAGPlugin { getter() { KAGLoadScript("Plugin.tjs"); return global.KAGPl
 /*
 	各システム読み込み
 */
-dm("KAG System スクリプトを読み込んでいます...");
+dm("正在加载 KAG 系统脚本...");
 
 KAGLoadScript("Utils.tjs");
 KAGLoadScript("KAGLayer.tjs");
@@ -207,7 +207,7 @@ if(Storages.isExistentStorage(System.exePath + "Override2.tjs"))
 /*
 	( デバッグ ) 時間計測
 */
-dm("スクリプトの読み込みに " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("加载脚本花费了 " + (System.getTickCount() - parseStartTick) + "ms");
 parseStartTick = System.getTickCount();
 
 /*
@@ -251,7 +251,7 @@ property mp
 /*
 	( デバッグ ) 時間計測
 */
-dm("KAGMainWindow のコンストラクタで " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("KAGMainWindow 的构造函数花费了 " + (System.getTickCount() - parseStartTick) + "ms");
 delete parseStartTick;
 
 
