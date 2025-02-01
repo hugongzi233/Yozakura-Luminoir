@@ -125,6 +125,7 @@ class KAGLayer extends Layer
 	function loadImages(storage, key)
 	{
 		// loadImages オーバーライド
+		dm("Loading images with storage:", storage, "and key:", key);
 		key = adjustColorKey(key);
 		return super.loadImages(storage, key);
 	}

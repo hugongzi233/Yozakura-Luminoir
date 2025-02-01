@@ -176,12 +176,14 @@ class BaseConductor extends KAGParser
 			timerEnabled =false;
 			onStop();
 			inProcessing = false;
-			var msg = "エラーが発生しました\n"
-				"ファイル : " + curStorage + "   行 : " + (curLine+1) + "\n"
-				"タグ : " + (obj === void ? "不明" : obj.tagname)
-				+ " ( ← エラーの発生した前後のタグを示している場合もあります )\n"
-				+ e.message;
+			var msg = "发生错误\n"
+                "文件 : " + curStorage + "   行 : " + (curLine+1) + "\n"
+                "标签 : " + (obj === void ? "不明" : obj.tagname)
+                + " ( ← 也可能表示错误发生前后的标签 )\n";
+			if (e && e.message) {
+				msg += e.message;
 			if((typeof e.trace) != "undefined") dm("trace : " + e.trace);
+			}
 			dm(msg);
 			throw new ConductorException(msg);
 //			System.inform(msg, "エラー");
@@ -461,9 +463,9 @@ class Conductor extends BaseConductor
 		}
 		catch(e)
 		{
-			throw new Exception(scriptname + " の 行 " + lineofs + " から始まる"
-				" iscript ブロックでエラーが発生しました。"
-				"\n( 詳細はコンソールを参照してください )\n" + e.message);
+		throw new Exception(scriptname + " 的 第 " + lineofs + " 行开始的"
+                " iscript 块中发生错误。"
+                "\n( 详情请参阅控制台 )\n" + e.message);
 		}
 		return true;
 	}
