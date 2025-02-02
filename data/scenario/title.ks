@@ -1,7 +1,6 @@
 *title
 @stoptrans
 @playbgm storage="start.wav"
-@layopt layer=message0 visible=false
 @position layer=message0 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0 frame="opbg"
 @current layer=message0 page=back
 @deffont face="黑体" size=24 color=0xffffff
