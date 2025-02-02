@@ -25,14 +25,15 @@
 
 ; 显示对话框宏
 [macro name=showmsg]
-@position layer=message0 left=0 top=&(720-160) width=1280 height=160 marginl=180 margint=0 marginr=73 marginb=17 opacity=0 visible=true frame="frame" page=back
+@position layer=message0 left=0 top=&(720-160) width=1280 height=160 marginl=256 margint=0 marginr=70 marginb=16 opacity=0 visible=true frame="frame" page=back
 @trans method=crossfade time=800
 @wt
 [endmacro]
 
-; 文字显示宏
+; 文字显示与语音宏
 ; 使用方法：@say name="名字" text="第一行" text2="第二行"(可选)
 [macro name=say]
+@playse storage=%se cond="mp.se!=''"
 @current layer=message0 page=fore
 @font face="黑体" size=24
 @er
@@ -47,6 +48,7 @@
 @emb exp="mp.text2"
 [endif]
 @p
+@stopse
 [endmacro]
 
 ; 清除对话框宏
@@ -71,17 +73,4 @@
 @wt
 [endmacro]
 
-; ==========================
-; 1-1
-@playbgm storage="wbgm02.ogg"
-@bg background="bg1"
-@stand face="bt1"
-@showmsg
-
-@say name="" text="要一起去冒险吗？"
-@say name="女孩" text="这个鬼东西怎么这么难学啊！！！" text2="我要放弃了！"
-@clearstand effect=false
-@bg background="bg2" method="universal" rule="ysr025" vague=10 time=500
-@stand face="bt2"
-@say name="李四" text="今天天气真不错！"
-@say name="" text="要一起去冒险吗？"
+@jump target="*c1-1" storage="c1-1.ks"
