@@ -7,7 +7,7 @@
             "command": "powershell",
             "args": [
                 "-Command",
-                "Start-Process -FilePath '${workspaceFolder}/tvpwin64.exe' -NoNewWindow -Wait | Tee-Object -FilePath 'output.log'"
+                "Start-Process -FilePath '${workspaceFolder}/tvpwin32.exe' -NoNewWindow -Wait | Tee-Object -FilePath 'output.log'"
             ],
             "group": {
                 "kind": "build",
