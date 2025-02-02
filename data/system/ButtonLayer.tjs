@@ -125,7 +125,7 @@ class ButtonLayer extends KAGLayer
 	function loadImages(storage, key)
 	{
 		// 画像を読み込む
-		dm("ButtonLayer: Loading images with storage:", storage, "and key:", key);
+		dm("ButtonLayer-加载:",storage,"KEY:",key);
 		super.loadImages(storage, key);
 		super.width = imageWidth \ (Butt_showFocusImage ? 4 : 3);
 		super.height = imageHeight;

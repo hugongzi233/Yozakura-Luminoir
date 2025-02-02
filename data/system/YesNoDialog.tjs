@@ -86,7 +86,7 @@ class YesNoDialogWindow extends Window
 
 		// Yesボタン
 		add(yesButton = new ButtonLayer(this, primaryLayer));
-		yesButton.caption = "はい";
+		yesButton.caption = "是的";
 		yesButton.captionColor = clBtnText;
 		yesButton.width = 70;
 		yesButton.height = 25;
@@ -96,7 +96,7 @@ class YesNoDialogWindow extends Window
 
 		// Noボタン
 		add(noButton = new ButtonLayer(this, primaryLayer));
-		noButton.caption = "いいえ";
+		noButton.caption = "取消";
 		noButton.captionColor = clBtnText;
 		noButton.width = 70;
 		noButton.height = 25;
@@ -172,7 +172,7 @@ class YesNoDialogWindow extends Window
 }
 
 // Yes か No かはっきりさせる関数
-function askYesNo(message, caption = "確認")
+function askYesNo(message, caption = "确认")
 {
 	var win = new YesNoDialogWindow(message, caption);
 	win.showModal();
