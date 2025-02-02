@@ -1,86 +1,80 @@
-// KAGLayer.tjs - KAG のレイヤの基本クラス
-// Copyright (C)2001-2009, W.Dee and contributors  改変・配布は自由です
+// KAGLayer.tjs - KAG 的基本层类
+// 版权所有 (C)2001-2009, W.Dee 和贡献者  修改和分发是自由的
 
 /*
- レイヤ関連のクラス階層
+ 层相关的类层次结构
 
- Layer ( 吉里吉里ネイティヴクラス )
-  |
-  +-- KAGLayer ( このファイル )
-       |
-       +-- AnimationLayer ( AnimationLayer.tjs )
-       |    |
-       |    +-- ClickGlyphLayer ( AnimationLayer.tjs )
-       |    |
-       |    +-- GraphicLayer ( GraphicLayer.tjs )
-       |         |
-       |         +-- BaseLayer ( GraphicLayer.tjs )
-       |         |
-       |         +-- CharacterLayer ( GraphicLayer.tjs )
-       |
-       +-- MessageLayer ( MessageLayer.tjs )
-       |
-       +-- ButtonLayer ( ButtonLayer.tjs )
-       |    |
-       |    +-- LinkButtonLayer ( MessageLayer.tjs )
-       |    |
-       |    +-- LButtonLayer ( HistoryLayer.tjs )
-       |
-       +-- EditLayer ( EditLayer.tjs )
-       |    |
-       |    +-- LinkEditLayer ( MessageLayer.tjs )
-       |
-       +-- CheckBoxLayer ( CheckBoxLayer.tjs )
-            |
-            +-- LinkCheckBoxLayer ( MessageLayer.tjs )
+ Layer ( 吉里吉里本地类 )
+	|
+	+-- KAGLayer ( 本文件 )
+			 |
+			 +-- AnimationLayer ( AnimationLayer.tjs )
+			 |    |
+			 |    +-- ClickGlyphLayer ( AnimationLayer.tjs )
+			 |    |
+			 |    +-- GraphicLayer ( GraphicLayer.tjs )
+			 |         |
+			 |         +-- BaseLayer ( GraphicLayer.tjs )
+			 |         |
+			 |         +-- CharacterLayer ( GraphicLayer.tjs )
+			 |
+			 +-- MessageLayer ( MessageLayer.tjs )
+			 |
+			 +-- ButtonLayer ( ButtonLayer.tjs )
+			 |    |
+			 |    +-- LinkButtonLayer ( MessageLayer.tjs )
+			 |    |
+			 |    +-- LButtonLayer ( HistoryLayer.tjs )
+			 |
+			 +-- EditLayer ( EditLayer.tjs )
+			 |    |
+			 |    +-- LinkEditLayer ( MessageLayer.tjs )
+			 |
+			 +-- CheckBoxLayer ( CheckBoxLayer.tjs )
+						|
+						+-- LinkCheckBoxLayer ( MessageLayer.tjs )
 */
 
 /*
-　ちょっとわかりづらい、トランジション終了時の動作について覚え書き
+　关于有点难以理解的过渡结束时的行为的备忘
 
-　吉里吉里はトランジション終了時に、トランジション元(src=相手)がある場合は、
-子レイヤを含む(children=true)場合は相手とツリーごと自分自身のレイヤを交換し、
-子レイヤを含まない(children=false)場合は、子の絶対的なツリー上の位置はその
-ままにして相手と入れ替わる。
+　吉里吉里在过渡结束时，如果有过渡源(src=对方)，
+并且包含子层(children=true)，则会交换对方和自身的层树，
+如果不包含子层(children=false)，则保持子层的绝对树位置不变并交换对方。
 
-　子レイヤを含まないトランジションを行えるのは背景レイヤのみ。
+　只有背景层可以进行不包含子层的过渡。
 
-トランジションを行うと、上記における「入れ替え」を行うが、吉里吉里本体の
-入れ替え、は name などの重要な情報も入れ替えてしまうので、
-GraphicLayer.exchangeInfo で内容を交換する。
+进行过渡时，会进行上述的“交换”，但吉里吉里本体的
+交换会交换 name 等重要信息，
+所以通过 GraphicLayer.exchangeInfo 交换内容。
 
-また、trans 属性で exchange=true が指定された場合は、両者のレイヤは入れ替わ
-るが、exchange=false (デフォルト) が指定された場合は、トランジション元(src)
-からトランジション先への情報のコピーを行わないとならない。
+另外，如果在 trans 属性中指定了 exchange=true，则两者的层会交换，
+但如果指定了 exchange=false (默认)，则需要将过渡源(src)的信息复制到过渡目标。
 
-srcなし の時はレイヤ単独でのトランジションが行われるのでこれらの考慮は
-必要ないが、終了時には子レイヤがすべて非表示になる。
+没有 src 时，进行单独层的过渡，因此不需要考虑这些，但结束时子层会全部隐藏。
 
-・メッセージレイヤ、前景レイヤが、srcなしでトランジション (children=true)
-　何もしなくてよいが、終了後それらの子レイヤは自動的に非表示になる。
+・消息层、前景层在没有 src 的情况下进行过渡 (children=true)
+　不需要做任何事情，但结束后这些子层会自动隐藏。
 
-・メッセージレイヤ、前景レイヤが、srcありでトランジション (children=true)
-　重要な情報をトランジション元と交換、exchange=false の場合はさらに
-　トランジション元の情報をトランジション先にコピー。ただし、このコピーの際に
-　ウィンドウの可視・不可視の情報はコピーしない。
+・消息层、前景层在有 src 的情况下进行过渡 (children=true)
+　交换重要信息，如果 exchange=false，还需要将过渡源的信息复制到过渡目标。
+　但在复制时不复制窗口的可见性信息。
 
-・背景レイヤがsrcなしでトランジション(children=true)
-　何もしなくてよいが、終了時に子レイヤは非表示になる。
+・背景层在没有 src 的情况下进行过渡 (children=true)
+　不需要做任何事情，但结束时子层会隐藏。
 
-・背景レイヤがsrcなしでトランジション(children=false)
-　本当に何もしない。
+・背景层在没有 src 的情况下进行过渡 (children=false)
+　真的不需要做任何事情。
 
-・背景レイヤがsrcありでトランジション(children=true)
-　重要な情報をトランジション元と交換、しかも子レイヤに対してもこの
-　「重要な情報を相手と交換」の指示を出す。exchange=false の場合はさらに
-　トランジション元の情報をトランジション先にコピー。これも、子レイヤすべて
-　に対しても指示する。
+・背景层在有 src 的情况下进行过渡 (children=true)
+　交换重要信息，并且对子层也发出“交换重要信息”的指示。
+　如果 exchange=false，还需要将过渡源的信息复制到过渡目标。
+　这也对子层发出指示。
 
-・背景レイヤがsrcありでトランジション(children=false)
-　重要な情報をトランジション元と交換。子レイヤに対しては
-　「重要な情報を相手と交換」の指示をださない。exchange=false の場合は
-　さらにトランジション元の情報をトランジション先にコピー。
-　これも子レイヤに対しては指示しない。
+・背景层在有 src 的情况下进行过渡 (children=false)
+　交换重要信息，不对子层发出“交换重要信息”的指示。
+　如果 exchange=false，还需要将过渡源的信息复制到过渡目标。
+　这也不对子层发出指示。
 
 */
 
@@ -125,6 +119,7 @@ class KAGLayer extends Layer
 	function loadImages(storage, key)
 	{
 		// loadImages オーバーライド
+		dm("Loading images with storage:", storage, "and key:", key);
 		key = adjustColorKey(key);
 		return super.loadImages(storage, key);
 	}

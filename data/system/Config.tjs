@@ -1,46 +1,45 @@
-// Config.tjs - KAG 設定
-// Copyright (C) 2001-2007 W.Dee and contributors  改変・配布は自由です
-;global.config_version = "3.32 stable"; // この行を消さないでください
+// Config.tjs - KAG 设置
+// Copyright (C) 2001-2007 W.Dee and contributors  改变和分发是自由的
+// Copyright (c) 2025-2025 FoxMoe
+;global.config_version = "1.1 foxmoe (from 3.32 stable)"; // 请不要删除这一行
 
-// このファイル内で設定できる項目は、すべて
-// ;設定名 = 値;
-// の形式になっています。
-// 「追加の設定」を除いて、設定は各項目につき１行で記述する必要があります。
-
-
-//------------------------------------------------------- 全体の設定 -----
+// 在这个文件中可以设置的项目，全部
+// ;设置名 = 值;
+// 的形式。
+// 除了“追加的设置”外，设置必须每个项目一行记录。
 
 
-// ◆ タイトル
-// ウィンドウのキャプション(タイトル)および
-// タスクバーに表示されるものです。
+//------------------------------------------------------- 全局设置 -----
+
+
+// ◆ 标题
+// 窗口的标题（标题栏）以及
+// 任务栏中显示的内容。
 // 游戏窗口的标题栏
-;System.title = "落樱约定 ～光与暗的笔触～";
+;System.title = "落樱约定 ～ 光与暗的笔触 ～";
 
 
-// ◆ シナリオ解析モード
-// シナリオファイル中の改行に従わせたい場合に false を設定します。
-// false を指定すると、KAG のシナリオ中の改行が、行末に \ または [p] を書か
-// ない限りそのままメッセージレイヤ上での改行として扱われます。
-// true を設定すると [r] タグを書かない限り改行されません。
-// KAG2.x 互換にするには false を指定してください。
+// ◆ 剧本解析模式
+// 如果希望按照剧本文件中的换行进行解析，请设置为 false。
+// 如果指定为 false，KAG 剧本中的换行将被视为消息层上的换行，除非在行尾写 \ 或 [p]。
+// 如果设置为 true，则除非写 [r] 标签，否则不会换行。
+// 为了与 KAG2.x 兼容，请指定为 false。
 // 仅在[r]存在时换行(兼容kag2.x)
 ;global.ignoreCR = true;
 
 
-// ◆ 画像キャッシュ制限
-// 画像キャッシュの制限値を MB 単位で指定します。
-// gcsAuto を指定すると、自動的に決定されます。
+// ◆ 图像缓存限制
+// 以 MB 为单位指定图像缓存的限制值。
+// 如果指定为 gcsAuto，将自动决定。
 // 图像缓存大小
-;System.graphicCacheLimit = gcsAuto; // 画像キャッシュリミット = 自動
+;System.graphicCacheLimit = gcsAuto; // 图像缓存限制 = 自动
 
 
-// ◆ global 追加の設定
-// 追加の設定項目がある場合は
-// [start-global-additionals] と [end-global-additionals] で囲まれた
-// 部分に設定を記述してください
-// ( [start-global-additionals] と [end-global-additionals] の行は
-//  編集したり消したりしないでください )
+// ◆ global 追加设置
+// 如果有其他设置项，请在
+// [start-global-additionals] 和 [end-global-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-global-additionals] 和 [end-global-additionals] 行 )
 
 //[start-global-additionals]
 
@@ -49,240 +48,191 @@
 
 
 
-//-------------------------------------------- ウィンドウや動作の設定 -----
+//-------------------------------------------- 窗口和操作设置 -----
 
 function KAGWindow_config()
 {
-// ◆ 画面サイズ
-// scWidth に画面の幅、scHeight に画面の高さをピクセル単位で指定します。
-// 標準的に使われている 640x480 や 800x600 のような画面サイズではないサイズ
-// に設定すると、フルスクリーンにできない場合があります。
-// 画面大小 请固定720p
+// ◆ 屏幕大小
+// 以像素为单位指定屏幕的宽度（scWidth）和高度（scHeight）。
+// 如果设置为非标准的 640x480 或 800x600 屏幕大小，可能无法全屏显示。
+// 屏幕大小 请固定720p
 ;scWidth = 1280;
 ;scHeight = 720;
 
 
-// ◆ 読みとり専用モード
-// readOnlyMode = true とすると、ディスクへのいっさいの書き込み動作をしなく
-// なります。CD-ROM 上から実行させるときなどに指定してください。
-// もちろん、その場合は栞の保存などができなくなります。
+// ◆ 只读模式
+// 如果设置为 true，将不会进行任何磁盘写入操作。
+// 请在从 CD-ROM 运行时指定。
+// 当然，这样的话将无法保存书签等。
 // 仅读模式 禁用存档功能
 ;readOnlyMode = false;
 
 
-// ◆ フリーセーブ
-// 栞の保存形式を指定します。
-// false を指定すると、メニューバーの「栞をたどる」「栞をはさむ」の
-// サブメニュー項目からセーブデータを保存したり読み込んだりします。
-// この場合は保存可能な栞の最大の個数は numBookMarks によって制限
-// されます。
-// true を指定するとフリーセーブモードになり、「栞をたどる」では
-// 「開く」ダイアログボックス、「栞をはさむ」では「名前を付けて保存」ダイア
-// ログボックスが開き、栞を個別のファイルとして保存するモードになります。
-// この場合は 保存可能な栞の個数に制限はありません。また、
-// エクスプローラなどによる栞の管理が容易になります。
+// ◆ 自由保存
+// 指定书签的保存形式。
+// 如果指定为 false，将通过菜单栏的“浏览书签”和“插入书签”子菜单项保存或读取保存数据。
+// 在这种情况下，可保存的书签最大数量由 numBookMarks 限制。
+// 如果指定为 true，将进入自由保存模式，“浏览书签”将打开“打开”对话框，“插入书签”将打开“另存为”对话框，书签将作为单独的文件保存。
+// 在这种情况下，可保存的书签数量没有限制。此外，使用资源管理器等管理书签也很容易。
 // 在游戏外保存存档(打开文件选择框)
 ;freeSaveDataMode = false;
 
 
-// ◆サムネイルを保存するか
-// false を指定すると、セーブデータの拡張子は .kdt になり、サムネイルは
-// 保存されません。
-// true を指定すると、セーブデータの拡張子は .bmp になり、エクスプローラや
-// 「開く」ダイアログボックスの「縮小版」表示でセーブ時点でのサムネイルを
-// 表示することができるようになります。
+// ◆ 是否保存缩略图
+// 如果指定为 false，保存数据的扩展名将为 .kdt，不会保存缩略图。
+// 如果指定为 true，保存数据的扩展名将为 .bmp，可以在资源管理器和“打开”对话框的“缩略图”视图中显示保存时的缩略图。
 // 开启存档缩略图
 ;saveThumbnail = true;
 
 
-// ◆サムネイルの保存サイズ
-// サムネイルの横幅を指定します。saveThumbnail を true に設定しないとこの
-// 設定は意味がありません。
-// 横幅はピクセル単位で指定してください。たて幅は scWidth と scHeight の
-// 比と同じ比で自動的に計算されます。
+// ◆ 缩略图保存大小
+// 指定缩略图的宽度。如果不设置 saveThumbnail 为 true，此设置无效。
+// 请以像素为单位指定宽度。高度将根据 scWidth 和 scHeight 的比例自动计算。
 // 存档缩略图宽度
 ;thumbnailWidth = 160;
 
-// ◆サムネイルの保存モード
-// サムネイルの保存モードを指定します。saveThumbnail を true に設定しないとこの
-// 設定は意味がありません。
-// 8 を指定すると 256 色ビットマップで保存されます。
-// 24 を指定すると 24bitフルカラービットマップで保存されます。
-// 256色ビットマップの方がファイルサイズを小さく抑えることができますが、
-// 画質は悪くなります。
+// ◆ 缩略图保存模式
+// 指定缩略图的保存模式。如果不设置 saveThumbnail 为 true，此设置无效。
+// 指定 8 将以 256 色位图保存。
+// 指定 24 将以 24 位全彩位图保存。
+// 256 色位图文件大小较小，但画质较差。
 // 缩略图 8位 -> 256色
 // 缩略图 24位 -> 24bit全位
 ;thumbnailDepth = 8;
 
 
-// ◆ データ名プレフィクス
-// ここで指定した名前で始まる名前で栞関連のファイルが作成されます。
-// フリーセーブモードの場合でもシステム変数やシステムの設定を保存する
-// ファイルに影響します。
+// ◆ 数据名称前缀
+// 以此名称开头的文件将用于保存书签相关文件。
+// 即使在自由保存模式下，也会影响保存系统变量和系统设置的文件。
 // 存档名字 请固定data
 ;dataName = "data";
 
 
-// ◆ データID
-// KAGが他の作品のセーブデータを間違って読み込まないように、作品固有の
-// IDを "" で囲って指定してください ( 何でもかまいません )。
-// 特にフリーセーブモードで重要になります。フリーセーブモードにしない場合は
-// それほど重要ではないです。
-// 他と重ならない一意なIDは↓で取得することもできます。
-// http://kikyou.info/uuidgen/uuidgen.php (出てきたIDをコピー&ペースト)
-// または 吉里吉里を起動して 「選択しない」ボタンを押し、Shift + F4 を押して
-// コンソールを表示させ、その下側の入力欄に
-//       System.createUUID()
-//       ( 先頭の // は含まず )
-// と入力して Enter キーを押しても取得することができます。
+// ◆ 数据ID
+// 为了防止 KAG 误读其他作品的保存数据，请指定作品特有的 ID（用 "" 围住，内容随意）。
+// 在自由保存模式下尤其重要。如果不使用自由保存模式，则不太重要。
+// 可以通过以下链接获取唯一的 ID：http://kikyou.info/uuidgen/uuidgen.php（复制并粘贴生成的 ID）。
+// 或者启动吉里吉里，点击“选择不”，按 Shift + F4 显示控制台，在输入栏中输入 System.createUUID() 并按 Enter 键获取 ID。
 // ( 例 : "371a6289-a084-ee18-2885-66314a0aa19d" )
 // !!仅修改一次!!
 // 唯一uuid
 ;saveDataID = "77aabbcc-9682-4a21-8a03-4cb4229e62d3";
 
 
-// ◆ 保存モード
-// "c" を指定すると栞が暗号化されます。
-// "z" を指定すると栞が圧縮されます。
-// "c" と "z" を両方指定することは出来ません。栞を圧縮すると
-// 簡単には読めないようなデータになるので、栞の圧縮は暗号化を
-// 兼ねています。
-// "" を指定すると栞の暗号化や圧縮はされません。
+// ◆ 保存模式
+// 指定 "c" 将加密书签。
+// 指定 "z" 将压缩书签。
+// 不能同时指定 "c" 和 "z"。压缩书签将使数据难以读取，因此压缩书签也具有加密功能。
+// 指定 "" 将不加密或压缩书签。
 // c加密 z压缩 cz不能同时使用
 ;saveDataMode = "z";
 
 
-// ◆ 栞にマクロの情報を保存するかどうか
-// 栞にマクロの情報を保存するかどうかを指定します。true を指定すると、KAG の
-// マクロの情報は栞に保存され、栞をたどる動作を行うと、栞を保存した状態のマ
-// クロが再現されます。
-// false を指定すると、KAG のマクロの情報は栞に保存されなく、栞をたどる動作
-// を行っても、現在のマクロの情報は変わりません。
-// 特に 毎回マクロ定義を 作品のはじめで行うような用途では、古いマクロの情報
-// が栞の読み込みによって新しいマクロの情報に上書きされてしまうことが開発の
-// 妨げになるため、false を指定した方がよいでしょう。
+// ◆ 是否保存宏信息到书签
+// 指定是否将宏信息保存到书签。指定 true 时，KAG 的宏信息将保存到书签中，浏览书签时将恢复保存时的宏状态。
+// 指定 false 时，KAG 的宏信息不会保存到书签中，浏览书签时当前的宏信息不会改变。
+// 特别是在作品开始时每次定义宏的情况下，旧的宏信息可能会被书签加载的新宏信息覆盖，建议指定为 false。
 // 保存宏 仅游戏发行时设置为true
 ;saveMacros = false;
 
 
 
-// ◆ 文字表示スピード (ミリ秒/文字)
-;chSpeeds.fast = 10; // 「高速」文字表示スピード
-;chSpeeds.normal = 30; // 「普通」文字表示スピード
-;chSpeeds.slow = 50; // 「遅い」文字表示スピード
+// ◆ 文字显示速度 (毫秒/字符)
+;chSpeeds.fast = 10; // “快速”文字显示速度
+;chSpeeds.normal = 30; // “普通”文字显示速度
+;chSpeeds.slow = 50; // “慢速”文字显示速度
 
 
-// ◆ 自動的に読み進むウェイト ページ末ウェイトの設定値 (ミリ秒)
-;autoModePageWaits.fast = 400; // 「短い」
-;autoModePageWaits.faster = 700; // 「やや短い」
-;autoModePageWaits.medium = 1000; // 「普通」
-;autoModePageWaits.slower = 1300; // 「やや遅い」
-;autoModePageWaits.slow = 2000; // 「遅い」
+// ◆ 自动阅读等待 页面末尾等待设置值 (毫秒)
+;autoModePageWaits.fast = 400; // “短”
+;autoModePageWaits.faster = 700; // “稍短”
+;autoModePageWaits.medium = 1000; // “普通”
+;autoModePageWaits.slower = 1300; // “稍慢”
+;autoModePageWaits.slow = 2000; // “慢”
 
 
-// ◆ 自動的に読み進むウェイト [l] ウェイトの設定値 (ミリ秒)
-;autoModeLineWaits.fast = 180; // 「短い」
-;autoModeLineWaits.faster = 240; // 「やや短い」
-;autoModeLineWaits.medium = 300; // 「普通」
-;autoModeLineWaits.slower = 360; // 「やや遅い」
-;autoModeLineWaits.slow = 500; // 「遅い」
+// ◆ 自动阅读等待 [l] 等待设置值 (毫秒)
+;autoModeLineWaits.fast = 180; // “短”
+;autoModeLineWaits.faster = 240; // “稍短”
+;autoModeLineWaits.medium = 300; // “普通”
+;autoModeLineWaits.slower = 360; // “稍慢”
+;autoModeLineWaits.slow = 500; // “慢”
 
 
-// ◆ マウスカーソル
-// マウスカーソルを指定します。マウスカーソルは cr で始まるマウスカーソル定
-// 数 ( 吉里吉里２ SDK Help 参照 ) か、マウスカーソルファイル名である必要が
-// あります。アニメーションマウスカーソルも指定できます。
-// マウスカーソル定数を指定するときは、cursor タグで指定するように先頭に &
-// をつける必要はありません。マウスカーソルファイル名を指定する場合は "" 
-// (ダブルクオーテーション) でくくってください。
-;cursorDefault = crArrow; // 通常のマウスカーソル
-;cursorPointed = crHandPoint; // リンクなどをポイントしたとき
-;cursorWaitingClick = crArrow; // クリック待ちの時
-;cursorDraggable = crSizeAll; // メッセージレイヤをドラッグ可能なとき
+// ◆ 鼠标光标
+// 指定鼠标光标。鼠标光标必须是以 cr 开头的鼠标光标常量（参见吉里吉里2 SDK 帮助）或鼠标光标文件名。
+// 可以指定动画鼠标光标。
+// 指定鼠标光标常量时，不需要在 cursor 标签中指定 &。
+// 指定鼠标光标文件名时，请用 ""（双引号）括起来。
+;cursorDefault = crArrow; // 默认鼠标光标
+;cursorPointed = crHandPoint; // 指向链接等时
+;cursorWaitingClick = crArrow; // 等待点击时
+;cursorDraggable = crSizeAll; // 消息层可拖动时
 
 
-// ◆ ラベル記録
-// 自動的に「読んだ」ラベルを記録するかどうかを指定します。
-// この設定が false でなく true になっていると、ラベルを読むごとにシステム
-// 変数 (sf) に
-// trail_シナリオファイル名_ラベル名
-// という変数名の変数に 1 が加算されます。
-// たとえば first.ks の *start というラベルであれば trail_first_start とい
-// う変数名になります。まだ通過していないカ所では 未定義 ( 0 として見なされ
-// ます ) になっています。
-// 「読む」というのは、ラベルから、そのラベルの終了までをすべてシナリオが実
-// 行されたときになって初めて「読んだ」とみなされます。
-// 「ラベルの終了」とは、以下の場合に終了とされ、そのラベルは「読んだ」とさ
-// れます。
+// ◆ 标签记录
+// 指定是否自动记录“已读”标签。
+// 如果此设置为 true，而不是 false，则每次读取标签时，系统变量 (sf) 中将增加一个名为 trail_剧本文件名_标签名 的变量，值为 1。
+// 例如，对于 first.ks 的 *start 标签，变量名将为 trail_first_start。尚未通过的地方将为未定义（视为 0）。
+// “读取”是指从标签开始到标签结束的所有剧本执行完毕时才视为“已读”。
+// “标签结束”是指以下情况之一时，该标签视为“已读”。
 //
-// ・[s] タグやシナリオの終端に達した
-// ・次のラベルが現れた
-// ・jump タグでジャンプした
-// ・link や button でのリンク先へのジャンプ
-//    ( 文章を表示しきっていない場合でも リンク先へジャンプすると「読んだ」
-//      と見なされるので注意; link や button タグの countpage 属性を参照 )
-// ・return タグで戻るとき ( call で飛ぶときは終了とは見なされません )
+// ・达到 [s] 标签或剧本末端
+// ・出现下一个标签
+// ・使用 jump 标签跳转
+// ・使用 link 或 button 跳转到链接目标
+//    ( 即使未显示完所有文本，跳转到链接目标也视为“已读”；参见 link 或 button 标签的 countpage 属性 )
+// ・使用 return 标签返回时（使用 call 跳转时不视为结束）
 // 未读的文字没办法skip
 ;autoRecordPageShowing = true;
 
 
-// ◆ 通過記録
-// 通過記録を自動的に行うかどうかを指定します。
-// ラベル記録とは違います。
-// 通過記録を行うと、「システム - 前に戻る」で、直前に
-// 通過記録を行った箇所に戻ることができます。
-// 0 を指定すると自動的には通過記録を行いません ( record タグで手動で通過記
-//   録を行うことはできます )
-// 1 を指定すると 保存可能なラベルを通過するごとに自動的に通過記録を行いま
-//   す。
-// 2 を指定すると選択肢 ( s タグで停止 ) ごとに通過記録を行います。
+// ◆ 通关记录
+// 指定是否自动进行通关记录。
+// 与标签记录不同。
+// 进行通关记录后，可以通过“系统 - 返回上一步”返回到上次通关记录的位置。
+// 指定 0 将不会自动进行通关记录（可以使用 record 标签手动进行通关记录）。
+// 指定 1 将在每次通过可保存标签时自动进行通关记录。
+// 指定 2 将在每次选择（使用 s 标签停止）时进行通关记录。
 ;recordHistoryOfStore = 0;
 
 
-// ◆ 通過記録の最大数
-// 通過記録の最大数を指定します。最大、ここで指定した回数、前に戻る事ができ
-// ます。大きくするとセーブデータも大きくなります。
+// ◆ 通关记录的最大数量
+// 指定通关记录的最大数量。最多可以返回到指定次数之前的位置。增加此值将使保存数据变大。
 ;maxHistoryOfStore = 5;
 
 
-// ◆ quake の time 属性値
-// true とすると quake の time 属性の単位が delay で指定した文字表示速度に
-// 基づくようになります。false を指定すると ms (ミリ秒) 単位で指定すること
-// になります。KAG 2.x 互換にするには true を指定してください。
+// ◆ quake 的 time 属性值
+// 指定 true 时，quake 的 time 属性单位将基于 delay 指定的文字显示速度。
+// 指定 false 时，单位为毫秒（ms）。为了与 KAG 2.x 兼容，请指定 true。
 ;defaultQuakeTimeInChUnit = false;
 
 
-// ◆ 利用可能な効果音バッファの数
-// 利用可能な効果音バッファの最大値を指定します。つまり、ここで指定した数の
-// 分だけ効果音を同時に再生できます。効果音を使用しない場合は 0 を指定して
-// かまいません。
+// ◆ 可用的音效缓冲数量
+// 指定可用的音效缓冲最大值。即，可以同时播放指定数量的音效。如果不使用音效，可以指定为 0。
 // 音效缓冲数量
 ;numSEBuffers = 3;
 
 
-// ◆ ムービーオブジェクトの数
-// 利用可能なムービーオブジェクトの最大値を指定します。つまり、ここで指定し
-// た数の分だけムービーを同時に再生できます。
+// ◆ 电影对象的数量
+// 指定可用的电影对象最大值。即，可以同时播放指定数量的电影。
 ;numMovies = 1;
 
 
-// ◆ 初期状態の前景レイヤの数
-// 必要なければ 0 を指定してかまいません。
-// 数が多いと速度が低下したりメモリを消費しますので、必要以上に大きな数を指
-// 定しない方が良いでしょう。
-// laycount タグでシナリオ内でも変更できます。
+// ◆ 初始状态的前景层数量
+// 如果不需要，可以指定为 0。
+// 数量过多会降低速度并消耗内存，因此不应指定超过必要的数量。
+// 可以使用 laycount 标签在剧本中更改。
 ;numCharacterLayers = 3;
 
 
-// ◆ 前景レイヤの左右中心位置指定
+// ◆ 前景层的左右中心位置指定
 // +---------+
 // |         |
 // | |  |  | |
 // | |  |  | |
 // +---------+
-// image タグあるいは img タグの pos 属性で指定する前景レイヤの 位置名 (
-// left や lecft_center など ) とそれぞれに対応する 中心位置 ( x 座標 ) を
-// 指定します。;scPositionX.位置名 = 中心位置; の形式で指定します。
+// 使用 image 标签或 img 标签的 pos 属性指定前景层的位置名（如 left 或 left_center 等）及其对应的中心位置（x 坐标）。
 ;scPositionX.left = 160;
 ;scPositionX.left_center = 240;
 ;scPositionX.center = 320;
@@ -290,9 +240,8 @@ function KAGWindow_config()
 ;scPositionX.right = 480;
 
 
-// 簡易な記号
-// ( pos 属性に指定する left, left_center, center, right_center, right を
-//  それぞれ l, lc, c, rc, r でも指定できるように別名を定義します )
+// 简单的符号
+// ( 在 pos 属性中指定 left, left_center, center, right_center, right 时，也可以使用 l, lc, c, rc, r 作为别名 )
 ;scPositionX.l = scPositionX.left;
 ;scPositionX.lc = scPositionX.left_center;
 ;scPositionX.c = scPositionX.center;
@@ -300,59 +249,50 @@ function KAGWindow_config()
 ;scPositionX.r = scPositionX.right;
 
 
-// ◆ 初期状態のメッセージレイヤの数
-// 前景レイヤと違って、0 を指定することはできません。これも必要な数だけ確保
-// するようにすべきです。laycount タグでシナリオ内でも変更できます。
+// ◆ 初始状态的消息层数量
+// 与前景层不同，不能指定为 0。也应仅保留必要的数量。可以使用 laycount 标签在剧本中更改。
 ;numMessageLayers = 2;
 
 
-// ◆ 初期状態でメッセージレイヤを表示するかどうか
-// true を指定するとメッセージレイヤ0が初期状態で表示状態になりますが、
-// false を指定すると初期状態ではすべてのメッセージレイヤは初期状態で非表示
-// になります。
+// ◆ 初始状态是否显示消息层
+// 指定 true 时，消息层 0 在初始状态下显示。
+// 指定 false 时，初始状态下所有消息层均为隐藏状态。
 ;initialMessageLayerVisible = true;
 
 
-// ◆ 利用可能な栞の数
-// メニューに表示し、ユーザーが選択可能な栞の数です。
-// save や load タグで保存可能な栞の数はこの設定には影響しません。
-// メニューによる栞の管理を行わない場合 ( ゲーム画面中で全部栞の管理などを
-// 行う場合など ) は、numBookMarks は必要な数に設定し、restoreMenu.visible と
-// storeMenu.visible を false に設定してください。
+// ◆ 可用的书签数量
+// 用户在菜单中可以选择的书签数量。
+// 使用 save 或 load 标签保存的书签数量不受此设置影响。
+// 如果不使用菜单管理书签（例如在游戏画面中管理所有书签），请将 numBookMarks 设置为所需数量，并将 restoreMenu.visible 和 storeMenu.visible 设置为 false。
 ;numBookMarks = 10;
 
 
-// ◆ 栞に日付を併記するか
-// true に設定すると、栞メニューの項目の横に YY/MM/DD HH:MMの形式で栞を保存
-// した日付・時刻が表示されます。
+// ◆ 是否在书签中显示日期
+// 指定 true 时，书签菜单项旁将显示保存书签的日期和时间，格式为 YY/MM/DD HH:MM。
 ;showBookMarkDate = true;
 
 
-// ◆ フォント選択で固定ピッチフォントのみを表示するか
-// true を指定すると、フォント選択ウィンドウで固定ピッチフォントのみを表示
-// するようになります。
+// ◆ 在字体选择中仅显示固定宽度字体
+// 指定 true 时，字体选择窗口中仅显示固定宽度字体。
 ;showFixedPitchOnlyInFontSelector = false;
 
 
-// ◆ 「ヘルプ > 目次」を選択したときに実行するファイル
-// ここで指定するファイルは吉里吉里実行可能ファイルと同じ場所に設置されてい
-// なければなりません。
+// ◆ 选择“帮助 > 目录”时执行的文件
+// 指定的文件必须与吉里吉里可执行文件位于同一位置。
 ;helpFile = "readme.txt";
 
 
-// ◆ 「ヘルプ > このソフトについて」を選択したときにでる
-// ウィンドウの表示領域のサイズ
-// このメニューを選択すると about.ks がそのウィンドウ内で実行されます。
-;aboutWidth = 320; // 幅
-;aboutHeight = 200; // 高さ
+// ◆ 选择“帮助 > 关于此软件”时显示的窗口区域大小
+// 选择此菜单时，将在该窗口内执行 about.ks。
+;aboutWidth = 320; // 宽度
+;aboutHeight = 200; // 高度
 
 
-// ◆ ウィンドウや動作の追加の設定
-// 追加の設定項目がある場合は
-// [start-window-additionals] と [end-window-additionals] で囲まれた
-// 部分に設定を記述してください
-// ( [start-window-additionals] と [end-window-additionals] の行は
-//  編集したり消したりしないでください )
+// ◆ 窗口和操作的追加设置
+// 如果有其他设置项，请在
+// [start-window-additionals] 和 [end-window-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-window-additionals] 和 [end-window-additionals] 行 )
 
 //[start-window-additionals]
 
@@ -361,111 +301,107 @@ function KAGWindow_config()
 }
 
 
-//---------------------------------------------------- メニューの設定 -----
+//---------------------------------------------------- 菜单设置 -----
 
 function Menu_visible_config()
 {
-// メニューの表示/非表示の設定
-// true を指定すると表示され、false を指定すると非表示になります。
-// メニューに表示するメニュー項目名については Menus.tjs を書き換えてくださ
-// い。
+// 菜单显示/隐藏设置
+// 指定 true 时显示，指定 false 时隐藏。
+// 要更改菜单项名称，请编辑 Menus.tjs。
 
 
-// ◆ メニューバーを表示するか
-// 非表示にすると当然どのメニュー項目にもアクセスできなくなります。
+// ◆ 是否显示菜单栏
+// 隐藏时，无法访问任何菜单项。
 ;menu.visible = true;
 
 
-// ◆ 「システム > メッセージを消す」
-// このメニュー項目を非表示にしてもマウスの右クリックでのメッセージの
-// 非表示は引き続き有効です。
+// ◆ “系统 > 隐藏消息”
+// 隐藏此菜单项后，仍可通过鼠标右键隐藏消息。
 ;rightClickMenuItem.visible = true;
 
 
-// ◆ 「システム > メッセージ履歴の表示」
+// ◆ “系统 > 显示消息历史”
 ;showHistoryMenuItem.visible = true;
 
 
-// ◆ 「システム > 次の選択肢/未読まで進む」または「次の選択肢まで進む」
+// ◆ “系统 > 跳到下一个选择/未读”或“跳到下一个选择”
 ;skipToNextStopMenuItem.visible = true;
 
 
-// ◆ 「システム > 自動的に読み進む」
+// ◆ “系统 > 自动阅读”
 ;autoModeMenuItem.visible = true;
 
 
-// ◆ 「システム > 自動的に読み進むウェイト」
+// ◆ “系统 > 自动阅读等待”
 ;autoModeWaitMenu.visible = true;
 
 
-// ◆ 「システム > 前に戻る」
+// ◆ “系统 > 返回上一步”
 ;goBackMenuItem.visible = true;
 
 
-// ◆ 「システム > 最初に戻る」
+// ◆ “系统 > 返回开始”
 ;goToStartMenuItem.visible = true;
 
 
-// ◆ 「文字表示」
+// ◆ “文字显示”
 ;characterMenu.visible = true;
 
 
-// ◆ 「文字表示 > 表示速度 > ページ末まで一気に」
-// ユーザがこのメニュー項目をチェックすると、
-// l タグが無視されるようになります。
+// ◆ “文字显示 > 显示速度 > 一次到页末”
+// 用户勾选此菜单项时，将忽略 l 标签。
 ;chNonStopToPageBreakItem.visible = true;
 
 
-// ◆ 「文字表示 > 一度読んだところは」
+// ◆ “文字显示 > 已读部分”
 ;ch2ndSpeedMenu.visible = true;
 
 
-// ◆ 「文字表示 > 一度読んだところは > ページ末まで一気に」
+// ◆ “文字显示 > 已读部分 > 一次到页末”
 ;ch2ndNonStopToPageBreakItem.visible = true;
 
 
-// ◆ 「文字表示 > アンチエイリアス」
+// ◆ “文字显示 > 抗锯齿”
 ;chAntialiasMenuItem.visible = true;
 
 
-// ◆ 「文字表示 > フォント」
+// ◆ “文字显示 > 字体”
 ;chChangeFontMenuItem.visible = true;
 
 
-// ◆ 「栞をたどる」
+// ◆ “浏览书签”
 ;restoreMenu.visible = true;
 
 
-// ◆ 「栞をはさむ」
+// ◆ “插入书签”
 ;storeMenu.visible = true;
 
 
-// ◆ 「画面」
+// ◆ “显示”
 ;displayMenu.visible = true;
 
 
-// ◆ 「ヘルプ」
+// ◆ “帮助”
 ;helpMenu.visible = false;
 
 
-// ◆ 「ヘルプ > 目次 ...」
+// ◆ “帮助 > 目录 ...”
 ;helpIndexMenuItem.visible = true;
 
 
-// ◆ 「ヘルプ > このソフトについて ...」
+// ◆ “帮助 > 关于此软件 ...”
 ;helpAboutMenuItem.visible = true;
 
 
-// ◆ 「デバッグ」
+// ◆ “调试”
 ;debugMenu.visible = false;
 
 
-// ◆ メニュー 追加の設定
-// 追加の設定項目がある場合は
-// [start-menu-additionals] と [end-menu-additionals] で囲まれた
-// 部分に設定を記述してください
-// ( [start-menu-additionals] と [end-menu-additionals] の行は
-//  編集したり消したりしないでください )
+// ◆ 菜单 追加设置
+// 如果有其他设置项，请在
+// [start-menu-additionals] 和 [end-menu-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-menu-additionals] 和 [end-menu-additionals] 行 )
 
 //[start-menu-additionals]
 
@@ -473,204 +409,188 @@ function Menu_visible_config()
 
 }
 
-//-------------------------------------------- メッセージレイヤの設定 -----
+//-------------------------------------------- 消息层设置 -----
 
 
 function MessageLayer_config()
 {
-// ◆ メッセージレイヤの表示モード
-// メッセージレイヤをどのモードで表示するかを指定します。
-// ltAddAlpha は KAG3 3.23 beta 5 から指定可能なモードで、
-// ltAlpha よりも処理が若干高速です。
-// ltAlpha はそれ以前の KAG と互換性のあるモードです。
-// ltAddAlpha を指定した場合は、frameGraphic で指定する
-// メッセージ枠用の画像も、ltAddAlpha 用に作成された
-// 画像を用いる必要があります (自動的には判別されません)。
-// ltAddAlpha 用の画像は画像フォーマットコンバータで作成可能です。
-;layerType = ltAddAlpha;
+// ◆ 消息层显示模式
+// 指定消息层的显示模式。
+// ltAddAlpha 是从 KAG3 3.23 beta 5 开始可以指定的模式，
+// 比 ltAlpha 处理速度稍快。
+// ltAlpha 是与之前的 KAG 兼容的模式。
+// 指定 ltAddAlpha 时，frameGraphic 指定的消息框图像也需要为 ltAddAlpha 模式创建的图像（不会自动判别）。
+// 可以使用图像格式转换器创建 ltAddAlpha 模式的图像。
 
-// ◆ メッセージ枠用の画像
-// メッセージ枠用の画像のファイル名を指定します。
-// "" を指定するとメッセージ枠の画像を使用しません。また、メッセージ枠用の
-// 画像を指定した場合、position タグでメッセージレイヤのサイズを変更すると
-// おかしな表示になると思います
-;frameGraphic = "";  // position タグの frame 属性に相当
+// imhubai 25-2-2: ltAddAlpha 模式无法显示半透明frame，所以改为ltAlpha
+;layerType = ltAlpha;
+
+// ◆ 消息框图像
+// 指定消息框图像的文件名。
+// 指定 "" 时不使用消息框图像。指定消息框图像时，使用 position 标签更改消息层大小可能会显示异常。
+;frameGraphic = "";  // 相当于 position 标签的 frame 属性
 
 
-// ◆ メッセージレイヤの色と不透明度
-// frameColor には 0xRRGGBB 形式で ( RR GG BB はそれぞれ 2 桁の 16 進数)
-// メッセージレイヤの色を指定します。frameOpacity には 0 〜 255 の数値で、
-// 不透明度を指定します。メッセージ枠用の画像が指定されている場合は無効で
-// す。
-;frameColor = 0x000000; // position タグの color 属性に相当
-;frameOpacity = 128;  // position タグの opacity 属性に相当
+// ◆ 消息层颜色和不透明度
+// frameColor 以 0xRRGGBB 形式指定消息层颜色。frameOpacity 以 0 到 255 的数值指定不透明度。指定消息框图像时无效。
+;frameColor = 0x000000; // 相当于 position 标签的 color 属性
+;frameOpacity = 128;  // 相当于 position 标签的 opacity 属性
+
+// ◆ 左右上下余白
+// 以像素为单位指定余白。如果指定了消息框图像，
+// 则需要在消息框的显示范围内设置余白。
+// 这些对应于 position 标签的 marginl, margint, marginr, marginb 属性。
+;marginL = 2; // 左余白
+;marginT = 2; // 上余白
+;marginR = 2; // 右余白
+;marginB = 2; // 下余白
 
 
-// ◆ 左右上下マージン
-// マージン (余白) を pixel 単位で指定します。メッセージ枠用の画像を指定し
-// た場合は、メッセージ枠の表示範囲内に設定する必要があります。
-// これらは、position タグの marginl, maringt, marginr, marginb 属性に対応
-// します。
-;marginL = 8; // 左余白
-;marginT = 8; // 上余白
-;marginR = 8; // 右余白
-;marginB = 8; // 下余白
-
-
-// ◆ 初期位置
-// これらは、position タグのそれぞれ left top width height の属性に対応しま
-// す。
+// ◆ 初始位置
+// 这些对应于 position 标签的 left, top, width, height 属性。
 ;ml = 16;  // 左端位置
 ;mt = 16;  // 上端位置
-;mw = 1280-32;   // 幅
-;mh = 720-32;   // 高さ
+;mw = 1280-32;   // 宽度
+;mh = 720-32;   // 高度
 
 
-// ◆ 自動改行/改ページ
-// true を設定すると、行末での自動改行、ページ末での自動改ページが行われま
-// す。false を設定するとこれらが行われない他、禁則処理等もされなくなりま
-// す。
+// ◆ 自动换行/分页
+// 设置为 true 时，将在行末自动换行，在页末自动分页。
+// 设置为 false 时，不会自动换行或分页，也不会进行禁则处理等。
 // 自动换行
 ;defaultAutoReturn = true; 
 
 
-// ◆ 右文字マージン
-// 禁則処理用にあけておく右端の文字数を指定します。
-// (縦書きモードでは下端の文字数であると解釈されます)
+// ◆ 右文字余白
+// 指定为禁则处理预留的右端字符数。
+// （在竖排模式下解释为下端字符数）
 ;marginRCh = 2;
 
 
-// ◆ 文字の大きさ
-// デフォルトの文字の大きさ ( 高さ ) を pixel 単位で指定します。
-;defaultFontSize = 24;  // deffont タグの size 属性に相当
+// ◆ 字体大小
+// 以像素为单位指定默认的字体大小（高度）。
+;defaultFontSize = 26;  // 对应于 deffont 标签的 size 属性
 
 
-// ◆ 行間
-// 行間を pixel 単位で指定します。
-;defaultLineSpacing = 6; // defstyle タグの linespacing 属性に相当
+// ◆ 行间距
+// 以像素为单位指定行间距。
+;defaultLineSpacing = 6; // 对应于 defstyle 标签的 linespacing 属性
 
-// ◆ 字間
-// 字間を pixel 単位で指定します。
-// デフォルトは 0 で、正あるいは負のオフセットで指定します。
-// 負の数値を指定すると字間が詰まります。正の数値を指定すると字間が空きま
-// す。
-;defaultPitch = 0; // defstyle タグの pitch 属性に相当
-
-
-// ◆ 文字の書体
-// デフォルトのフォント名を指定します。
-// この設定はシステム変数に記録されて、次回起動時に引き継がれるので、
-// userFace の設定を変更し、適用したい場合はシステム変数ファイル
-// ?????sc.* の "chdefaultFace" => の行を削除してください。
-// (あるいはシステム変数ファイルを消してください)
-// カンマで区切って複数のフォントを指定することができます。その場合は、最初
-// の方に書いたフォントが存在すれば、優先されます。
-;userFace = "ＭＳ Ｐ明朝"; // deffont タグの face 属性に相当
+// ◆ 字间距
+// 以像素为单位指定字间距。
+// 默认值为 0，可以指定正或负的偏移量。
+// 指定负值时字间距会变小，指定正值时字间距会变大。
+;defaultPitch = 0; // 对应于 defstyle 标签的 pitch 属性
 
 
-// ◆ 文字の色
-// デフォルトの文字の色を 0xRRGGBB 形式で指定します。
-;defaultChColor = 0xffffff;  // deffont タグの color 属性に相当
+// ◆ 字体
+// 指定默认的字体名称。
+// 此设置会记录在系统变量中，并在下次启动时继承，
+// 如果要更改 userFace 的设置并应用，请删除系统变量文件
+// ?????sc.* 中的 "chdefaultFace" => 行。
+// （或者删除系统变量文件）
+// 可以用逗号分隔指定多个字体。在这种情况下，存在的字体将优先使用。
+;userFace = "黑体"; // 对应于 deffont 标签的 face 属性
 
 
-// ◆ 文字をボールドにするか
-// する場合は true, しない場合は false を指定します。
-;defaultBold = true; // deffont タグの bold 属性に相当
+// ◆ 字体颜色
+// 以 0xRRGGBB 形式指定默认的字体颜色。
+;defaultChColor = 0xffffff;  // 对应于 deffont 标签的 color 属性
 
 
-// ◆ ルビサイズ
-// ルビサイズを pixel 単位で指定します。
-;defaultRubySize = 10; // deffont タグの rubysize に相当
+// ◆ 是否加粗字体
+// 指定 true 时加粗，指定 false 时不加粗。
+;defaultBold = false; // 对应于 deffont 标签的 bold 属性
 
 
-// ◆ ルビ の表示オフセット
-// 負の数を指定するとその pixel 数分、本文に近い位置に表示されます。
-;defaultRubyOffset = -2; // deffont タグの rubyoffset に相当
+// ◆ ルビ大小
+// 以像素为单位指定ルビ大小。
+;defaultRubySize = 10; // 对应于 deffont 标签的 rubysize 属性
 
 
-// ◆ アンチエイリアス文字描画をするか
-// する場合は true, しない場合は false を指定します。
+// ◆ ルビ显示偏移
+// 指定负值时，ルビ会向本文靠近指定的像素数。
+;defaultRubyOffset = -2; // 对应于 deffont 标签的 rubyoffset 属性
+
+
+// ◆ 是否使用抗锯齿字体绘制
+// 指定 true 时使用，指定 false 时不使用。
 ;defaultAntialiased = true;
 
 
-// ◆ 影の色
-// 影の色を 0xRRGGBB 形式で指定します。
-;defaultShadowColor = 0x000000;  // deffont タグの shadowcolor に属性に相当
+// ◆ 阴影颜色
+// 以 0xRRGGBB 形式指定阴影颜色。
+;defaultShadowColor = 0x000000;  // 对应于 deffont 标签的 shadowcolor 属性
 
-// ◆ 縁取りの色
-// 縁取りの色を 0xRRGGBB 形式で指定します。
-;defaultEdgeColor = 0x000000;  // deffont タグの edgecolor に属性に相当
-
-
-// ◆ 影を描画するか
-// する場合は true, しない場合は false を指定します。
-;defaultShadow = true;  // deffont タグの shadow 属性に相当
+// ◆ 描边颜色
+// 以 0xRRGGBB 形式指定描边颜色。
+;defaultEdgeColor = 0x000000;  // 对应于 deffont 标签的 edgecolor 属性
 
 
-// ◆ 縁取りをするか
-// する場合は true, しない場合は false を指定します。KAG3 から、縁取りと影
-// を同時に描画することができなくなりました。縁取りを指定した場合は縁取りが
-// 優先されます。
-;defaultEdge = false;  // deffont タグの edge 属性に相当
+// ◆ 是否绘制阴影
+// 指定 true 时绘制，指定 false 时不绘制。
+;defaultShadow = true;  // 对应于 deffont 标签的 shadow 属性
 
 
-// ◆ クリック待ちグリフの画像ファイル
-// 画像の作り方は、アニメーションレイヤ ( AnimationLayer.tjs ) 内を参照して
-// ください。拡張子は指定しないでください。
-// カラーキーを指定する必要がある場合はシナリオ中で glyph タグで指定してく
-// ださい。
-
-// 行末クリック待ちグリフ
-;lineBreakGlyph = "LineBreak";  // glyph タグの line 属性に相当
+// ◆ 是否描边
+// 指定 true 时描边，指定 false 时不描边。从 KAG3 开始，
+// 不能同时绘制描边和阴影。指定描边时，优先绘制描边。
+;defaultEdge = false;  // 对应于 deffont 标签的 edge 属性
 
 
-// ページ末クリック待ちグリフ
-;pageBreakGlyph = "PageBreak";  // glyph タグの page 属性に相当
+// ◆ 点击等待符号的图像文件
+// 图像的制作方法请参见 AnimationLayer.tjs 内。
+// 不要指定扩展名。
+// 如果需要指定颜色键，请在剧本中使用 glyph 标签指定。
+
+// 行末点击等待符号
+;lineBreakGlyph = "LineBreak";  // 对应于 glyph 标签的 line 属性
 
 
-// ◆ クリック待ちグリフを固定した場所に表示するかどうか
-// false を指定すると、クリック待ち記号(グリフ)は、現在の文字表示位置に表示
-// されます。true を指定すると、クリック待ち記号は、 glyphFixedLeft や
-// glyphFixedTop で指定した位置に表示されます。
-;glyphFixedPosition = false;  // glyph タグの fix 属性に相当
+// 页末点击等待符号
+;pageBreakGlyph = "PageBreak";  // 对应于 glyph 标签的 page 属性
 
 
-// ◆ クリック待ちグリフを固定した場所に表示するときの位置
-// glyphFixedLeft にはグリフを表示する左端位置を、glyphFixedTop にはグリフ
-// を表示する上端位置を指定してください。
-;glyphFixedLeft = 0;  // glyph タグの left 属性に相当
-;glyphFixedTop = 0;  // glyph タグの top 属性に相当
+// ◆ 是否在固定位置显示点击等待符号
+// 指定 false 时，点击等待符号显示在当前文字显示位置。
+// 指定 true 时，点击等待符号显示在 glyphFixedLeft 和
+// glyphFixedTop 指定的位置。
+;glyphFixedPosition = false;  // 对应于 glyph 标签的 fix 属性
 
 
-// ◆ リンクの強調色
-// リンクを選択したときに出る半透明矩形のデフォルトの色です。
-;defaultLinkColor = 0x0080ff;  // link タグの color 属性に相当
+// ◆ 在固定位置显示点击等待符号时的位置
+// 指定 glyphFixedLeft 为符号显示的左端位置，
+// 指定 glyphFixedTop 为符号显示的上端位置。
+;glyphFixedLeft = 0;  // 对应于 glyph 标签的 left 属性
+;glyphFixedTop = 0;  // 对应于 glyph 标签的 top 属性
 
 
-// ◆ リンクの不透明度
-// リンクを選択したときに出る半透明矩形の不透明度です。
+// ◆ 链接的高亮颜色
+// 选择链接时出现的半透明矩形的默认颜色。
+;defaultLinkColor = 0x0080ff;  // 对应于 link 标签的 color 属性
+
+
+// ◆ 链接的不透明度
+// 选择链接时出现的半透明矩形的不透明度。
 ;defaultLinkOpacity = 64;
 
 
-// ◆ 縦書きモード
-// メッセージレイヤを標準で縦書きモードにする場合は false ではなく true を
-// 指定してください。
+// ◆ 竖排模式
+// 如果要将消息层默认设置为竖排模式，请指定 true 而不是 false。
 ;vertical = false;
 
 
-// ◆ マウスでドラッグ可能か
-// true に設定すると、marginR, marginL, marginT, marginB で設定したマージン
-// 外の部分で、かつフレーム画像の不透明度が 64 以上の箇所をマウスでつかんで
-// メッセージレイヤをユーザが移動できるようになります。
-;draggable = false;  // position タグの draggable 属性に相当
+// ◆ 是否可用鼠标拖动
+// 指定 true 时，用户可以在 marginR, marginL, marginT, marginB 设置的余白
+// 外部，并且框架图像的不透明度为 64 以上的部分，用鼠标拖动消息层。
+;draggable = false;  // 对应于 position 标签的 draggable 属性
 
 
-// ◆ メッセージレイヤ 追加の設定
-// 追加の設定項目がある場合は
-// [start-messagelayer-additionals] と [end-messagelayer-additionals] で囲
-// まれた部分に設定を記述してください
-// ( [start-messagelayer-additionals] と [end-messagelayer-additionals] の
-// 行は編集したり消したりしないでください )
+// ◆ 消息层 追加设置
+// 如果有其他设置项，请在
+// [start-messagelayer-additionals] 和 [end-messagelayer-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-messagelayer-additionals] 和 [end-messagelayer-additionals] 行 )
 
 //[start-messagelayer-additionals]
 
@@ -678,28 +598,26 @@ function MessageLayer_config()
 
 }
 
-//-------------------------------------------------------- BGM の設定 -----
+//-------------------------------------------------------- BGM 的设置 -----
 
 
 function BGM_config()
 {
-// BGM の設定です。
+// BGM 的设置。
 
-// ◆ クロスフェードを行うか
-// doubleBuffered 変数には、サウンドバッファを２つ使用するかどうかを指定し
-// ます。true に設定するとサウンドバッファが 2 つ用意され、クロスフェードが
-// 可能になります。
-// MIDI サウンドバッファで複数同時再生を意図していないデータを使う場合や、
-// CDDA サウンドバッファを使う場合は false に指定してください。
+// ◆ 是否进行交叉淡入淡出
+// doubleBuffered 变量指定是否使用两个声音缓冲区。
+// 指定 true 时，将准备两个声音缓冲区，可以进行交叉淡入淡出。
+// 使用 MIDI 声音缓冲区播放不打算同时播放的音频数据时，
+// 或使用 CDDA 声音缓冲区时，请指定 false。
 ;doubleBuffered = true;
 
 
-// ◆ BGM 追加の設定
-// 追加の設定項目がある場合は
-// [start-bgm-additionals] と [end-bgm-additionals] で囲まれた
-// 部分に設定を記述してください
-// ( [start-bgm-additionals] と [end-bgm-additionals] の行は
-//  編集したり消したりしないでください )
+// ◆ BGM 追加设置
+// 如果有其他设置项，请在
+// [start-bgm-additionals] 和 [end-bgm-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-bgm-additionals] 和 [end-bgm-additionals] 行 )
 
 //[start-bgm-additionals]
 
@@ -707,65 +625,64 @@ function BGM_config()
 
 }
 
-//---------------------------------------------- メッセージ履歴の設定 -----
+//---------------------------------------------- 消息历史的设置 -----
 
 
 function HistoryLayer_config()
 {
-// メッセージ履歴の設定です
+// 消息历史的设置
 
 
-// ◆ フォント名
-;fontName = "ＭＳ Ｐ明朝";
+// ◆ 字体名称
+;fontName = "黑体";
 
 
-// ◆ フォントを太字にするか
-;fontBold = true;
+// ◆ 是否加粗字体
+;fontBold = false;
 
 
-// ◆ フォントのサイズ ( pixel単位)
+// ◆ 字体大小 ( 以像素为单位)
 ;fontHeight = 24;
 
 
-// ◆ ラインの高さ
+// ◆ 行高
 ;lineHeight = 26;
 
 
-// ◆ 縦書きの場合は true
+// ◆ 竖排模式时指定 true
 ;verticalView = false;
 
 
-// ◆ ページ単位での閲覧を行うかどうか
-// ページ単位での閲覧をするようになると
-// cm ct er タグ、あるいは repage 属性が true の hr タグ
-// でメッセージ履歴の改ページを行うようになります。
+// ◆ 是否按页面单位进行浏览
+// 设置为 true 时，将按页面单位进行浏览，
+// cm ct er 标签，或 repage 属性为 true 的 hr 标签
+// 将进行消息历史的分页。
 ;everypage = false;
 
 
-// ◆ 自動改行を行うかどうか
+// ◆ 是否自动换行
 ;autoReturn = true;
 
 
-// ◆ 履歴保持最大数
-// 「◆ ページ単位での閲覧を行うかどうか」を true に設定した場合は
-// maxPages をページ単位で、false に設定した場合は maxLines を行単位で
-// 指定してください。
+// ◆ 履历保持最大数
+// 如果将「◆ 是否按页面单位进行浏览」设置为 true，
+// 请将 maxPages 指定为页面单位；如果设置为 false，
+// 请将 maxLines 指定为行单位。
 ;maxPages = 100;
 ;maxLines = 2000;
 
 
-// ◆ 栞にメッセージ履歴を保存するか
-// true を指定すると栞にメッセージ履歴が保存されるように
-// なりますが、栞のデータサイズが大きくなります。
+// ◆ 是否将消息履历保存到书签
+// 指定为 true 时，消息履历将保存到书签中，
+// 但书签的数据大小会变大。
 ;storeState = false;
 
 
-// ◆ メッセージ履歴 追加の設定
-// 追加の設定項目がある場合は
-// [start-historylayer-additionals] と [end-historylayer-additionals] で囲
-// まれた部分に設定を記述してください
-// ( [start-historylayer-additionals] と [end-historylayer-additionals] の行は
-//  編集したり消したりしないでください )
+// ◆ 消息履历 追加设置
+// 如果有其他设置项，请在
+// [start-historylayer-additionals] 和 [end-historylayer-additionals] 之间
+// 进行设置
+// ( 请不要编辑或删除 [start-historylayer-additionals] 和 [end-historylayer-additionals] 行 )
 
 //[start-historylayer-additionals]
 
@@ -778,6 +695,4 @@ function HistoryLayer_config()
 
 
 // ---------
-// このファイルのこれ以降は設定できる項目はありません
-
-
+// 这个文件之后没有可设置的项目

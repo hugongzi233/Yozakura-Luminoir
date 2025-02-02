@@ -194,7 +194,7 @@ class BGM
 		{
 			if(!found)
 			{
-				dm("BGM " + storage + " が見つかりません");
+				dm("BGM " + storage + " 未找到!");
 				return;
 			}
 
@@ -214,7 +214,7 @@ class BGM
 			}
 			catch(e)
 			{
-				dm("BGM " + storage +" を再生できません : " + e.message);
+				dm("BGM " + storage +" 发生错误 : " + e.message);
 				return;
 			}
 		}

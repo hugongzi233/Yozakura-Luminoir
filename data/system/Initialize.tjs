@@ -1,73 +1,70 @@
-// Initialize.tjs - システムの初期化
-// Copyright (C)2001-2009, W.Dee and contributors  改変・配布は自由です
+// Initialize.tjs - 游戏初始化
+// Copyright (C)2001-2009, W.Dee and contributors  改变和分发是自由的
 
-// システムバージョン
+// 系统版本
 var kagVersion = "3.32 stable rev. 2";
 
 /*
-	Debug.message へのショートカット
+	Debug.message 的快捷方式
 */
 
-var dm = Debug.message; // これで dm("message"); でコンソールに message を表示できる
+var dm = Debug.message; // 这样可以用 dm("message"); 在控制台显示 message
 
 
 /*
-	デフォルトの「捕捉されない例外」ハンドラ
+	默认的“未捕获异常”处理程序
 */
 
 System.exceptionHandler = function (e)
 {
-	// どこにも捕捉されない例外がシステム側で捕捉された場合、この関数が
-	// 呼ばれる。e は例外オブジェクト。
+	// 当系统捕获到未被任何地方捕获的异常时，会调用此函数。e 是异常对象。
 	if(e instanceof "ConductorException")
 	{
-		// コンダクタの投げた例外の場合
-		Debug.logAsError(); // ログのファイルへの書き出し動作の開始など
+		// 如果是 Conductor 抛出的异常
+		Debug.logAsError(); // 开始将日志写入文件等操作
 		var event_disabled = System.eventDisabled;
 		System.eventDisabled = true;
-			// エラーの理由を表示させている間にイベントが発生すると
-			// やっかいなのでいったんイベント発生を停止させる
+			// 在显示错误原因时，如果发生事件会很麻烦，所以暂时停止事件发生
 		System.inform(e.message);
 		System.eventDisabled = event_disabled;
-			// イベントを発生するかどうかを元の状態に
-		return true; // true を返すと本体側で例外の処理は行わなくなる
+			// 将事件发生状态恢复到原来的状态
+		return true; // 返回 true 则本体侧不会进行异常处理
 	}
 	else
 	{
-		return false; // false を返すと通常の例外処理
+		return false; // 返回 false 则进行通常的异常处理
 	}
 };
 
 
 /*
-	パスの設定
-	後に指定した物が、より優先されて使用される
+	路径设置
+	后指定的将优先使用
 */
 
 
 function useArchiveIfExists(name)
 {
-	// name が存在していたらそのアーカイブを使う
+	// 如果 name 存在则使用该存档
 	var arcname;
 	if(Storages.isExistentStorage(arcname = System.exePath + name))
 		Storages.addAutoPath(arcname + ">");
 }
 
-Storages.addAutoPath(System.exePath + "video/"); // exePath 以下の video/
-Storages.addAutoPath("video/"); // video フォルダ
-Storages.addAutoPath("others/"); // その他
-Storages.addAutoPath("rule/"); // ルール画像フォルダ
-Storages.addAutoPath("sound/"); // 効果音フォルダ
-Storages.addAutoPath("bgm/"); // BGM フォルダ
-Storages.addAutoPath("fgimage/"); // 前景画像フォルダ
-Storages.addAutoPath("bgimage/"); // 背景画像フォルダ
-Storages.addAutoPath("scenario/"); // シナリオフォルダ
-Storages.addAutoPath("image/"); // そのほかの画像フォルダ
-Storages.addAutoPath("system/"); // システムフォルダ
+Storages.addAutoPath(System.exePath + "video/"); // exePath 下的 video/
+Storages.addAutoPath("video/"); // video 文件夹
+Storages.addAutoPath("others/"); // 其他
+Storages.addAutoPath("rule/"); // 规则图片文件夹
+Storages.addAutoPath("sound/"); // 音效文件夹
+Storages.addAutoPath("bgm/"); // BGM 文件夹
+Storages.addAutoPath("fgimage/"); // 前景图片文件夹
+Storages.addAutoPath("bgimage/"); // 背景图片文件夹
+Storages.addAutoPath("scenario/"); // 剧本文件夹
+Storages.addAutoPath("image/"); // 其他图片文件夹
+Storages.addAutoPath("system/"); // 系统文件夹
 
-// パッチアーカイブの検索と使用
-// もしこれらの名前を持ったアーカイブが実行可能ファイルと
-// 同じ場所にあった場合、それを優先して使う
+// 补丁存档的搜索和使用
+// 如果这些名字的存档与可执行文件在同一位置，则优先使用它们
 useArchiveIfExists("video.xp3");
 useArchiveIfExists("others.xp3");
 useArchiveIfExists("rule.xp3");
@@ -81,56 +78,55 @@ useArchiveIfExists("system.xp3");
 
 useArchiveIfExists("patch.xp3");
 
-// 追加のパッチ用アーカイブの検索
+// 额外补丁存档的搜索
 for(var i = 2; ; i++)
 {
-	// パッチ用アーカイブ patch2.xp3, patch3.xp3 ... がある場合はそちらを
-	// 優先して読み込むように
+	// 如果存在补丁存档 patch2.xp3, patch3.xp3 ... 则优先加载
 	if(Storages.isExistentStorage(System.exePath + "patch" + i + ".xp3"))
 		Storages.addAutoPath(System.exePath + "patch" + i + ".xp3>");
 	else
 		break;
 }
 
-delete useArchiveIfExists; // useArchiveIfExists は使い終わったので一応消しておく
+delete useArchiveIfExists; // useArchiveIfExists 用完后删除
 
 /*
-	システムバージョン
+	系统版本
 */
 Debug.notice("OS : " + System.osName + " (" + System.platformName + ")");
 Debug.notice("KAG : " + kagVersion);
 Debug.notice("Kirikiri : " + System.versionString);
 
 /*
-	( デバッグ ) 時間計測
+	( 调试 ) 时间测量
 */
 
 var parseStartTick = System.getTickCount();
 
 
 /*
-	スクリプト読み込みラッパー
+	脚本加载包装器
 */
 
 function KAGLoadScript(name)
 {
 	var start = System.getTickCount();
 	Scripts.execStorage(name);
-	dm(name + " を読み込みました(" + (System.getTickCount() - start) + "ms)");
+	dm(name + " 已加载(" + (System.getTickCount() - start) + "ms)");
 }
 
 var loaded_scripts = %[];
 
 function KAGLoadScriptOnce(name)
 {
-	// 指定したスクリプトを読み込むが、一回しか読み込まない
-	if(global.loaded_scripts[name] === true) return; // 既に読み込んでいる
+	// 加载指定的脚本，但只加载一次
+	if(global.loaded_scripts[name] === true) return; // 已经加载过
 	global.KAGLoadScript(name);
 	global.loaded_scripts[name] = true;
 }
 
 /*
-	Config.tjs 読み込み
+	加载 Config.tjs
 */
 if(Storages.isExistentStorage("Config.tjs"))
 {
@@ -138,17 +134,17 @@ if(Storages.isExistentStorage("Config.tjs"))
 }
 else if(Storages.isExistentStorage("Config.~new"))
 {
-	System.inform("Config.tjs が見つかりません。\nsystem フォルダにある "
-		"Config.~new ファイルを Config.tjs に改名してください。");
+	System.inform("Config.tjs 文件未找到。\n请将 system 文件夹中的 "
+		"Config.~new 文件重命名为 Config.tjs。");
 	System.exit();
 }
 else
 {
-	throw new Exception("Config.tjs が見つかりません。");
+	throw new Exception("Config.tjs 文件未找到");
 }
 
 /*
-	Config.tjs バージョンチェック
+	Config.tjs 版本检查
 */
 
 if(typeof global.config_version == "undefined" || config_version != kagVersion)
@@ -157,20 +153,20 @@ if(typeof global.config_version == "undefined" || config_version != kagVersion)
 }
 
 /*
-	二重起動のチェック
+	双重启动检查
 */
 
-// 実行可能ファイルのパスをキーにしてロックを行う
+// 使用可执行文件路径作为键进行锁定
 if(!System.createAppLock(System.exePath.replace(/[^A-Za-z]/g, '_')))
 {
-	// すでに起動している
-	System.inform(System.title + "はすでに起動しています");
+	// 已经启动
+	System.inform(System.title + "已经在运行");
 	System.exit();
 }
 
 
 /*
-	オン・デマンド・ローディングを行うための定義
+	定义按需加载
 */
 
 
@@ -181,9 +177,9 @@ property EditLayer { getter() { KAGLoadScript("EditLayer.tjs"); return global.Ed
 property KAGPlugin { getter() { KAGLoadScript("Plugin.tjs"); return global.KAGPlugin; } }
 
 /*
-	各システム読み込み
+	加载各系统
 */
-dm("KAG System スクリプトを読み込んでいます...");
+dm("正在加载 KAG 系统脚本...");
 
 KAGLoadScript("Utils.tjs");
 KAGLoadScript("KAGLayer.tjs");
@@ -205,28 +201,27 @@ if(Storages.isExistentStorage(System.exePath + "Override2.tjs"))
 
 
 /*
-	( デバッグ ) 時間計測
+	( 调试 ) 时间测量
 */
-dm("スクリプトの読み込みに " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("加载脚本花费了 " + (System.getTickCount() - parseStartTick) + "ms");
 parseStartTick = System.getTickCount();
 
 /*
-	( デバッグ ) VM コードのダンプ
+	( 调试 ) VM 代码转储
 */
 
 // Scripts.dump();
 
 /*
-	( デバッグ ) 時間計測
+	( 调试 ) 时间测量
 */
 
 parseStartTick = System.getTickCount();
 
 
 /*
-	KAG メインウィンドウの作成
-	グローバルメンバ kag が存在しなければ KAGWindow クラスの
-	オブジェクトを作成して入れる
+	创建 KAG 主窗口
+	如果全局成员 kag 不存在，则创建 KAGWindow 类的对象并赋值给它
 */
 
 global.kag = new KAGWindow() if typeof global.kag == "undefined";
@@ -235,13 +230,12 @@ global.kag = new KAGWindow() if typeof global.kag == "undefined";
 
 
 /*
-	グローバルから簡単にアクセスできるように、いくつかの
-	変数の別名を作成
+	为了便于从全局访问，创建一些变量的别名
 */
 
-var f = kag.flags;   // ユーザ変数 (フラグ)
-var sf = kag.sflags; // システム変数 (システム)
-var tf = kag.tflags; // 一時変数 (一時フラグ)
+var f = kag.flags;   // 用户变量 (标志)
+var sf = kag.sflags; // 系统变量 (系统)
+var tf = kag.tflags; // 临时变量 (临时标志)
 
 property mp
 {
@@ -249,14 +243,14 @@ property mp
 }
 
 /*
-	( デバッグ ) 時間計測
+	( 调试 ) 时间测量
 */
-dm("KAGMainWindow のコンストラクタで " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("KAGMainWindow 的构造函数花费了 " + (System.getTickCount() - parseStartTick) + "ms");
 delete parseStartTick;
 
 
 /*
-	AfterInit.tjs が存在すれば実行
+	如果存在 AfterInit.tjs 则执行
 */
 if(Storages.isExistentStorage("AfterInit.tjs"))
 	KAGLoadScript("AfterInit.tjs");
@@ -264,8 +258,7 @@ if(Storages.isExistentStorage(System.exePath + "AfterInit2.tjs"))
 	KAGLoadScript(System.exePath + "AfterInit2.tjs");
 
 /*
-	コマンドラインパラメータとして -ovr が指定されていれば
-	そのパラメータを TJS 式として実行
+	如果命令行参数中指定了 -ovr，则将该参数作为 TJS 表达式执行
 */
 {
 	var ovr = System.getArgument('-ovr');
@@ -277,4 +270,3 @@ if(Storages.isExistentStorage(System.exePath + "AfterInit2.tjs"))
 */
 
 kag.process("start.ks");
-
