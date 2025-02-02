@@ -1,9 +1,12 @@
 # 落樱约定～光与暗的笔触～
 
-> script define
+> 落桜の約束～光と闇のタッチ～
+> Yozakura-Luminoir
 > 「你真是一副不可靠的样子啊……收下今天满满的爱意后，加油『创作』哦！」
 
 [krkr KAG3教程](https://hydrozoa.felisworks.com/)
+[KAG3文档](https://hydrozoa.felisworks.com/doc/KAG3Doc/contents/index.html)
+[krkr 天之界限bilibili](https://www.bilibili.com/video/BV1ts411f76W)
 
 ## 1-1 被禁锢的画作
 
@@ -67,6 +70,6 @@
 她指着画板上的细节，脸微微发红，语气中带着一丝不满，但眼神却透出一丝笑意。
 
 池原: 哎呀，艺术嘛，总要有点夸张的成分。再说了，我觉得这样更可爱啊。  
-我故意耸耸肩，笑着逗她。ddd
+我故意耸耸肩，笑着逗她。
 
 ## 1-2 雕刻灵魂的约定

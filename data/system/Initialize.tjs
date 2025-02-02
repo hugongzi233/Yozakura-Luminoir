@@ -1,8 +1,9 @@
 // Initialize.tjs - 游戏初始化
 // Copyright (C)2001-2009, W.Dee and contributors  改变和分发是自由的
+// Copyright (c) 2025-2025 FoxMoe
 
 // 系统版本
-var kagVersion = "3.32 stable rev. 2";
+var kagVersion = "1.1 foxmoe (From 3.32 stable)";
 
 /*
 	Debug.message 的快捷方式
@@ -96,7 +97,7 @@ delete useArchiveIfExists; // useArchiveIfExists 用完后删除
 Debug.notice("OS : " + System.osName + " (" + System.platformName + ")");
 Debug.notice("KAG : " + kagVersion);
 Debug.notice("Kirikiri : " + System.versionString);
-
+Debug.notice("Visit Foxmoe.top for further kag version information.");
 /*
 	( 调试 ) 时间测量
 */
@@ -112,7 +113,7 @@ function KAGLoadScript(name)
 {
 	var start = System.getTickCount();
 	Scripts.execStorage(name);
-	dm(name + " 已加载(" + (System.getTickCount() - start) + "ms)");
+	dm(name + " 已加载耗时(" + (System.getTickCount() - start) + "ms)");
 }
 
 var loaded_scripts = %[];

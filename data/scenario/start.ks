@@ -11,4 +11,7 @@
 ; 隐藏message0层
 @layopt layer=message0 visible=false
 
+; LOGO TODO
+
+; 进入标题画面
 @jump target="*title" storage="title.ks"
