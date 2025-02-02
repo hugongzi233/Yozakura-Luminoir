@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run tvpwin64.exe",
+            "label": "Run tvpwin32.exe",
             "type": "shell",
             "command": "powershell",
             "args": [
