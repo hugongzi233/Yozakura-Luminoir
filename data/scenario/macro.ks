@@ -69,4 +69,4 @@
 @wt
 [endmacro]
 
-@jump target="*c1-1" storage="c1-1.ks"
+@return

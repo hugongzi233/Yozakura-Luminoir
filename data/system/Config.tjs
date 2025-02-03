@@ -234,10 +234,10 @@ function KAGWindow_config()
 // +---------+
 // 使用 image 标签或 img 标签的 pos 属性指定前景层的位置名（如 left 或 left_center 等）及其对应的中心位置（x 坐标）。
 ;scPositionX.left = 160;
-;scPositionX.left_center = 240;
-;scPositionX.center = 320;
-;scPositionX.right_center = 400;
-;scPositionX.right = 480;
+;scPositionX.left_center = 320;
+;scPositionX.center = 640;
+;scPositionX.right_center = 960;
+;scPositionX.right = 1120;
 
 
 // 简单的符号

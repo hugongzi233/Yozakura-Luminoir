@@ -10,7 +10,8 @@
 @loadplugin module="wuvorbis.dll"
 ; 隐藏message0层
 @layopt layer=message0 visible=false
-
+; 加载macro
+@call storage="macro.ks" target="*macro"
 ; LOGO TODO
 
 ; 进入标题画面

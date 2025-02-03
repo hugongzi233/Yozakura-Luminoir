@@ -8,7 +8,10 @@
 @deffont face="黑体" size=24 color=0xffffff rubysize=16 rubyoffset=0
 @er
 @locate x=600 y=370
-@button graphic="start" storage="macro.ks" target="*macro"
+@button graphic="start" target="*new"
 @trans method=crossfade time=800
 @wt
 @s
+
+*new
+@jump storage="c1-1.ks" target="*c1-1"
