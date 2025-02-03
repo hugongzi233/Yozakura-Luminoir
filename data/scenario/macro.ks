@@ -69,4 +69,19 @@
 @wt
 [endmacro]
 
+; 清除选择肢宏
+[macro name=clearbtn]
+@position layer=message1 frame="" page=back
+@trans method=crossfade time=400 cond="mp.effect==true"
+@wt
+[endmacro]
+
+; 显示选择肢宏
+[macro name=showbtn]
+@backlay
+@position layer=message1 page=fore visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
+@current layer=message1 page=fore
+@deffont face="黑体" size=26 color=0xffffff rubysize=16 rubyoffset=0
+@wt
+[endmacro]
 @return

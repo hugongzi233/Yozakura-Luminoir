@@ -17,4 +17,5 @@
 @s
 
 *new
-@jump storage="c1-1.ks" target="*c1-1"
+@jump storage="test.ks" target="*test"
+; @jump storage="c1-1.ks" target="*c1-1"

@@ -1708,6 +1708,7 @@ class MessageLayer extends KAGLayer
 		object.text = elm.text;
 		object.color = elm.color;
 		object.size = elm.size;
+		object.offset = elm.offset;
 		object.visible = true;
 		object.onenter = createSoundExpression(elm.onenter, elm.enterse, elm.entersebuf);
 		object.onleave = createSoundExpression(elm.onleave, elm.leavese, elm.leavesebuf);

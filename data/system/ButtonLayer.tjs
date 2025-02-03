@@ -25,6 +25,7 @@ class ButtonLayer extends KAGLayer
 	var text = '';
 	var color = 0x000000;
 	var size = 24;
+	var offset = 0;
 	var Butt_textDrawed;
 
     function ButtonLayer(win, par)
@@ -64,10 +65,8 @@ class ButtonLayer extends KAGLayer
         //      1 : 按钮按下状态
         //      2 : 鼠标光标在按钮上状态
         //     (3): 有焦点时
-        if(!enabled)
-        {
-            s = 0; // 无效状态
-        }
+
+        if(!enabled) s = 0; // 禁用状态
 		
         if(Butt_imageLoaded)
         {
@@ -76,7 +75,8 @@ class ButtonLayer extends KAGLayer
             imageLeft = -s * width;
 
 			// 自定义按钮文字
-			if(!Butt_textDrawed[s]){
+			if(!Butt_textDrawed[s] && text != '')
+			{
 			var tw, th;
 			tw = font.getTextWidth(text);
             th = font.getTextHeight(text);
@@ -88,10 +88,10 @@ class ButtonLayer extends KAGLayer
 			var textY = (height - th)>>1;
 
 			// 绘制文字
-			super.drawText(Math.abs(imageLeft)+textX, textY, text, color, 255);
+			super.drawText(Math.abs(imageLeft)+textX-offset, textY, text, color, 255);
 
 			super.font.height = re;
-			Butt_textDrawed[s]=true;
+			Butt_textDrawed[s] = true;
 			}
         }
         else
