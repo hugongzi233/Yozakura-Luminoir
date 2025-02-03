@@ -3,6 +3,8 @@
 ; 1-1
 @playbgm storage="wbgm02.ogg"
 @bg background="bg1"
+@rclick enabled=true
+
 @showmsg
 
 @stand face="bt1" layer=1 pos="lc"
@@ -15,16 +17,15 @@
 @locate x=90 y=100
 @button graphic="select" text="我想继续跟你一起走下去" color=0xffffff size=26 offset=77 target="*win"
 
-@wait time=100 canskip=false
-
 @locate x=90 y=210
 @button graphic="select" text="对不起，我拒绝" color=0xffffff size=26 offset=40 target="*lose"
+@wt
 @s
 
 *win
 @clearbtn
 @showmsg
-@clearstand layer=1 effect=false
+; @clearstand layer=1 effect=false
 @stand face="bt2" layer=1 pos="lc"
 
 @n name="女孩" se="alic0008.ogg"

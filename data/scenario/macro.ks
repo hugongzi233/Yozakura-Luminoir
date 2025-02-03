@@ -82,8 +82,11 @@
 
 ; 显示选择肢宏
 [macro name=showbtn]
-@position layer=message1 page=fore visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
-@current layer=message1 page=fore
+@backlay
+@position layer=message1 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
+@current layer=message1 page=back
+@er
+@trans method=crossfade time=800
 [endmacro]
 
 @return
