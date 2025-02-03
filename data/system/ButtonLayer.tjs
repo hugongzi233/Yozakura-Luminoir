@@ -1,378 +1,395 @@
-// ButtonLayer.tjs - ボタンレイヤ
-// Copyright (C)2001-2009, W.Dee and contributors  改変・配布は自由です
+// ButtonLayer.tjs - 按钮层
+// Copyright (C)2001-2009, W.Dee and contributors  改变和分发是自由的
 
 /*
-ボタンとして動作するレイヤです。
-押し込まれた時の画像、マウスカーソルがレイヤ内にあるときの画像、通常の画像
-をそれぞれ変えることができます。
+作为按钮操作的层。
+可以分别更改按下时的图像、鼠标光标在层内时的图像和通常的图像。
 
-書式  new ButtonLayer(<window>, <parent>)
+格式  new ButtonLayer(<window>, <parent>)
 
-<window> : このレイヤを作成するウィンドウ
-<parent> : 親レイヤ
+<window> : 创建此层的窗口
+<parent> : 父层
 
 */
 
-
 class ButtonLayer extends KAGLayer
 {
-	var Butt_imageLoaded = false; // 画像が読み込まれたか
-	var Butt_mouseOn = false; // レイヤ内にマウスがあるか
-	var Butt_mouseDown = false; // マウスボタンが押されているか
-	var Butt_color = clNone;
-	var Butt_caption = ''; // ボタンのキャプション
-	var Butt_captionColor = 0x000000; // キャプションの色
-	var Butt_keyPressed = false;
-	var Butt_showFocusImage = false;
+    var Butt_imageLoaded = false; // 图像是否已加载
+    var Butt_mouseOn = false; // 鼠标是否在层内
+    var Butt_mouseDown = false; // 鼠标按钮是否按下
+    var Butt_color = clNone;
+    var Butt_caption = ''; // 按钮的标题
+    var Butt_captionColor = 0x000000; // 标题的颜色
+    var Butt_keyPressed = false;
+    var Butt_showFocusImage = false;
+	var text = '';
+	var color = 0x000000;
+	var size = 24;
+	var offset = 0;
+	var Butt_textDrawed;
 
-	function ButtonLayer(win, par)
-	{
-		super.KAGLayer(win, par);
+    function ButtonLayer(win, par)
+    {
+        super.KAGLayer(win, par);
 
-		if(typeof win.cursorPointed !== "undefined")
-			cursor = win.cursorPointed;
+        if(typeof win.cursorPointed !== "undefined")
+            cursor = win.cursorPointed;
 
-		hitType = htMask;
-		hitThreshold = 0;
-		focusable = true; // フォーカスを得られる
-	}
+        hitType = htMask;
+        hitThreshold = 0;
+        focusable = true; // 可以获得焦点
+		Butt_textDrawed = new Array();
+    }
 
-	function finalize()
-	{
-		super.finalize(...);
-	}
+    function finalize()
+    {
+        super.finalize(...);
+    }
 
-	function assign(src)
-	{
-		// src の情報をこのボタンレイヤにコピー
-		assignImages(src, true);
-		Butt_imageLoaded = src.Butt_imageLoaded;
-		Butt_color = src.Butt_color;
-		Butt_caption = src.Butt_caption;
-		Butt_captionColor = src.Butt_captionColor;
-		hitThreshold = src.hitThreshold;
-		update();
-	}
+    function assign(src)
+    {
+        // 将 src 的信息复制到此按钮层
+        assignImages(src, true);
+        Butt_imageLoaded = src.Butt_imageLoaded;
+        Butt_color = src.Butt_color;
+        Butt_caption = src.Butt_caption;
+        Butt_captionColor = src.Butt_captionColor;
+        hitThreshold = src.hitThreshold;
+        update();
+    }
 
-	function drawState(s)
-	{
-		// 状態 s に対応する画像を描画
-		// s :  0 : 普通の状態
-		//      1 : ボタンが押された状態
-		//      2 : ボタンの上にマウスカーソルがある状態
-		//     (3): フォーカスがある場合
-		if(!enabled)
-		{
-			s = 0; // 無効状態
-		}
+    function drawState(s)
+    {
+        // 绘制对应状态 s 的图像
+        // s :  0 : 普通状态
+        //      1 : 按钮按下状态
+        //      2 : 鼠标光标在按钮上状态
+        //     (3): 有焦点时
 
-		if(Butt_imageLoaded)
-		{
-			// ボタンイメージが読み込まれている
-			// TODO: keyboard focus
-			imageLeft = -s * width;
-		}
-		else
-		{
-			if(Butt_keyPressed) s = 1; // 押されている
+        if(!enabled) s = 0; // 禁用状态
+		
+        if(Butt_imageLoaded)
+        {
+            // 按钮图像已加载
+            // TODO: 键盘焦点
+            imageLeft = -s * width;
 
-			// 枠とキャプションを描画
-			// クリア
-			face = dfAlpha;
-			colorRect(0, 0, width, height, 0, -255);
-			// 下地を塗る
-			if(Butt_color != clNone)
-				colorRect(0, 0, width, height, Butt_color, 128);
-			// 文字のサイズを得る
+			// 自定义按钮文字
+			if(!Butt_textDrawed[s] && text != '')
+			{
 			var tw, th;
-			tw = font.getTextWidth(Butt_caption);
-			th = font.getTextHeight(Butt_caption);
-			if(s == 0 || s == 2)
-			{
-				// 通常あるいはマウスが上にある
-				colorRect(0, 0, width, 1, 0xffffff, 128);
-				colorRect(0, 1, 1, height-2, 0xffffff, 128);
-				colorRect(width-1, 1, 1, height-1, 0x000000, 128);
-				colorRect(1, height-1, width-2, 1, 0x000000, 128);
-				drawText((width-tw)>>1, (height-th)>>1, 
-					Butt_caption, Butt_captionColor, nodeEnabled?255:128);
+			tw = font.getTextWidth(text);
+            th = font.getTextHeight(text);
+			var re = super.font.height;
+			super.font.height = size;
+
+			// 计算文字的起始绘制位置，使其居中
+			var textX = (width - tw)>>1;
+			var textY = (height - th)>>1;
+
+			// 绘制文字
+			super.drawText(Math.abs(imageLeft)+textX-offset, textY, text, color, 255);
+
+			super.font.height = re;
+			Butt_textDrawed[s] = true;
 			}
-			else
-			{
-				// 押されている
-				colorRect(0, 0, width, 1, 0x000000, 128);
-				colorRect(0, 1, 1, height-2, 0x000000, 128);
-				colorRect(width-1, 1, 1, height-1, 0xffffff, 128);
-				colorRect(1, height-1, width-2, 1, 0xffffff, 128);
-				drawText(((width-tw)>>1) +1, ((height-th)>>1) +1, 
-					Butt_caption, Butt_captionColor, nodeEnabled?255:128);
-			}
+        }
+        else
+        {
+            if(Butt_keyPressed) s = 1; // 按下状态
 
-			if(s != 0)
-				colorRect(2, 2, width-4, height-4, clHighlight, 64); // ハイライトする
+            // 绘制边框和标题
+            // 清除
+            face = dfAlpha;
+            colorRect(0, 0, width, height, 0, -255);
+            // 填充背景
+            if(Butt_color != clNone)
+                colorRect(0, 0, width, height, Butt_color, 128);
+            // 获取文字大小
+            var tw, th;
+            tw = font.getTextWidth(Butt_caption);
+            th = font.getTextHeight(Butt_caption);
+            if(s == 0 || s == 2)
+            {
+                // 通常或鼠标在上面
+                colorRect(0, 0, width, 1, 0xffffff, 128);
+                colorRect(0, 1, 1, height-2, 0xffffff, 128);
+                colorRect(width-1, 1, 1, height-1, 0x000000, 128);
+                colorRect(1, height-1, width-2, 1, 0x000000, 128);
+                drawText((width-tw)>>1, (height-th)>>1, 
+                    Butt_caption, Butt_captionColor, nodeEnabled?255:128);
+            }
+            else
+            {
+                // 按下状态
+                colorRect(0, 0, width, 1, 0x000000, 128);
+                colorRect(0, 1, 1, height-2, 0x000000, 128);
+                colorRect(width-1, 1, 1, height-1, 0xffffff, 128);
+                colorRect(1, height-1, width-2, 1, 0xffffff, 128);
+                drawText(((width-tw)>>1) +1, ((height-th)>>1) +1, 
+                    Butt_caption, Butt_captionColor, nodeEnabled?255:128);
+            }
 
-			if(focused)
-			{
-				// フォーカスがあるのでハイライトする
-				colorRect(2, 2, width-4, 1, clHighlight, 128);
-				colorRect(2, 3, 1, height-5, clHighlight, 128);
-				colorRect(3, height-3, width-5, 1, clHighlight, 128);
-				colorRect(width-3, 3, 1, height-6, clHighlight, 128);
-			}
-		}
-	}
+            if(s != 0)
+                colorRect(2, 2, width-4, height-4, clHighlight, 64); // 高亮
 
-	function loadImages(storage, key)
-	{
-		// 画像を読み込む
-		dm("ButtonLayer-加载:",storage,"KEY:",key);
-		super.loadImages(storage, key);
-		super.width = imageWidth \ (Butt_showFocusImage ? 4 : 3);
-		super.height = imageHeight;
-		callOnPaint = true;
-		Butt_imageLoaded = true;
-	}
+            if(focused)
+            {
+                // 有焦点时高亮
+                colorRect(2, 2, width-4, 1, clHighlight, 128);
+                colorRect(2, 3, 1, height-5, clHighlight, 128);
+                colorRect(3, height-3, width-5, 1, clHighlight, 128);
+                colorRect(width-3, 3, 1, height-6, clHighlight, 128);
+            }
+        }
+    }
 
-	function discardImage()
-	{
-		// 画像を破棄し、文字ボタンレイヤとして動作するようにする
-		Butt_imageLoaded = false;
-		imageLeft = imageTop = 0;
-		update();
-	}
+    function loadImages(storage, key)
+    {
+        // 加载图像
+        dm("ButtonLayer-加载:",storage,"KEY:",key);
+        super.loadImages(storage, key);
+        super.width = imageWidth \ (Butt_showFocusImage ? 4 : 3);
+        super.height = imageHeight;
+        callOnPaint = true;
+        Butt_imageLoaded = true;
+    }
 
-	function onExecute(x, y, button, shift)
-	{
-		// マウスボタンが押されて、放されたときに呼ばれる
-		// 何かこのボタンが押されたことによりコマンドなどを実装したい場合は
-		// onMouseUp や onClick をオーバーライドするよりも
-		// このメソッドをオーバーライドすることを推奨する
-	}
+    function discardImage()
+    {
+        // 丢弃图像，作为文字按钮层操作
+        Butt_imageLoaded = false;
+        imageLeft = imageTop = 0;
+        update();
+    }
 
-	function onMouseDown()
-	{
-		// onMouseDown イベントハンドラ
-		Butt_mouseDown = true;
-		focus();
-		update();
-		super.onMouseDown(...);
-	}
+    function onExecute(x, y, button, shift)
+    {
+        // 鼠标按钮按下并释放时调用
+        // 如果要实现某些命令或操作，建议重写此方法而不是 onMouseUp 或 onClick
+    }
 
-	function onMouseUp()
-	{
-		// onMouseUp イベントハンドラ
-		if(Butt_mouseDown) onExecute(...);
-		Butt_mouseDown = false;
-		update();
-		super.onMouseUp(...);
-	}
+    function onMouseDown()
+    {
+        // onMouseDown 事件处理程序
+        Butt_mouseDown = true;
+        focus();
+        update();
+        super.onMouseDown(...);
+    }
 
-	function onClick()
-	{
-		// onClick イベントハンドラ
-		super.onClick(...);
-	}
+    function onMouseUp()
+    {
+        // onMouseUp 事件处理程序
+        if(Butt_mouseDown) onExecute(...);
+        Butt_mouseDown = false;
+        update();
+        super.onMouseUp(...);
+    }
 
-	function draw()
-	{
-		// 現在の状態にあわせて描画を行う
-		if(Butt_mouseDown) drawState(1);
-		else if(Butt_mouseOn) drawState(2);
-		else if(Butt_showFocusImage && focused) drawState(3);
-		else drawState(0);
-	}
+    function onClick()
+    {
+        // onClick 事件处理程序
+        super.onClick(...);
+    }
 
-	function onPaint()
-	{
-		// 描画の直前に呼ばれる
-		super.onPaint(...);
-		draw();
-	}
+    function draw()
+    {
+        // 根据当前状态绘制
+        if(Butt_mouseDown) drawState(1);
+        else if(Butt_mouseOn) drawState(2);
+        else if(Butt_showFocusImage && focused) drawState(3);
+        else drawState(0);
+    }
 
-	function onMouseEnter()
-	{
-		// マウスがレイヤ領域内に入った
-		update();
-		Butt_mouseOn = true;
-		super.onMouseEnter(...);
-	}
+    function onPaint()
+    {
+        // 绘制前调用
+        super.onPaint(...);
+        draw();
+    }
 
-	function onMouseLeave()
-	{
-		// マウスがレイヤ領域から出ていった
-		update();
-		Butt_mouseOn = false;
-		Butt_mouseDown = false;
-		super.onMouseLeave(...);
-	}
+    function onMouseEnter()
+    {
+        // 鼠标进入层区域
+        update();
+        Butt_mouseOn = true;
+        super.onMouseEnter(...);
+    }
 
-	function onNodeDisabled()
-	{
-		// レイヤのノードが不可になった
-		super.onNodeDisabled(...);
-		Butt_mouseDown = false;
-		update();
-	}
+    function onMouseLeave()
+    {
+        // 鼠标离开层区域
+        update();
+        Butt_mouseOn = false;
+        Butt_mouseDown = false;
+        super.onMouseLeave(...);
+    }
 
-	function onNodeEnabled()
-	{
-		// レイヤのノードが有効になった
-		super.onNodeEnabled(...);
-		update();
-	}
+    function onNodeDisabled()
+    {
+        // 层的节点被禁用
+        super.onNodeDisabled(...);
+        Butt_mouseDown = false;
+        update();
+    }
 
-	function onFocus()
-	{
-		// フォーカスを得た
-		super.onFocus(...);
-		update();
-	}
+    function onNodeEnabled()
+    {
+        // 层的节点被启用
+        super.onNodeEnabled(...);
+        update();
+    }
 
-	function onBlur()
-	{
-		// フォーカスを失った
-		super.onBlur(...);
-		Butt_mouseDown = false;
-		update();
-	}
+    function onFocus()
+    {
+        // 获得焦点
+        super.onFocus(...);
+        update();
+    }
 
-	function onKeyDown(key, shift, process)
-	{
-		// キーが押された
-		if(process)
-		{
-			if(key == VK_RETURN || key == VK_SPACE)
-			{
-				// スペースキーまたはエンターキー
-				Butt_keyPressed = true;
-				update();
-				super.onKeyDown(key, shift, false); // 処理をしたのでprocessにfalseを渡す
-			}
-			else
-			{
-				super.onKeyDown(...);
-			}
-		}
-		else
-		{
-			// process が false の場合は処理は行わない
-			super.onKeyDown(...);
-		}
-	}
+    function onBlur()
+    {
+        // 失去焦点
+        super.onBlur(...);
+        Butt_mouseDown = false;
+        update();
+    }
 
-	function onKeyUp(key, shift, process)
-	{
-		// キーが離された
-		if(process)
-		{
-			if(key == VK_RETURN || key == VK_SPACE)
-			{
-				// スペースキーまたはエンターキー
-				var flag = Butt_keyPressed;
-				Butt_keyPressed = false;
-				update();
-				super.onKeyUp(key, shift, false);
-				if(flag) onClick(width \ 2, height \ 2); // クリック動作
-			}
-			else
-			{
-				super.onKeyUp(...);
-			}
-		}
-		else
-		{
-			super.onKeyUp(...);
-		}
-	}
+    function onKeyDown(key, shift, process)
+    {
+        // 按键被按下
+        if(process)
+        {
+            if(key == VK_RETURN || key == VK_SPACE)
+            {
+                // 空格键或回车键
+                Butt_keyPressed = true;
+                update();
+                super.onKeyDown(key, shift, false); // 处理后传递 false 给 process
+            }
+            else
+            {
+                super.onKeyDown(...);
+            }
+        }
+        else
+        {
+            // process 为 false 时不处理
+            super.onKeyDown(...);
+        }
+    }
 
-	function onKeyPress(key, shift)
-	{
-		super.onKeyPress(...);
-	}
+    function onKeyUp(key, shift, process)
+    {
+        // 按键被释放
+        if(process)
+        {
+            if(key == VK_RETURN || key == VK_SPACE)
+            {
+                // 空格键或回车键
+                var flag = Butt_keyPressed;
+                Butt_keyPressed = false;
+                update();
+                super.onKeyUp(key, shift, false);
+                if(flag) onClick(width \ 2, height \ 2); // 触发点击操作
+            }
+            else
+            {
+                super.onKeyUp(...);
+            }
+        }
+        else
+        {
+            super.onKeyUp(...);
+        }
+    }
 
+    function onKeyPress(key, shift)
+    {
+        super.onKeyPress(...);
+    }
 
-	property width
-	{
-		setter(x)
-		{
-			super.width = x;
-			imageWidth = x;
-			Butt_imageLoaded = false;
-			update();
-		}
-		getter
-		{
-			return super.width;
-		}
-	}
+    property width
+    {
+        setter(x)
+        {
+            super.width = x;
+            imageWidth = x;
+            Butt_imageLoaded = false;
+            update();
+        }
+        getter
+        {
+            return super.width;
+        }
+    }
 
-	property height
-	{
-		setter(x)
-		{
-			super.height = x;
-			imageHeight = x;
-			Butt_imageLoaded = false;
-			update();
-		}
-		getter
-		{
-			return super.height;
-		}
-	}
+    property height
+    {
+        setter(x)
+        {
+            super.height = x;
+            imageHeight = x;
+            Butt_imageLoaded = false;
+            update();
+        }
+        getter
+        {
+            return super.height;
+        }
+    }
 
-	function setSize(w, h)
-	{
-		super.setSize(w, h);
-		setImageSize(w, h);
-		Butt_imageLoaded = false;
-		update();
-	}
+    function setSize(w, h)
+    {
+        super.setSize(w, h);
+        setImageSize(w, h);
+        Butt_imageLoaded = false;
+        update();
+    }
 
-	property caption
-	{
-		setter(x)
-		{
-			Butt_caption = x;
-			update();
-		}
-		getter
-		{
-			return Butt_caption;
-		}
-	}
+    property caption
+    {
+        setter(x)
+        {
+            Butt_caption = x;
+            update();
+        }
+        getter
+        {
+            return Butt_caption;
+        }
+    }
 
-	property color
-	{
-		setter(x)
-		{
-			Butt_color = int x;
-			update();
-		}
-		getter
-		{
-			return Butt_color;
-		}
-	}
+    property color
+    {
+        setter(x)
+        {
+            Butt_color = int x;
+            update();
+        }
+        getter
+        {
+            return Butt_color;
+        }
+    }
 
-	property captionColor
-	{
-		setter(x)
-		{
-			Butt_captionColor = int x;
-			update();
-		}
-		getter
-		{
-			return Butt_captionColor;
-		}
-	}
+    property captionColor
+    {
+        setter(x)
+        {
+            Butt_captionColor = int x;
+            update();
+        }
+        getter
+        {
+            return Butt_captionColor;
+        }
+    }
 
-	property showFocusImage
-	{
-		setter(x) { Butt_showFocusImage = x; }
-		getter { return Butt_showFocusImage; }
-	}
+    property showFocusImage
+    {
+        setter(x) { Butt_showFocusImage = x; }
+        getter { return Butt_showFocusImage; }
+    }
 }
-
-
