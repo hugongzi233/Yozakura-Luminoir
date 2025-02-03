@@ -31,8 +31,9 @@
 [endmacro]
 
 ; 文字显示与语音宏
-; 使用方法：@say name="名字" text="第一行" text2="第二行"(可选)
-[macro name=say]
+; 使用方法：@n name="名字" se="音效"(可选)
+[macro name=n]
+@stopse
 @playse storage=%se cond="mp.se!=''"
 @current layer=message0 page=fore
 @font face="黑体" size=24
@@ -42,13 +43,6 @@
 @r
 [endnowait]
 @resetfont
-@emb exp="mp.text"
-[if exp="mp.text2!=''"]
-@r
-@emb exp="mp.text2"
-[endif]
-@p
-@stopse
 [endmacro]
 
 ; 清除对话框宏
