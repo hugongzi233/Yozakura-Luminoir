@@ -1,5 +1,6 @@
 *macro|macro
 @position layer=message0 page=back frame=""
+@position layer=message1 page=fore frame=""
 @current layer=message0 page=back
 @er
 
@@ -25,13 +26,14 @@
 [endmacro]
 
 ; 显示对话框宏
+; 使用方法 @showmsg
 [macro name=showmsg]
 @position layer=message0 left=0 top=&(720-160) width=1280 height=160 marginl=200 margint=0 marginr=70 marginb=16 opacity=0 visible=true frame="frame" page=back
 @trans method=crossfade time=800
 @wt
 [endmacro]
 
-; 文字显示与语音宏
+; 名字显示与语音宏
 ; 使用方法：@n name="名字" se="音效"(可选)
 [macro name=n]
 @stopse
@@ -57,6 +59,7 @@
 ; 使用方法 @clearstand layer=1 effect=true(可选)
 [macro name=clearstand]
 @freeimage layer=%layer page=back
+@freeimage layer=%layer page=fore
 @trans method=crossfade time=300 cond="mp.effect==true"
 @wt
 [endmacro]
@@ -74,14 +77,13 @@
 @position layer=message1 frame="" page=back
 @trans method=crossfade time=400 cond="mp.effect==true"
 @wt
+@current layer=message0 page=back
 [endmacro]
 
 ; 显示选择肢宏
 [macro name=showbtn]
-@backlay
 @position layer=message1 page=fore visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
 @current layer=message1 page=fore
-@deffont face="黑体" size=26 color=0xffffff rubysize=16 rubyoffset=0
-@wt
 [endmacro]
+
 @return

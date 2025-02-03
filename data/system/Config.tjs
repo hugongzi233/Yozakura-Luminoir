@@ -223,7 +223,7 @@ function KAGWindow_config()
 // 如果不需要，可以指定为 0。
 // 数量过多会降低速度并消耗内存，因此不应指定超过必要的数量。
 // 可以使用 laycount 标签在剧本中更改。
-;numCharacterLayers = 3;
+;numCharacterLayers = 6;
 
 
 // ◆ 前景层的左右中心位置指定
@@ -251,7 +251,7 @@ function KAGWindow_config()
 
 // ◆ 初始状态的消息层数量
 // 与前景层不同，不能指定为 0。也应仅保留必要的数量。可以使用 laycount 标签在剧本中更改。
-;numMessageLayers = 2;
+;numMessageLayers = 3;
 
 
 // ◆ 初始状态是否显示消息层
@@ -422,7 +422,7 @@ function MessageLayer_config()
 // 指定 ltAddAlpha 时，frameGraphic 指定的消息框图像也需要为 ltAddAlpha 模式创建的图像（不会自动判别）。
 // 可以使用图像格式转换器创建 ltAddAlpha 模式的图像。
 
-// imhubai 25-2-2: ltAddAlpha 模式无法显示半透明frame，所以改为ltAlpha
+// imhubai 25-2-2: ltAddAlpha 模式无法显示普通半透明frame，所以改为ltAlpha
 ;layerType = ltAlpha;
 
 // ◆ 消息框图像
