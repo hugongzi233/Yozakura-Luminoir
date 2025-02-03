@@ -11,7 +11,7 @@
 @button graphic="start" target="*new"
 
 @locate x=200 y=370
-@button graphic="btn" text="一段文字" color=0xffffff size=16 target="*new"
+@button graphic="btn" text="一段文字" color=0xffffff size=16 target="*testsave"
 @trans method=crossfade time=800
 @wt
 @s
@@ -19,3 +19,6 @@
 *new
 @jump storage="test.ks" target="*test"
 ; @jump storage="c1-1.ks" target="*c1-1"
+
+*testsave
+@jump storage="testsave.ks" target="*testsave"

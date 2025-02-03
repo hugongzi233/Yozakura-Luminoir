@@ -89,7 +89,7 @@ function KAGWindow_config()
 // 指定缩略图的宽度。如果不设置 saveThumbnail 为 true，此设置无效。
 // 请以像素为单位指定宽度。高度将根据 scWidth 和 scHeight 的比例自动计算。
 // 存档缩略图宽度
-;thumbnailWidth = 160;
+;thumbnailWidth = 360;
 
 // ◆ 缩略图保存模式
 // 指定缩略图的保存模式。如果不设置 saveThumbnail 为 true，此设置无效。
@@ -98,7 +98,7 @@ function KAGWindow_config()
 // 256 色位图文件大小较小，但画质较差。
 // 缩略图 8位 -> 256色
 // 缩略图 24位 -> 24bit全位
-;thumbnailDepth = 8;
+;thumbnailDepth = 24;
 
 
 // ◆ 数据名称前缀
