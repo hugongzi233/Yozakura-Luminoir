@@ -1,6 +1,6 @@
 // Config.tjs - KAG 设置
 // Copyright (C) 2001-2007 W.Dee and contributors  改变和分发是自由的
-// Copyright (c) 2025-2025 FoxMoe
+// Copyright (C) 2025-2025 FoxMoe
 ;global.config_version = "1.1 foxmoe (From 3.32 stable)"; // 请不要删除这一行
 
 // 在这个文件中可以设置的项目，全部

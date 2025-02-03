@@ -1,6 +1,6 @@
 // Initialize.tjs - 游戏初始化
-// Copyright (C)2001-2009, W.Dee and contributors  改变和分发是自由的
-// Copyright (c) 2025-2025 FoxMoe
+// Copyright (C) 2001-2009 W.Dee and contributors  改变和分发是自由的
+// Copyright (C) 2025-2025 FoxMoe
 
 // 系统版本
 var kagVersion = "1.1 foxmoe (From 3.32 stable)";
