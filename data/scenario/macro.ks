@@ -1,4 +1,4 @@
-*open|
+*macro|MARCO
 @position layer=message0 page=back frame=""
 @current layer=message0 page=back
 @er
