@@ -1,8 +1,9 @@
 *test|Test空间
 ; ==========================
 ; 1-1
+@clearall
 @playbgm storage="wbgm02.ogg"
-@bg background="bg2" method="universal" rule="ysr025" vague=10 time=500
+@bg background="bg2" method="universal" rule="dot" vague=10 time=500
 @stand face="bt2" layer=2 pos="c"
 @rclick call=true target=*rclick enabled=true
 

@@ -9,6 +9,7 @@
 [KAG3文档](https://hydrozoa.felisworks.com/doc/KAG3Doc/contents/index.html)
 [TSJ2文档](https://hydrozoa.felisworks.com/doc/tjs2doc/contents/index.html)
 [TVP文档](https://hydrozoa.felisworks.com/doc/kr2doc/contents/index.html)
+[KAGEXPRESS](https://mp.weixin.qq.com/s/T58wP_jZRPrxdr34SaC15g)
 
 KAG版本: 1.1 Foxmoe (From 3.32 stable)
 KRKRZ版本: 1.4.0.8

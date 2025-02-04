@@ -1,5 +1,5 @@
 *title
-@stoptrans
+@clearall
 ;@waitclick
 ;@playbgm storage="start.wav"
 @fadeinbgm storage="start.wav"
@@ -11,7 +11,7 @@
 @button graphic="start" target="*new"
 
 @locate x=200 y=370
-@button graphic="btn" text="一段文字" color=0xffffff size=16 target="*testsave"
+@button graphic="btn" text="一段文字" color=0xffffff size=16 target="*testmacro"
 @trans method=crossfade time=800
 @wt
 @s
@@ -20,5 +20,13 @@
 @jump storage="test.ks" target="*test"
 ; @jump storage="c1-1.ks" target="*c1-1"
 
-*testsave
-@jump storage="testsave.ks" target="*testsave"
+*testmacro
+[macro name=meg]
+[SYS_B]
+[eval exp="tf.name=mp.name"]
+[eval exp="meg.show(tf.name)"]
+[endmacro]
+
+@meg name="提示文本"
+[p]
+; @jump storage="testsave.ks" target="*testmacro"

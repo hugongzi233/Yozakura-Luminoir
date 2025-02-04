@@ -1,8 +1,12 @@
 *macro|macro
+
+[macro name=clearall]
+@position layer=base page=back frame=""
 @position layer=message0 page=back frame=""
 @position layer=message1 page=fore frame=""
 @current layer=message0 page=back
 @er
+[endmacro]
 
 ; 显示立绘宏
 ; 使用方法 @stand face="图片" layer=1 pos="l lc c rc r"(可选)

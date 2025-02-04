@@ -13,6 +13,6 @@
 ; 加载macro
 @call storage="macro.ks" target="*macro"
 ; LOGO TODO
-
+@call storage="logo.ks" target="*logo"
 ; 进入标题画面
 @jump target="*title" storage="title.ks"
