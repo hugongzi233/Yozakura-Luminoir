@@ -1,5 +1,6 @@
 *macro|macro
-
+; 清除所有layer背景
+; 使用方法 @clearall
 [macro name=clearall]
 @position layer=base page=back frame=""
 @position layer=message0 page=back frame=""
@@ -90,7 +91,24 @@
 @position layer=message1 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
 @current layer=message1 page=back
 @er
-@trans method=crossfade time=800
+@trans method=crossfade time=200
+[endmacro]
+
+; 显示快捷按钮宏
+[macro name=showtoolbar]
+@backlay
+@position layer=message2 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
+@current layer=message2 page=back
+@er
+@trans method=crossfade time=200
+[endmacro]
+
+; 清除选择肢宏
+[macro name=cleartoolbar]
+@position layer=message2 frame="" page=back
+@trans method=crossfade time=400 cond="mp.effect==true"
+@wt
+@current layer=message0 page=back
 [endmacro]
 
 @return

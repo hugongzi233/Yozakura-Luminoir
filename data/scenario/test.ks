@@ -7,10 +7,19 @@
 @stand face="bt2" layer=2 pos="c"
 @rclick call=true target=*rclick enabled=true
 
+@showtoolbar
+@locate x=0 y=0
+@button graphic="btn" target="*backtotitle"
+
+@locate x=100 y=0
+@button graphic="btn" target="*backtotitle"
+@wt
+
 @showmsg
 
 @n name="女孩"
 今天天气真不错！[p]
+
 @n name=""
 要跟我一起去山里玩吗？[p]
 
@@ -48,6 +57,9 @@
 
 @return
 
+*backtotitle
+@clearall
+@call storage="title.ks" target="*title"
 
 
 *rclick

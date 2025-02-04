@@ -1,5 +1,7 @@
 *title
 @clearall
+@clearbtn
+@clearmsg
 ;@waitclick
 ;@playbgm storage="start.wav"
 @fadeinbgm storage="start.wav"
@@ -21,12 +23,6 @@
 ; @jump storage="c1-1.ks" target="*c1-1"
 
 *testmacro
-[macro name=meg]
-[SYS_B]
-[eval exp="tf.name=mp.name"]
-[eval exp="meg.show(tf.name)"]
-[endmacro]
-
-@meg name="提示文本"
+啥？-------------------------------=
 [p]
 ; @jump storage="testsave.ks" target="*testmacro"
