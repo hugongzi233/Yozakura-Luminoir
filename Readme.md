@@ -14,6 +14,17 @@
 KAG版本: 1.1 Foxmoe (From 3.32 stable)
 KRKRZ版本: 1.4.0.8
 
+layer说明:
+    base        背景层(包括背景、背景特效、LOGO、出场光效等)
+    message0    基础层(对话框)
+    message1    选择肢
+    message2    右下角快捷按钮层
+    1           立绘1
+    2           立绘2
+    3           立绘3
+    4           立绘4
+    5           特效附加
+
 ## 1-1 被禁锢的画作
 
 .effect 渐变
