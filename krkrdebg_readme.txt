@@ -1,32 +1,31 @@
-吉里吉里Z/TJS2 デバッガ
+Kirikiri Z/TJS2 Debugger 
 
-●使い方
-krkrdebg.exe を起動します。
-設定、プロジェクトの設定を選びます。
-実行ファイルパスに添付のtvpwin32_dbg.exeのフルパスを
-引数に -debug を
-プロジェクトフォルダに data のフルパスを ( ex. C:\krkr\debugger\data )
-作業フォルダに実行ディレクトリを ( ex. C:\krkr\debugger )
-スクリプト拡張子にスクリプトの拡張子をスペース区切りで ( ex. .tjs ) ("."も必要です)
-以上を設定します。
-TJS ファイルが左に列挙されます。
-ファイル → 名前を付けて保存 で、プロジェクトを保存しておくと、次回以降楽です。
+●How to use 
+Launch krkrdebg.exe. 
+Select Settings, Project Settings. 
+The full path of tvpwin32_dbg.exe attached to the execution file path 
+-debug in the argument 
+Full path of data in project folder ( ex. C:\krkr\debugger\data ) 
+Set the execution directory to the working folder ( ex. C:\krkr\debugger ) 
+Script extension is the script extension separated by a space ( ex. .tjs ) ("." is also required) 
+Set above. 
+TJS files are listed on the left. 
+If you save the project with File → Save As, it will be easier next time. 
 
-同じディレクトリに debugger.sdp があった場合、その設定ファイルをデフォルトで読み込みます
-引数に -p filename.sdp として起動した場合、その設定ファイルを読みます。
+If there is debugger.sdp in the same directory, load that configuration file by default 
+If invoked with -p filename.sdp as an argument, read that configuration file. 
 
-startup.tjs とか Config.tjs とかはじめの方に実行されるファイルの実行文がある行をダブルクリックするとブレークポイントが貼られます。
-( 何もない行にもブレークポイントは貼れますが止まりません )
+If you double-click the line with the execution statement of the file that is executed toward the beginning, such as startup.tjs or Config.tjs, a breakpoint will be pasted. 
+(Breakpoints can be pasted on empty lines, but they do not stop.) 
 
-後は、実行するとブレークポイントで止まります。
-トレースやステップで実行継続できます。
+Then run it and it will stop at the breakpoint. 
+You can continue execution by tracing or stepping. 
 
-実行中にブレークポイントを設定しても、即座には反映されません。
-ブレーク(一時停止)で止めて、再度実行すると反映されます。
+Setting breakpoints during execution does not take effect immediately. 
+Stop with a break (pause) and execute again to reflect. 
 
-設定ファイルには、各種パスは相対パスで保存されます。
+Various paths are saved in the configuration file as relative paths. 
 
 
-【更新履歴】
-2015/08/17 1.0.1.1 表示できない文字は〓へ置き換え、UTF-8 で文字表示出来ない不具合修正。
-
+【Change log】 
+2015/08/17 1.0.1.1 Replaced characters that cannot be displayed with 〓, and fixed the problem that characters cannot be displayed in UTF-8.

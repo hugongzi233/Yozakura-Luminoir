@@ -495,8 +495,8 @@ class KAGWindow extends Window
 	function finalize()
 	{
 		// finalize メソッド
-        clearBgmStop();
-        clearBgmLabel();
+        ClearBgmStop();
+        ClearBgmLabel();
 
 		// プラグインの無効化
 		for(var i = 0; i < kagPlugins.count; i++) invalidate kagPlugins[i];
@@ -523,7 +523,7 @@ class KAGWindow extends Window
 	{
 		saveSystemVariables();
 		if(!askOnClose) { super.onCloseQuery(true); return; }
-		super.onCloseQuery(askYesNo("确定退出游戏吗？"));
+		super.onCloseQuery(askYesNo("終了しますか？"));
 	}
 
 	function close()
@@ -1890,7 +1890,8 @@ class KAGWindow extends Window
 					{
 						invalidate tmp;
 						unlockSnapshot();
-						System.inform("无法保存文件 (文件无法打开或写保护)");
+						System.inform("ファイルに保存できません (ファイルを開けないか、"
+							"書き込み禁止です)");
 						return false;
 					}
 				}
@@ -1917,7 +1918,8 @@ class KAGWindow extends Window
 			}
 			catch(e)
 			{
-				System.inform("无法保存文件 (文件无法打开或写保护)");
+				System.inform("ファイルに保存できません (ファイルを開けないか、"
+					"書き込み禁止です)");
 				return false;
 			}
 		}
@@ -1980,7 +1982,7 @@ class KAGWindow extends Window
 
 			if(data.id != saveDataID)
 			{
-				System.inform("尝试加载其他系统的数据", "错误");
+				System.inform("他のシステムのデータを読み込もうとしました", "エラー");
 				return false;
 			}
 
@@ -2000,8 +2002,9 @@ class KAGWindow extends Window
 		}
 		catch(e)
 		{
-			System.inform("无法加载书签，书签已损坏，或书签数据格式不正确",
-				"(" + e.message + ")", "错误");
+			System.inform("栞を読み込めないか、栞が"
+				"壊れているか、あるいは他の形式の栞データ"
+				"です(" + e.message + ")", "エラー");
 			return false;
 		}
 
@@ -2025,7 +2028,7 @@ class KAGWindow extends Window
 		if(num < numBookMarks) prompt += (num + 1);
 		if(bookMarkDates[num] != "") // bookMarkDates が空文字の場合は栞は存在しない
 			prompt += "「" + bookMarkNames[num] + "」";
-		prompt += "中插入「"+ pcflags.currentPageName + "」吗?";
+		prompt += "に「"+ pcflags.currentPageName + "」をはさみますか?";
 		var result = askYesNo(prompt);
 		if(result) return saveBookMark(num);
 		return false;
@@ -2039,7 +2042,7 @@ class KAGWindow extends Window
 			return false;
 		var prompt = "栞 ";
 		if(num < numBookMarks) prompt += (num + 1);
-		prompt += "跳转到「"+ bookMarkNames[num] + "」吗?";
+		prompt += "「"+ bookMarkNames[num] + "」をたどりますか?";
 		var result = askYesNo(prompt);
 		if(result) return loadBookMark(num);
 		return false;
@@ -2431,7 +2434,7 @@ class KAGWindow extends Window
 		}
 
 
-		dm("开始读取脚本");
+		dm("処理を開始します");
 		inSleep = false;
 		notifyRun();
 		if(conductor.status != conductor.mRun) conductor.run(immediate); // 実行開始
@@ -2440,7 +2443,7 @@ class KAGWindow extends Window
 	function processGo()
 	{
 		// コンダクタを現在位置から実行開始させる
-		dm("开始读取脚本");
+		dm("処理を開始します");
 		inSleep = false;
 		notifyRun();
 		conductor.run(false); // 実行開始
@@ -2460,7 +2463,7 @@ class KAGWindow extends Window
 		inSleep = false;
 		notifyRun();
 		conductor.callLabel(label); // 実行開始
-		dm("开始读取脚本");
+		dm("処理を開始します");
 		if(conductor.status != conductor.mRun) conductor.run();
 	}
 
@@ -2509,8 +2512,9 @@ class KAGWindow extends Window
 		{
 			pushHistoryOfStore();
 			stablePosibility = false;
-			dm(conductor.curStorage + " : 标签/页面 : " + label + "/" + currentPageName);
-			if(usingExtraConductor) throw new Exception("在右键点击子程序/extraCondutor子程序中无法记录可保存的标签");
+			dm(conductor.curStorage + " : ラベル/ページ : " + label + "/" + currentPageName);
+			if(usingExtraConductor) throw new Exception("右クリックサブルーチン内/extraCondutor"
+				"サブルーチン内では保存可能なラベルを記述できません");
 			storeFlags(), storeLabelPassed = true, setMenuAccessibleAll();
 			if(recordHistoryOfStore == 1) // 1 : 保存可能なラベルごと
 				setToRecordHistory();
@@ -2542,7 +2546,7 @@ class KAGWindow extends Window
 			if(conductor.callStackDepth == 1)
 			{
 				// つまり、最終の return が実行されたと言うこと
-				dm("从 extraConductor 子程序返回 ...");
+				dm("extraConductor サブルーチンから戻ります ...");
 				var run;
 				if(elm.storage !== void || elm.target !== void) run = true; else run = false;
 				returnExtraConductor(run);
@@ -4280,7 +4284,7 @@ class KAGWindow extends Window
         var exp     = bgmStopExp;
         var storage = bgmStopStorage;
         var target  = bgmStopTarget;
-        clearBgmStop();
+        ClearBgmStop();
         
         // 処理実行
         if (exp !== void) {
@@ -4298,7 +4302,7 @@ class KAGWindow extends Window
         bgmStopTarget  = elm.target;
     }
     
-    function clearBgmStop() {
+    function ClearBgmStop() {
         // BGM停止時処理の解除
         bgmStopExp     = void;
         bgmStopStorage = void;
@@ -4359,7 +4363,7 @@ class KAGWindow extends Window
     /**
      * BGM ラベル処理の解除
      */
-    function clearBgmLabel() {
+    function ClearBgmLabel() {
         bgmLabelInfos = %[];
         bgmLabelInfo = void;
     }
@@ -5098,7 +5102,7 @@ class KAGWindow extends Window
 	{
 		// プラグインの読み込み
 		Plugins.link(elm.module);
-		dm("插件已加载 : " + elm.module);
+		dm("プラグインを読み込みました : " + elm.module);
 		return 0;
 	} incontextof this,
 
@@ -5402,7 +5406,7 @@ class KAGWindow extends Window
 		updateBeforeCh = 1;
 		var start = System.getTickCount();
 		getLayerFromElm(elm).loadImages(elm);
-		dm(elm.storage + " 的加载耗时 " + (System.getTickCount() - start) + "ms");
+		dm(elm.storage + " の読み込みに " + (System.getTickCount() - start) + "ms かかりました");
 		return 0;
 	} incontextof this,
 
@@ -5412,7 +5416,7 @@ class KAGWindow extends Window
 		updateBeforeCh = 1;
 		var start = System.getTickCount();
 		getLayerFromElm(elm).loadImages(elm);
-		dm(elm.storage + " 的加载耗时 " + (System.getTickCount() - start) + "ms");
+		dm(elm.storage + " の読み込みに " + (System.getTickCount() - start) + "ms かかりました");
 		return 0;
 	} incontextof this,
 
@@ -5575,8 +5579,8 @@ class KAGWindow extends Window
 	{
 		// BGM の演奏
 		bgm.play(elm);
-        clearBgmStop();
-        clearBgmLabel();
+        ClearBgmStop();
+        ClearBgmLabel();
 		return 0;
 	} incontextof this,
 
@@ -5633,8 +5637,8 @@ class KAGWindow extends Window
 	{
 		// BGM の入れ替え/クロスフェード
 		bgm.exchange(elm);
-        clearBgmStop();
-        clearBgmLabel();
+        ClearBgmStop();
+        ClearBgmLabel();
 		return 0;
 	} incontextof this,
 
@@ -5651,10 +5655,10 @@ class KAGWindow extends Window
         return 0;
 	} incontextof this,
 
-    clearbgmstop : function(elm)
+    ClearBgmstop : function(elm)
 	{
 		// BGM の終了時コールバックの削除
-        clearBgmStop();
+        ClearBgmStop();
         return 0;
 	} incontextof this,
 
@@ -5664,10 +5668,10 @@ class KAGWindow extends Window
         return 0;
     } incontextof this,
 
-    clearbgmlabel : function(elm)
+    ClearBgmlabel : function(elm)
 	{
         // BGM のラベル時コールバックの削除
-        clearBgmLabel();
+        ClearBgmLabel();
         return 0;
 	} incontextof this,
 
