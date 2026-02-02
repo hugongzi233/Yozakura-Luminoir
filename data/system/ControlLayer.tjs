@@ -1,0 +1,162 @@
+/*
+	Control Layer for super simple movie player 
+*/
+
+class ControlLayer extends Layer
+{
+	var openButton;
+	var playButton;
+	var pauseButton;
+	var stopButton;
+	var slider;
+
+	var timer;
+
+	function ControlLayer(win, par)
+	{
+		super.Layer(win, par);
+
+		// set properties
+		setImageSize(400, 20);
+		setSizeToImageSize();
+		name = "Control Layer";
+		visible = true;
+
+		// create each button etc. 
+		var l = 4;
+		const spacing = 4;
+
+		with(openButton = new ButtonLayer(win, this))
+		{
+			.width = 25;
+			.height = 16;
+			.left = l;
+			.top = 2;
+			.caption = .name = "Open";
+			.onClickHandler = window.openFile;
+			.visible = true;
+			l += .width + spacing;
+		}
+
+
+		with(playButton = new ButtonLayer(win, this))
+		{
+			.width = 25;
+			.height = 16;
+			.left = l;
+			.top = 2;
+			.caption = .name = "Play";
+			.onClickHandler = window.play;
+			.visible = true;
+			l += .width + spacing;
+		}
+
+		with(pauseButton = new ButtonLayer(win, this))
+		{
+			.width = 25;
+			.height = 16;
+			.left = l;
+			.top = 2;
+			.caption = .name = "Pause";
+			.onClickHandler = window.pause;
+			.visible = true;
+			l += .width + spacing;
+		}
+
+		with(stopButton = new ButtonLayer(win, this))
+		{
+			.width = 25;
+			.height = 16;
+			.left = l;
+			.top = 2;
+			.caption = .name = "Stop";
+			.onClickHandler = window.stop;
+			.visible = true;
+			l += .width + spacing;
+		}
+
+		with(slider = new SliderLayer(win, this))
+		{
+			.left = l + 80;
+			.top = 2;
+			.width =  width - spacing - .left - 100;
+			.height = 16;
+			.onChangeHandler = onSliderChange;
+			.visible = true;
+		}
+
+
+		// create timer
+		timer = new Timer(onTimer, '');
+		timer.interval = 100;
+
+		// update status 
+		displayStatus();
+	}
+
+	function finalize()
+	{
+		invalidate openButton;
+		invalidate playButton;
+		invalidate pauseButton;
+		invalidate stopButton;
+		invalidate slider;
+		invalidate timer;
+		super.finalize(...);
+	}
+
+	function displayStatus()
+	{
+		// display status
+		var st_x = 130;
+		var st_y = 4;
+
+		fillRect(st_x, st_y, width-st_x, height-st_y, 0);
+
+		var text;
+		switch(window.videoStatus)
+		{
+		case 'unload':		text = 'Please open the movie';		break;
+		case 'play':		text = 'Playing';					break;
+		case 'stop':		text = 'Stopping';					break;
+		case 'pause':		text = 'Temporarily stopped';		break;
+		}
+
+		slider.visible = window.videoStatus != 'unload';
+
+		if(text !== void)
+			drawText(st_x, st_y, text, 0, , false);
+
+		if(slider.visible)
+		{
+			timer.enabled = true;
+
+			var cur = window.video.position \ 1000;
+			var tot = window.video.totalTime \ 1000;
+
+			var t = "%d:%02d / %d:%02d".sprintf(
+				cur \ 60, cur % 60,
+				tot \ 60, tot % 60);
+
+			drawText(slider.left + slider.width + 10, st_y, t, 0, , false);
+
+			slider.max = window.video.numberOfFrame;
+			slider.setPos(window.video.frame);
+		}
+		else
+		{
+			timer.enabled = false;
+		}
+	}
+
+	function onTimer()
+	{
+		displayStatus();
+	}
+
+	function onSliderChange(which, pos)
+	{
+		window.video.frame = pos;
+	}
+}
+

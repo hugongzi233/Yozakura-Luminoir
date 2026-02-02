@@ -1,0 +1,313 @@
+/*
+	Super Simple Movie Player
+*/
+
+class MoviePlayerWindow extends Window
+{
+	var controlLayer; // control layer
+	var video; // VideoOverlay object
+	var videoLayer; // layer to display the video
+	var layeredIndicatorLayer; // layer indicating that the layer is playing
+
+	var videoStatus = "unload"; // video status
+
+	function MoviePlayerWindow()
+	{
+		// constructor
+		super.Window(...);
+
+		// set window appearance
+		borderStyle = bsSingle;
+		//innerSunken = false;
+		caption = System.title = "Simple Movie Player";
+
+		// initialize the menu
+		menu.add(this.fileMenu = new MenuItem(this, "File(&F)"));
+		fileMenu.add(this.openMenuItem = new CommandMenuItem(this, "Open(&O) ...", openFile));
+		fileMenu.add(new MenuItem(this, "-"));
+		fileMenu.add(this.exitMenuItem = new CommandMenuItem(this, "Close(&X)", close));
+		menu.add(this.playMenu = new MenuItem(this, "Play(&P)"));
+		playMenu.add(this.playMenuItem = new CommandMenuItem(this, "Play(&P)", play));
+		playMenu.add(this.pauseMenuItem = new CommandMenuItem(this, "Pause(&H)", pause));
+		playMenu.add(this.stopMenuItem = new CommandMenuItem(this, "Stop(&S)", stop));
+		playMenu.add(new MenuItem(this, "-"));
+		playMenu.add(this.playMixerMenuItem = new CommandMenuItem(this, "Mixer Playback(&O)", playMixer));
+		playMixerMenuItem.radio = true;
+		playMenu.add(this.playLayeredMenuItem = new CommandMenuItem(this, "Layer Playback(&L)", playLayered));
+		playLayeredMenuItem.radio = true;
+		playMenu.add(this.playMFMenuItem = new CommandMenuItem(this, "MediaFoundation Playback(&M)", playMF));
+		playMFMenuItem.radio = true;
+		playMixerMenuItem.group = playLayeredMenuItem.group = playMFMenuItem.group = 1;
+
+		menu.visible = true;
+
+		// create primaryLayer
+		add(new Layer(this, null));
+
+		// create controlLayer
+		add(controlLayer = new ControlLayer(this, primaryLayer));
+
+		// create a layer to display the video
+		add(videoLayer = new Layer(this, primaryLayer));
+		with(videoLayer)
+		{
+			.visible = false;
+			.type = ltOpaque; // fully opaque
+			.name = "Layer for video display";
+		}
+
+		// create a layer to indicate that the layer is playing
+		add(layeredIndicatorLayer = new Layer(this, videoLayer));
+		with(layeredIndicatorLayer)
+		{
+			var text = "Playing movie in layer";
+			var bw = 4;
+			var bl = 9012;
+			.font.height = 20;
+			var tw = .font.getTextWidth(text);
+			var th = .font.getTextHeight(text);
+			.setImageSize(tw + bw*2, th + bw*2);
+			.drawText(bw, bw, text, 0, 256, true, bl, 0xffffff, bw, 0, 0);
+			.colorRect(0, 0, .imageWidth, .imageHeight, 0, -128); // Make everything translucent
+			.setSizeToImageSize();
+			.visible = true;
+		}
+
+		// create a VideoOverlay object
+		add(video = new VideoOverlay(this));
+		playMixer(); // overlay playback at first
+
+		// adjust window size
+		adjustWindowSize();
+
+		// visible state
+		visible = true;
+	}
+
+	function finalize()
+	{
+		// finalize method
+		super.finalize(...);
+	}
+
+	function adjustWindowSize()
+	{
+		// adjust the window size to fit the movie size
+		var ww, wh;
+		if(videoStatus == 'unload')
+		{
+			// if the movie hasn't loaded yet
+			ww = 320;
+			wh = 240;
+		}
+		else
+		{
+			// if the movie is loaded
+			ww = video.originalWidth; // video width
+			wh = video.originalHeight; // video height
+		}
+
+		var cw = controlLayer.width; // control layer width
+		var ch = controlLayer.height; // control layer height
+
+		// the width is the larger of the control layer or the video
+		// height is the combined value of control layer and video
+		var w = ww>cw?ww:cw;
+		var h = wh + ch;
+
+		// set client size
+		setInnerSize(w, h);
+
+		// The client size that determines the upper left position
+		// of the video may not be the value specified by the program
+		// (when the window size is too small or too large)
+		// so it is reacquired. The case when the window size is too large
+		// is not considered here.
+		w = innerWidth;
+		h = innerHeight;
+
+		video.left = (w - ww) \ 2;
+		video.top = (h - ch - wh) \ 2 + ch;
+
+		// resize amd fill the primary layer
+		with(primaryLayer)
+		{
+			.setImageSize(w, h);
+			.setSizeToImageSize();
+			.fillRect(0, 0, w, h, System.toActualColor(clBtnFace));
+		}
+	}
+
+	function open(fn)
+	{
+		// open with MediaFoundation if .mp4 file
+		if( video.mode != vomMFEVR && /\.mp4$/i.test(fn) ) {
+			playMF();
+		}
+		// open the movie pointed to by "fn"
+		try
+		{
+			video.open(fn);
+		}
+		catch(e)
+		{
+			Debug.message("File       : %s".sprintf(fn));
+			Debug.startLogToFile();
+			Debug.message(e.message);
+			System.inform("An error has ocurred.\n" + e.message);
+			return;
+		}
+		adjustWindowSize();
+		video.visible = true;
+		if(video.mode == vomOverlay || video.mode == vomMixer )
+		{
+			// specify the size of the video display area when in overlay mode
+			video.setSize(video.originalWidth, video.originalHeight);
+			adjustWindowSize();
+		}
+
+		// playback start
+		video.play();
+
+		// output various information to the console
+		Debug.message("File       : %s".sprintf(fn));
+		if( video.mode != vomMFEVR )
+		{
+			dumpVideoInfo();
+		}
+
+	}
+
+	function openFile(fn)
+	{
+		// open the "Open File" dialog and open the movie 
+		var params = %[
+			filter : [ "MPEG Stream(*.mpg;*.mpeg;*.mpv)|*.mpg;*.mpeg;*.mpv" ],
+			filterIndex : 1,
+			name : "",
+			title : "Open File",
+			save : false,
+			];
+		if(Storages.selectFile(params))
+			open(params.name);
+	}
+
+	function play()
+	{
+		// start playing 
+		if(videoStatus != 'unload')
+		{
+			if(video.mode == vomLayer)
+				videoLayer.visible = true;
+			else
+				video.visible = true;
+			video.play();
+		}
+	}
+
+	function pause()
+	{
+		// pause
+		video.pause();
+	}
+
+	function stop()
+	{
+		// stop
+		video.stop();
+		video.rewind();
+	}
+
+	function playLayered()
+	{
+		// switch to layer playback
+		video.stop(); // stop the playback
+		video.close(); // also close the video
+
+		video.mode = vomLayer;
+		video.layer1 = videoLayer;
+		playLayeredMenuItem.checked = true;
+	}
+
+	function playMixer()
+	{
+		// switch to overlay playback
+		video.stop(); // stop the playback
+		video.close(); // also close the video
+
+		video.mode = vomMixer;
+		videoLayer.visible = false;
+		playMixerMenuItem.checked = true;
+	}
+	function playMF()
+	{
+		// switch to MediaFoundation playback
+		video.stop(); // stop the playback
+		video.close(); // also close the video
+
+		video.mode = vomMFEVR;
+		videoLayer.visible = false;
+		playMFMenuItem.checked = true;
+	}
+	function dumpVideoInfo()
+	{
+		Debug.message("Video size   : %d x %d".sprintf(video.originalWidth, video.originalHeight));
+		Debug.message("Framerate : %f fps".sprintf(video.fps));
+		Debug.message("Total number of frames   : %d".sprintf(video.numberOfFrame));
+		Debug.message("Total time         : %d:%02d.%03d (%d ms)".sprintf(video.totalTime \ 1000 \ 60,
+			video.totalTime \ 1000 % 60, video.totalTime % 1000,video.totalTime));
+	}
+
+	function action(ev)
+	{
+		// event aggregation handler
+		var type = ev.type;
+		var target = ev.target;
+		switch(target)
+		{
+		case video:
+			if(type == 'onStatusChanged')
+			{
+				// video status changed 
+				Debug.message("Status: " + ev.status);
+				if( video.mode == vomMFEVR && ev.status == "ready" )
+				{
+					adjustWindowSize();
+					video.setSize(video.originalWidth, video.originalHeight);
+					dumpVideoInfo();
+				}
+				if(videoStatus == "play" && ev.status == "stop")
+				{
+					// transition from play state to stop state
+					video.rewind(); // rewind
+				}
+				videoStatus = ev.status;
+				controlLayer.displayStatus(videoStatus);
+			}
+			else if(type == 'onPeriod')
+			{
+				// period event occurred
+				var txt = "onPeriod: ";
+				switch(ev.reason)
+				{
+				case perLoop:   txt  += "loop";    break;
+				case perPeriod: txt  += "period";  break;
+				case perPrepare: txt += "prepare"; break;
+				}
+				Debug.message(txt);
+			}
+			break;
+		}
+	}
+
+	function onFileDrop(list)
+	{
+		// when a file is dropped on the window
+		super.onFileDrop(...);
+		open(list[0]);
+	}
+
+}
+
+
+
