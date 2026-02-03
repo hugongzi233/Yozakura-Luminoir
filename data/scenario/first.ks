@@ -32,4 +32,8 @@
 @position layer=2 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0 frame=""
 @position layer=2 page=fore visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0 frame=""
 @current layer=message0 page=back
+
+; Logo界面，开发测试时请注释此行
 @jump target="*logo" storage="logo.ks"
+
+; @jump storage="title.ks" target="*title"
