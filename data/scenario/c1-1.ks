@@ -47,6 +47,7 @@
 [p]
 （还有——）
 [p]
+; 此处立绘
 @nm name="？？？"
 「呀啊啊啊啊啊——！！！」
 [p]
@@ -54,3 +55,6 @@
 「——诶？你听我解释啊！」
 [p]
 ; 拖鞋
+@se storage="sen_ge_panchi09.ogg"
+; @set_stand face="lia_angry" layer=1 pos="c" time=500
+; @clear_message_window effect=true
