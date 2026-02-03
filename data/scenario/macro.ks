@@ -50,6 +50,8 @@
 ;
 ; [bgm] / [bgm_stop]
 ;   Play/Stop background music.
+;   Arguments:
+;     delay : Delay time before playing/stopping
 ;
 ; [fade_out] / [fade_in]
 ;   Fade to black / Fade in from black.
@@ -63,10 +65,42 @@
 ; ==============================================================================
 
 *macro|macro
-@position layer=message0 page=back frame=""
-@position layer=message1 page=fore frame=""
+[macro name=init_system_settings]
+; 禁止存档
+@disablestore store=true
+; 关闭右键菜单
+@rclick enabled=false
+; 不可跳过
+@clickskip enabled=false
+; 关闭历史记录功能
+@history enabled=false output=false
+; 加载音频播放插件
+@loadplugin module="wuvorbis.dll"
+[endmacro]
+
+
+; ==========================
+; System Initialization
+; ==========================
+[macro name=init_system_layers]
+@layopt layer=base page=back visible=true
+@layopt layer=base page=fore visible=true
+
+@position layer=message0 page=back visible=false opacity=255 left=0 top=&(720-160) width=1280 height=160 marginl=200 margint=0 marginr=70 marginb=16 frame="frame"
+@position layer=message0 page=fore visible=false opacity=255 left=0 top=&(720-160) width=1280 height=160 marginl=200 margint=0 marginr=70 marginb=16 frame="frame"
+
+@position layer=message1 page=back visible=false opacity=0 left=0 top=0 width=1280 height=720 marginl=0 margint=0 marginr=0 marginb=0 frame=""
+@position layer=message1 page=fore visible=false opacity=0 left=0 top=0 width=1280 height=720 marginl=0 margint=0 marginr=0 marginb=0 frame=""
+
+@layopt layer=0 page=back visible=false
+@layopt layer=0 page=fore visible=false
+@layopt layer=1 page=back visible=false
+@layopt layer=1 page=fore visible=false
+@layopt layer=2 page=back visible=false
+@layopt layer=2 page=fore visible=false
+
 @current layer=message0 page=back
-@er
+[endmacro]
 
 ; ------------------------------------------------------------------------------
 ; Graphic Macros
@@ -181,7 +215,7 @@
 [endmacro]
 
 [macro name="set_window_subtitle"]
-@set_window_title title='&f.windowTitle + &mp.subtitle'
+@set_window_title title='&f.windowTitle + " " + &mp.subtitle'
 [endmacro]
 
 [macro name="set_full_screen"]
@@ -193,14 +227,19 @@
 [endmacro]
 
 [macro name="bgm"]
+[if exp="mp.delay !== void"]
+@stopbgm
+@w time=%delay
+[endif]
 @playbgm storage=%storage loop=true
 [endmacro]
 
 [macro name="bgm_stop"]
+[if exp="mp.delay !== void"]
 @stopbgm
-[if exp="time !== void"]
-@w time=%time
+@w time=%delay
 [endif]
+@stopbgm
 [endmacro]
 
 ; ------------------------------------------------------------------------------

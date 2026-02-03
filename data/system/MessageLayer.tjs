@@ -33,12 +33,12 @@ class LinkButtonLayer extends ButtonLayer
 	function onClick()
 	{
 		super.onClick(...);
+		onExecute();
 	}
 
 	function onExecute(x, y, button, shift)
 	{
-		if(enabled && button == mbLeft && !parent.selProcessLock) parent.onButtonClick(linkNum);
-		if(this isvalid) super.onExecute(...);
+		if(enabled && !parent.selProcessLock) parent.onButtonClick(linkNum);
 	}
 
 	function onMouseEnter()

@@ -76,7 +76,7 @@ function KAGWindow_config()
 // ログボックスが開き、栞を個別のファイルとして保存するモードになります。
 // この場合は 保存可能な栞の個数に制限はありません。また、
 // エクスプローラなどによる栞の管理が容易になります。
-;freeSaveDataMode = false;
+;freeSaveDataMode = true;
 
 
 // ◆サムネイルを保存するか
