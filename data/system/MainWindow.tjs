@@ -523,7 +523,7 @@ class KAGWindow extends Window
 	{
 		saveSystemVariables();
 		if(!askOnClose) { super.onCloseQuery(true); return; }
-		super.onCloseQuery(askYesNo("終了しますか？"));
+		super.onCloseQuery(askYesNo("退出游戏吗？"));
 	}
 
 	function close()

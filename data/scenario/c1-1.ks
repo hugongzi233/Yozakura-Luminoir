@@ -56,5 +56,6 @@
 [p]
 ; 拖鞋
 @se storage="sen_ge_panchi09.ogg"
+@shake
 ; @set_stand face="lia_angry" layer=1 pos="c" time=500
 ; @clear_message_window effect=true
