@@ -68,7 +68,8 @@
 @jump target="*title"
 
 *func_config
-@eval exp="kag.onShowConfigMenuItemClick(kag)"
+; 跳转到自定义设置页面
+@jump storage="config.ks" target="*start"
 @s
 
 *func_exit
