@@ -1,66 +1,132 @@
 ; ==============================================================================
-; Macro Definitions
+; 宏定义
 ; ==============================================================================
 ;
 ; [set_stand]
-;   Show character stand (tachie).
-;   Arguments:
-;     face   : Image filename (required)
-;     layer  : Layer number (default: 1)
-;     pos    : Position (l, lc, c, rc, r)
-;     method : Transition method (default: crossfade)
-;     time   : Transition time (default: 300)
+;   显示角色立绘。
+;   参数:
+;     face   : 图片文件名 (必须)
+;     layer  : 图层号 (默认: 1)
+;     pos    : 位置 (l=左, lc=左中, c=中, rc=右中, r=右)
+;     method : 切换方式 (默认: crossfade)
+;     rule   : 切换规则文件
+;     vague  : 模糊度
+;     time   : 切换时间 (默认: 300)
 ;
 ; [set_background]
-;   Show background image.
-;   Arguments:
-;     background : Image filename (required)
-;     method     : Transition method (default: crossfade)
-;     time       : Transition time (default: 400)
-;
-; [show_message_window]
-;   Show the message window (dialogue box).
-;   Arguments: None
-;
-; [clear_message_window]
-;   Hide the message window.
-;   Arguments:
-;     effect : If true, use transition (default: false)
-;
-; [set_name] / [nm]
-;   Set the speaker's name. [nm] also redraws the name area.
-;   Arguments:
-;     name : Speaker name
-;
-; [nm_off]
-;   Clear the speaker's name.
+;   显示背景图片。
+;   参数:
+;     background : 图片文件名 (必须)
+;     method     : 切换方式 (默认: crossfade)
+;     rule       : 切换规则文件
+;     vague      : 模糊度
+;     time       : 切换时间 (默认: 400)
 ;
 ; [clear_stand]
-;   Clear character stand.
-;   Arguments:
-;     layer : Layer number (default: 1)
+;   清除角色立绘。
+;   参数:
+;     layer  : 图层号 (默认: 1)
+;     method : 切换方式 (默认: crossfade)
+;     rule   : 切换规则文件
+;     vague  : 模糊度
+;     time   : 切换时间 (默认: 300)
 ;
 ; [clear_bg]
-;   Clear background.
+;   清除背景。
+;   参数:
+;     method : 切换方式 (默认: crossfade)
+;     rule   : 切换规则文件
+;     vague  : 模糊度
+;     time   : 切换时间 (默认: 500)
+;
+; [show_message_window]
+;   显示消息框（对话框）。
+;   参数: 无 (固定800ms淡入)
+;
+; [clear_message_window]
+;   隐藏消息框。
+;   参数:
+;     effect : 如果为true，则使用过渡效果 (默认: false)
+;
+; [set_name]
+;   设置当前说话人的名字（仅设置变量，不重绘名字框）。
+;   参数:
+;     name : 说话人名字
+;
+; [nm]
+;   设置说话人名字并重绘名字框。
+;   参数:
+;     name : 说话人名字
+;
+; [nm_off]
+;   清除说话人名字。
+;
+; [p]
+;   等待点击并重绘名字框（通常用于一句对话结束后）。
+;
+; [show_btn]
+;   显示按钮层 (message1)。
+;   参数:
+;     method, rule, vague, time (默认: 800)
+;
+; [clear_btn]
+;   隐藏按钮层。
+;   参数:
+;     method, rule, vague, time (默认: 500)
 ;
 ; [set_window_title]
-;   Set the game window title.
-;   Arguments:
-;     title : Title string
+;   设置游戏窗口标题。
+;   参数:
+;     title : 标题字符串
 ;
-; [bgm] / [bgm_stop]
-;   Play/Stop background music.
-;   Arguments:
-;     delay : Delay time before playing/stopping
+; [set_window_subtitle]
+;   设置窗口子标题（追加在原标题后）。
+;   参数:
+;     subtitle : 子标题字符串
 ;
-; [fade_out] / [fade_in]
-;   Fade to black / Fade in from black.
+; [set_full_screen]
+;   设置全屏模式。
+;   参数:
+;     fullscreen : true 或 false
+;
+; [se]
+;   播放音效。
+;   参数:
+;     storage : 音频文件名（支持所有 playse 参数）
+;
+; [bgm]
+;   播放背景音乐。
+;   参数:
+;     storage : 音频文件名
+;     delay   : 播放前的延迟时间 (毫秒)
+;
+; [bgm_stop]
+;   停止背景音乐。
+;   参数:
+;     delay   : 停止前的延迟时间 (毫秒)
+;
+; [fade_out]
+;   黑屏淡出（画面变黑）。
+;   参数:
+;     time : 持续时间 (默认: 1000)
+;
+; [fade_in]
+;   黑屏淡入（从黑屏恢复显示）。
+;   参数:
+;     time : 持续时间 (默认: 1000)
 ;
 ; [shake]
-;   Screen shake effect.
+;   屏幕震动效果。
+;   参数:
+;     time : 持续时间 (默认: 300)
+;     vmax : 垂直震幅 (默认: 10)
+;     hmax : 水平震幅 (默认: 10)
 ;
 ; [w]
-;   Wait command shortcut.
+;   等待指令简写。
+;   参数:
+;     time : 等待时间 (毫秒)
+;     mode : 等待模式 (默认: normal)
 ;
 ; ==============================================================================
 
