@@ -50,6 +50,8 @@
 ;
 ; [bgm] / [bgm_stop]
 ;   Play/Stop background music.
+;   Arguments:
+;     delay : Delay time before playing/stopping
 ;
 ; [fade_out] / [fade_in]
 ;   Fade to black / Fade in from black.
@@ -181,7 +183,7 @@
 [endmacro]
 
 [macro name="set_window_subtitle"]
-@set_window_title title='&f.windowTitle + &mp.subtitle'
+@set_window_title title='&f.windowTitle + " " + &mp.subtitle'
 [endmacro]
 
 [macro name="set_full_screen"]
@@ -193,14 +195,19 @@
 [endmacro]
 
 [macro name="bgm"]
+[if exp="mp.delay !== void"]
+@stopbgm
+@w time=%delay
+[endif]
 @playbgm storage=%storage loop=true
 [endmacro]
 
 [macro name="bgm_stop"]
+[if exp="mp.delay !== void"]
 @stopbgm
-[if exp="time !== void"]
-@w time=%time
+@w time=%delay
 [endif]
+@stopbgm
 [endmacro]
 
 ; ------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 @nm name="池原"
 今天也是"社畜浓度"超标的一天。
 [p]
-我叫池原一郎，是一家广告公司的普通职员。[l][r]
+我叫[ruby text="    ち  げん  いち  ろう"]池原一郎，是一家广告公司的普通职员。[l][r]
 为了公司那笔生死攸关的投资，我像个廉价的陪酒机器人一样，对着那位满面油光的老板笑了整整六个小时。
 [p]
 六个小时啊。[l][r]
@@ -30,9 +30,9 @@
 [p]
 
 @se storage="sei_ge_srai_door_op01.ogg"
-@set_background background="温泉旅馆宿舍庭院_莉亚_未处理.png" time=1000
-@stopbgm time=500
-@bgm storage="rest.ogg"
+@set_background background="温泉旅馆宿舍庭院_莉亚_未处理.png" time=1000 method="universal" rule="ysr036" vague=10
+
+@bgm storage="rest.ogg" delay=1000
 
 @nm name="？？？"
 「——诶？」

@@ -13,12 +13,10 @@
 @history enabled=false output=false
 ; 加载音频播放插件
 @loadplugin module="wuvorbis.dll"
-; 隐藏message0层
-@layopt layer=message0 visible=false
 ; 加载macro
 @call storage="macro.ks" target="*macro"
 
-@eval exp="f.windowTitle='游戏标题' + ' '"
+@eval exp="f.windowTitle='游戏标题'"
 @set_window_title title='&f.windowTitle'
 
 ; 进入
