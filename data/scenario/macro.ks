@@ -41,6 +41,7 @@
 [endmacro]
 
 [macro name=SetBackground]
+@backlay
 @image layer=base page=back storage=%background visible=true left=0 top=0 opacity=255
 [if exp="mp.method!=''"]
 @trans method=%method rule=%rule vague=%vague time=%time
@@ -56,17 +57,39 @@
 @wt
 [endmacro]
 
-[macro name=n]
-@stopse
-@playse storage=%se cond="mp.se!=''"
+[macro name=SetName]
+@eval exp='f.currentName = mp.name'
+[endmacro]
+
+[macro name=_draw_name]
 @current layer=message0 page=fore
 @font face="黑体" size=24
 @er
 [nowait]
-@emb exp="'【'+mp.name+'】'" cond="mp.name!=''"
+[if exp="f.currentName !== void && f.currentName != ''"]
+@emb exp="'【'+f.currentName+'】'"
 @r
+[else]
+　
+@r
+[endif]
 [endnowait]
 @resetfont
+[endmacro]
+
+[macro name=nm]
+[eval exp="f.currentName = mp.name"]
+@_draw_name
+[endmacro]
+
+[macro name=nm_off]
+[eval exp="f.currentName = ''"]
+@_draw_name
+[endmacro]
+
+[macro name=p]
+@l
+@_draw_name
 [endmacro]
 
 [macro name=se]
