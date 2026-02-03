@@ -25,6 +25,9 @@
 @set_background background="温泉旅馆宿舍_未处理.png"
 衬衫脱掉...西裤脱掉...终于解放了——
 [p]
+@nm name="池原"
+「泡温泉！泡温泉！」
+[p]
 
 @se storage="sei_ge_srai_door_op01.ogg"
 @set_background background="温泉旅馆宿舍庭院_莉亚_未处理.png" time=1000
