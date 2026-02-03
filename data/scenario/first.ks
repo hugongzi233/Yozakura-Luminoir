@@ -19,7 +19,7 @@
 @call storage="macro.ks" target="*macro"
 
 @eval exp="f.windowTitle='游戏标题' + ' '"
-@SetWindowTitle title='&f.windowTitle'
+@set_window_title title='&f.windowTitle'
 
 ; 进入
 @position layer=base page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0 frame=""

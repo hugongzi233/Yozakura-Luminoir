@@ -3,42 +3,58 @@
 ; 1-1
 @disablestore store=false
 
-@eval exp="f.windowSubtitle='吸...吸血鬼'"
-@SetWindowTitle title='&f.windowTitle + &f.windowSubtitle'
-@playbgm storage="mitisugara.ogg"
-@SetBackground background="bg1"
-@ShowMessageWindow
+@set_window_subtitle subtitle='吸...吸血鬼!'
+@bgm storage="mitisugara.ogg"
+@set_background background="温泉旅馆入口_未处理.png"
+@show_message_window
 
-@SetStand face="bt1" layer=1 pos="lc"
+@nm name="池原"
+今天也是"社畜浓度"超标的一天。
+[p]
+我叫池原一郎，是一家广告公司的普通职员。[l][r]
+为了公司那笔生死攸关的投资，我像个廉价的陪酒机器人一样，对着那位满面油光的老板笑了整整六个小时。
+[p]
+六个小时啊。[l][r]
+脸颊的肌肉已经不再是自己的了，大概这辈子都恢复不了了吧。
+[p]
+结束了...终于结束了...
+[p]
+@nm_off
+算了，至少这家新开的温泉旅馆房间不错。温泉...温泉在等着我...
+[p]
+@set_background background="温泉旅馆宿舍_未处理.png"
+衬衫脱掉...西裤脱掉...终于解放了——
+[p]
+@nm name="池原"
+「泡温泉！泡温泉！」
+[p]
 
-@n name="女孩" se="alic0063.ogg"
-你这个整天无所事事、[ruby text="龌龊变态"]油腻肮脏、[font size=30 color=0xFF3300]不修边幅[resetfont]，只会对着电脑屏幕傻笑的白痴给我去死！[p]
+@se storage="sei_ge_srai_door_op01.ogg"
+@set_background background="温泉旅馆宿舍庭院_莉亚_未处理.png" time=1000
+@stopbgm time=500
+@bgm storage="rest.ogg"
 
-@ClearStand layer=1
-
-@SetStand face="bt2" layer=2 pos="c" method="universal" rule="ysr000" vague=100 time=100
-@SetStand face="bt1" layer=1 pos="l"
-@SetStand face="bt1" layer=1 pos="c"
-@SetStand face="bt1" layer=1 pos="rc"
-@SetStand face="bt1" layer=1 pos="r"
-
-@n name="女孩" se="alic0008.ogg"
-这个鬼东西怎么这么难学啊！！！[r]我要放弃了！[p]
-
-@ClearStand layer=2
-@ClearStand layer=1
-
-@playbgm storage="rest.ogg"
-
-@SetBackground background="bg2" method="universal" rule="ysr031" vague=10 time=500
-@SetStand face="bt2" layer=2 pos="c"
-
-@n name="女孩" se="alic0063.ogg"
-你这个整天无所事事、[ruby text="龌龊变态"]油腻肮脏、[font size=30 color=0xFF3300]不修边幅[resetfont]，只会对着电脑屏幕傻笑的白痴给我去死！[p]
-
-@ClearStand layer=1
-
-@SetStand face="bt2" layer=2 pos="lc"
-@n name="女孩" se="alic0008.ogg"
-这个鬼东西怎么这么难学啊！！！[r]我要放弃了！[p]
-[click]
+@nm name="？？？"
+「——诶？」
+[p]
+@nm name="池原"
+「——诶？」
+[p]
+@nm_off
+（蒸汽中，娇小的人影）
+[p]
+（银白色的长发，浮在水面上的...肩膀？）
+[p]
+（还有——）
+[p]
+; 此处立绘
+@nm name="？？？"
+「呀啊啊啊啊啊——！！！」
+[p]
+@nm name="池原"
+「——诶？你听我解释啊！」
+[p]
+; 拖鞋
+@se storage="sen_ge_panchi09.ogg"
+; @set_stand face="lia_angry" layer=1 pos="c" time=500
+; @clear_message_window effect=true

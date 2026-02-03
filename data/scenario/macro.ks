@@ -1,27 +1,66 @@
-; ==========================
+; ==============================================================================
 ; Macro Definitions
-; ==========================
+; ==============================================================================
 ;
-; Usage:
-; SetStand 显示立绘
-;   参数: face="图片" layer=1 pos="l lc c rc r" method="universal" rule="文件名" vague= time=
-; SetBackground 显示背景
-;   参数: background="文件名" (method="universal" rule="文件名" vague= time=)
-; ShowMessageWindow 显示对话框
-; n 名字显示与语音
-;   参数：name="名字" se="音效"(可选)
-; ClearMessageWindow 清除对话框
-; ClearStand 清除立绘
-;  参数: layer=1 (method="universal" rule="文件名" vague= time=)
-; ClearBg 清除背景
-;  参数: (method="universal" rule="文件名" vague= time=)
-; ClearBtn 清除按钮背景
-;  参数: (method="universal" rule="文件名" vague= time=)
-; ShowBtn 显示按钮背景
-; SetWindowTitle 设置窗口标题
-;   参数: title="标题文字"
-; SetFullScreen 设置全屏/窗口模式
-;   参数: fullscreen=true/false
+; [set_stand]
+;   Show character stand (tachie).
+;   Arguments:
+;     face   : Image filename (required)
+;     layer  : Layer number (default: 1)
+;     pos    : Position (l, lc, c, rc, r)
+;     method : Transition method (default: crossfade)
+;     time   : Transition time (default: 300)
+;
+; [set_background]
+;   Show background image.
+;   Arguments:
+;     background : Image filename (required)
+;     method     : Transition method (default: crossfade)
+;     time       : Transition time (default: 400)
+;
+; [show_message_window]
+;   Show the message window (dialogue box).
+;   Arguments: None
+;
+; [clear_message_window]
+;   Hide the message window.
+;   Arguments:
+;     effect : If true, use transition (default: false)
+;
+; [set_name] / [nm]
+;   Set the speaker's name. [nm] also redraws the name area.
+;   Arguments:
+;     name : Speaker name
+;
+; [nm_off]
+;   Clear the speaker's name.
+;
+; [clear_stand]
+;   Clear character stand.
+;   Arguments:
+;     layer : Layer number (default: 1)
+;
+; [clear_bg]
+;   Clear background.
+;
+; [set_window_title]
+;   Set the game window title.
+;   Arguments:
+;     title : Title string
+;
+; [bgm] / [bgm_stop]
+;   Play/Stop background music.
+;
+; [fade_out] / [fade_in]
+;   Fade to black / Fade in from black.
+;
+; [shake]
+;   Screen shake effect.
+;
+; [w]
+;   Wait command shortcut.
+;
+; ==============================================================================
 
 *macro|macro
 @position layer=message0 page=back frame=""
@@ -29,113 +68,167 @@
 @current layer=message0 page=back
 @er
 
-[macro name=SetStand]
+; ------------------------------------------------------------------------------
+; Graphic Macros
+; ------------------------------------------------------------------------------
+
+[macro name=set_stand]
 @backlay
-@image layer=%layer page=back storage=%face visible=true left=0 top=0 pos=%pos
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
-[else]
-@trans method=crossfade time=300
-[endif]
+@image layer=%layer|1 page=back storage=%face visible=true left=0 top=0 pos=%pos
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|300
 @wt
 [endmacro]
 
-[macro name=SetBackground]
+[macro name=set_background]
+@backlay
 @image layer=base page=back storage=%background visible=true left=0 top=0 opacity=255
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
-[else]
-@trans method=crossfade time=400
-[endif]
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|400
 @wt
 [endmacro]
 
-[macro name=ShowMessageWindow]
+[macro name=clear_stand]
+@freeimage layer=%layer|1 page=back
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|300
+@wt
+[endmacro]
+
+[macro name=clear_bg]
+@freeimage layer=base page=back
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|500
+@wt
+[endmacro]
+
+; ------------------------------------------------------------------------------
+; Message Window Macros
+; ------------------------------------------------------------------------------
+
+[macro name=show_message_window]
 @position layer=message0 left=0 top=&(720-160) width=1280 height=160 marginl=200 margint=0 marginr=70 marginb=16 opacity=0 visible=true frame="frame" page=back
 @trans method=crossfade time=800
 @wt
 [endmacro]
 
-[macro name=n]
-@stopse
-@playse storage=%se cond="mp.se!=''"
-@current layer=message0 page=fore
-@font face="黑体" size=24
-@er
-[nowait]
-@emb exp="'【'+mp.name+'】'" cond="mp.name!=''"
-@r
-[endnowait]
-@resetfont
-[endmacro]
-
-[macro name=se]
-@playse *
-[endmacro]
-
-[macro name=ClearMessageWindow]
+[macro name=clear_message_window]
 @position layer=message0 frame="" page=back
 @trans method=crossfade time=800 cond="mp.effect==true"
 @wt
 [endmacro]
 
-[macro name=ClearStand]
-@freeimage layer=%layer page=back
-@freeimage layer=%layer page=fore
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
-[else]
-@trans method=crossfade time=300
-[endif]
-@wt
+; ------------------------------------------------------------------------------
+; Name & Text Macros
+; ------------------------------------------------------------------------------
+
+[macro name=set_name]
+@eval exp='f.currentName = mp.name'
 [endmacro]
 
-[macro name=ClearBg]
-@freeimage layer=base page=back
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
+[macro name=_draw_name]
+@current layer=message0 page=fore
+@font face="黑体" size=24
+@er
+[nowait]
+[if exp="f.currentName !== void && f.currentName != ''"]
+@emb exp="'【'+f.currentName+'】'"
+@r
 [else]
-@trans method=crossfade time=500
+　
+@r
 [endif]
-@wt
+[endnowait]
+@resetfont
 [endmacro]
 
-[macro name=ClearBtn]
-@position layer=message1 frame="" page=back
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
-[else]
-@trans method=crossfade time=500
-[endif]
-@wt
-@current layer=message0 page=back
+[macro name=nm]
+[eval exp="f.currentName = mp.name"]
+@_draw_name
 [endmacro]
 
-[macro name=ShowBtn]
+[macro name=nm_off]
+[eval exp="f.currentName = ''"]
+@_draw_name
+[endmacro]
+
+[macro name=p]
+@l
+@_draw_name
+[endmacro]
+
+; ------------------------------------------------------------------------------
+; Button Macros
+; ------------------------------------------------------------------------------
+
+[macro name=show_btn]
 @backlay
 @position layer=message1 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
 @current layer=message1 page=back
 @er
-[if exp="mp.method!=''"]
-@trans method=%method rule=%rule vague=%vague time=%time
-[else]
-@trans method=crossfade time=800
-[endif]
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|800
 [endmacro]
 
-[macro name="SetWindowTitle"]
+[macro name=clear_btn]
+@position layer=message1 frame="" page=back
+@trans method=%method|crossfade rule=%rule vague=%vague time=%time|500
+@wt
+@current layer=message0 page=back
+[endmacro]
+
+; ------------------------------------------------------------------------------
+; System Macros
+; ------------------------------------------------------------------------------
+
+[macro name="set_window_title"]
 [eval exp='System.title = mp.title']
 [endmacro]
 
-; [macro name="SetWindowSize"]
-; [eval exp='f.width = mp.width']
-; [eval exp='f.height = mp.height']
-; [eval exp='System.setMode(f.width, f.height)']
-; [endmacro]
-; @SetWindowSize width=1920 height=1080
+[macro name="set_window_subtitle"]
+@set_window_title title='&f.windowTitle + &mp.subtitle'
+[endmacro]
 
-[macro name="SetFullScreen"]
+[macro name="set_full_screen"]
 [eval exp='System.setFullScreen(mp.fullscreen)']
 [endmacro]
 
+[macro name="se"]
+@playse *
+[endmacro]
+
+[macro name="bgm"]
+@playbgm storage=%storage loop=true
+[endmacro]
+
+[macro name="bgm_stop"]
+@stopbgm
+[if exp="time !== void"]
+@w time=%time
+[endif]
+[endmacro]
+
+; ------------------------------------------------------------------------------
+; Effect Macros
+; ------------------------------------------------------------------------------
+
+[macro name="fade_out"]
+@backlay
+@position layer=2 page=back visible=true opacity=255 left=0 top=0 width=1280 height=720 color=0x000000
+@trans method=crossfade time=%time|1000
+@wt
+[endmacro]
+
+[macro name="fade_in"]
+@backlay
+@layopt layer=2 page=back visible=false
+@trans method=crossfade time=%time|1000
+@wt
+[endmacro]
+
+[macro name="shake"]
+@quake time=%time|300 vmax=%vmax|10 hmax=%hmax|10
+@wt
+[endmacro]
+
+[macro name="w"]
+@wait time=%time mode=%mode|normal
+[endmacro]
+
 @return
+
