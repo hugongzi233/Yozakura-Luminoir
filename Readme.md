@@ -7,6 +7,7 @@
 [krkr KAG3文字教程](https://hydrozoa.felisworks.com/)
 [krkr KAG3天之界限bilibili](https://www.bilibili.com/video/BV1ts411f76W)
 [KAG3文档](https://hydrozoa.felisworks.com/doc/KAG3Doc/contents/index.html)
+[KAG3文档2](https://kimoritama.github.io/krkr2doc-cn/kag3doc/contents/index.html)
 [TSJ2文档](https://hydrozoa.felisworks.com/doc/tjs2doc/contents/index.html)
 [TVP文档](https://hydrozoa.felisworks.com/doc/kr2doc/contents/index.html)
 [KAGEXPRESS](https://mp.weixin.qq.com/s/T58wP_jZRPrxdr34SaC15g)

@@ -266,11 +266,11 @@ function KAGWindow_config()
 // image タグあるいは img タグの pos 属性で指定する前景レイヤの 位置名 (
 // left や lecft_center など ) とそれぞれに対応する 中心位置 ( x 座標 ) を
 // 指定します。;scPositionX.位置名 = 中心位置; の形式で指定します。
-;scPositionX.left = 160;
-;scPositionX.left_center = 240;
-;scPositionX.center = 320;
-;scPositionX.right_center = 400;
-;scPositionX.right = 480;
+;scPositionX.left = 320;
+;scPositionX.left_center = 480;
+;scPositionX.center = 640;
+;scPositionX.right_center = 800;
+;scPositionX.right = 960;
 
 
 // 簡易な記号

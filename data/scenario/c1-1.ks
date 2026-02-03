@@ -1,6 +1,10 @@
 *c1-1|吸...吸血鬼!
 ; ==========================
 ; 1-1
+@disablestore store=false
+
+@eval exp="f.windowSubtitle='吸...吸血鬼'"
+@SetWindowTitle title='&f.windowTitle + &f.windowSubtitle'
 @playbgm storage="mitisugara.ogg"
 @SetBackground background="bg1"
 @ShowMessageWindow
@@ -10,14 +14,19 @@
 @n name="女孩" se="alic0063.ogg"
 你这个整天无所事事、[ruby text="龌龊变态"]油腻肮脏、[font size=30 color=0xFF3300]不修边幅[resetfont]，只会对着电脑屏幕傻笑的白痴给我去死！[p]
 
-@ClearStand layer=1 effect=false
+@ClearStand layer=1
 
-@SetStand face="bt2" layer=2 pos="lc" method="universal" rule="ysr000" vague=100 time=100
+@SetStand face="bt2" layer=2 pos="c" method="universal" rule="ysr000" vague=100 time=100
+@SetStand face="bt1" layer=1 pos="l"
+@SetStand face="bt1" layer=1 pos="c"
+@SetStand face="bt1" layer=1 pos="rc"
+@SetStand face="bt1" layer=1 pos="r"
+
 @n name="女孩" se="alic0008.ogg"
 这个鬼东西怎么这么难学啊！！！[r]我要放弃了！[p]
 
-@ClearStand layer=2 effect=false
-@ClearStand layer=1 effect=false
+@ClearStand layer=2
+@ClearStand layer=1
 
 @playbgm storage="rest.ogg"
 
@@ -27,7 +36,7 @@
 @n name="女孩" se="alic0063.ogg"
 你这个整天无所事事、[ruby text="龌龊变态"]油腻肮脏、[font size=30 color=0xFF3300]不修边幅[resetfont]，只会对着电脑屏幕傻笑的白痴给我去死！[p]
 
-@ClearStand layer=1 effect=false
+@ClearStand layer=1
 
 @SetStand face="bt2" layer=2 pos="lc"
 @n name="女孩" se="alic0008.ogg"

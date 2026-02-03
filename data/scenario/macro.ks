@@ -6,20 +6,22 @@
 ; SetStand 显示立绘
 ;   参数: face="图片" layer=1 pos="l lc c rc r" method="universal" rule="文件名" vague= time=
 ; SetBackground 显示背景
-;   参数: background="文件名" (自定义效果可选 method="universal" rule="文件名" vague= time=)
+;   参数: background="文件名" (method="universal" rule="文件名" vague= time=)
 ; ShowMessageWindow 显示对话框
 ; n 名字显示与语音
 ;   参数：name="名字" se="音效"(可选)
 ; ClearMessageWindow 清除对话框
 ; ClearStand 清除立绘
-;  参数: layer=1 effect=true/false(是否有过渡效果，默认true)
+;  参数: layer=1 (method="universal" rule="文件名" vague= time=)
 ; ClearBg 清除背景
-;  参数: effect=true/false(是否有过渡效果，默认true)
+;  参数: (method="universal" rule="文件名" vague= time=)
 ; ClearBtn 清除按钮背景
-;  参数: effect=true/false(是否有过渡效果，默认true)
+;  参数: (method="universal" rule="文件名" vague= time=)
 ; ShowBtn 显示按钮背景
 ; SetWindowTitle 设置窗口标题
 ;   参数: title="标题文字"
+; SetFullScreen 设置全屏/窗口模式
+;   参数: fullscreen=true/false
 
 *macro|macro
 @position layer=message0 page=back frame=""
@@ -80,19 +82,31 @@
 [macro name=ClearStand]
 @freeimage layer=%layer page=back
 @freeimage layer=%layer page=fore
-@trans method=crossfade time=300 cond="mp.effect==true"
+[if exp="mp.method!=''"]
+@trans method=%method rule=%rule vague=%vague time=%time
+[else]
+@trans method=crossfade time=300
+[endif]
 @wt
 [endmacro]
 
 [macro name=ClearBg]
 @freeimage layer=base page=back
-@trans method=crossfade time=500 cond="mp.effect==true"
+[if exp="mp.method!=''"]
+@trans method=%method rule=%rule vague=%vague time=%time
+[else]
+@trans method=crossfade time=500
+[endif]
 @wt
 [endmacro]
 
 [macro name=ClearBtn]
 @position layer=message1 frame="" page=back
-@trans method=crossfade time=400 cond="mp.effect==true"
+[if exp="mp.method!=''"]
+@trans method=%method rule=%rule vague=%vague time=%time
+[else]
+@trans method=crossfade time=500
+[endif]
 @wt
 @current layer=message0 page=back
 [endmacro]
@@ -102,7 +116,11 @@
 @position layer=message1 page=back visible=true opacity=0 top=0 height=720 left=0 width=1280 marginl=0 margint=0 marginr=0 marginb=0
 @current layer=message1 page=back
 @er
+[if exp="mp.method!=''"]
+@trans method=%method rule=%rule vague=%vague time=%time
+[else]
 @trans method=crossfade time=800
+[endif]
 [endmacro]
 
 [macro name="SetWindowTitle"]
@@ -115,5 +133,9 @@
 ; [eval exp='System.setMode(f.width, f.height)']
 ; [endmacro]
 ; @SetWindowSize width=1920 height=1080
+
+[macro name="SetFullScreen"]
+[eval exp='System.setFullScreen(mp.fullscreen)']
+[endmacro]
 
 @return
