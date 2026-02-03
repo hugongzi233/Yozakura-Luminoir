@@ -4,7 +4,7 @@
 ;@playbgm storage="start.wav"
 @fadeinbgm storage="mainpage.ogg"
 
-@SetBackground background="opbg" method=crossfade time=1000
+@set_background background="opbg" method=crossfade time=1000
 @deffont face="黑体" size=26 color=0xffffff rubysize=16 rubyoffset=0
 @er
 @locate x=600 y=370
