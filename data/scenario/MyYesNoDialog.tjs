@@ -267,7 +267,6 @@ var appex_yesno_stub = function(message, caption = "确认", yesFunc, noFunc, pa
 
     var autoYesFunc = yesFunc;
     
-    // Inject callbacks for standard KAG3 system events where possible
     // This allows us to use the Layer (In-Game) dialog instead of the Window (External) dialog
     if (autoYesFunc === void) {
         if (msgBase == "dialog_exit_base") {

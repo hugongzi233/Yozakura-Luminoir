@@ -786,6 +786,10 @@ class KAGWindow extends Window
         }
 
 		// if (typeof this.callHook != "undefined") callHook("onOpenDialog", dialog);
+        
+        // Pause the conductor to prevent script execution (and transitions) while dialog is open
+        if (typeof mainConductor != "undefined") mainConductor.interrupted = true;
+        if (typeof extraConductor != "undefined") extraConductor.interrupted = true;
 
         setMenuAccessibleAll();
 
@@ -813,6 +817,10 @@ class KAGWindow extends Window
 
     function closeDialog(dialog=void) {
         if (currentDialog !== void && (dialog === void || currentDialog === dialog)) {
+            // Resume conductor
+            if (typeof mainConductor != "undefined") mainConductor.interrupted = false;
+            if (typeof extraConductor != "undefined") extraConductor.interrupted = false;
+
             setMenuAccessibleAll();
             
             if (currentDialog !== void) {
