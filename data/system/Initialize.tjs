@@ -116,7 +116,7 @@ function KAGLoadScript(name)
 {
 	var start = System.getTickCount();
 	Scripts.execStorage(name);
-	dm(name + " を読み込みました(" + (System.getTickCount() - start) + "ms)");
+	dm(name + " 加载完成! 耗时" + (System.getTickCount() - start) + "ms");
 }
 
 var loaded_scripts = %[];
@@ -209,7 +209,7 @@ if(Storages.isExistentStorage(System.exePath + "Override2.tjs"))
 /*
 	( デバッグ ) 時間計測
 */
-dm("スクリプトの読み込みに " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("脚本加载完成! 耗时" + (System.getTickCount() - parseStartTick) + "ms");
 parseStartTick = System.getTickCount();
 
 /*

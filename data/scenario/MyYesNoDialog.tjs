@@ -258,11 +258,11 @@ var appex_yesno_stub = function(message, caption = "确认", yesFunc, noFunc, pa
 {
     var msgBase = void;
     // Detect message types
-    if (message == "退出游戏吗？" || message == "終了しますか？") msgBase = "dialog_exit_base";
-    else if (message == "最初に戻ります。よろしいですか ?" || message.indexOf("タイトル") >= 0) msgBase = "dialog_title_base";
-    else if (message.indexOf("をはさみますか?") >= 0 || message.indexOf("上書き") >= 0) msgBase = "dialog_overwrite_base"; 
-    else if (message.indexOf("をたどりますか?") >= 0 || message.indexOf("ロード") >= 0) msgBase = "dialog_load_base"; 
-    else if (message.indexOf("まで戻りますか?") >= 0) msgBase = "dialogprev";
+    if (message == "要退出游戏吗?") msgBase = "dialog_exit_base";
+    else if (message == "要回到标题页面吗?") msgBase = "dialog_title_base";
+    else if (message.indexOf("要保存?") >= 0) msgBase = "dialog_overwrite_base"; 
+    else if (message.indexOf("要读取?") >= 0) msgBase = "dialog_load_base"; 
+    else if (message.indexOf("要返回?") >= 0) msgBase = "dialogprev";
     else if (message == "初期化") msgBase = "dialog_configini_base";
 
     var autoYesFunc = yesFunc;

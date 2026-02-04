@@ -6,4 +6,5 @@
 @se storage="foxmoe001.ogg"
 
 @w time=3000
+[eval exp="f.seenLogo = true"]
 @jump storage="title.ks" target="*title"

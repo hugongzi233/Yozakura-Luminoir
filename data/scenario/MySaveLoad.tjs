@@ -1,0 +1,340 @@
+// SaveLoadImpl.tjs
+// Save/Load Menu Implementation separating logic from KS
+// Optimized for KAG3/KRKRZ
+
+class SaveLoadMenu
+{
+    var kag;
+    var mode; // 'save' or 'load'
+    var page;
+    var numSlots = 8; // Number of slots per page (from original script)
+    var numPages = 10;
+    
+    // Layer definitions
+    var bgLayerId = 9;
+    var thumbStartLayerId = 10;
+    var textLayerId = 18;
+    var hlLayerId = 19;
+    var messageLayerId = 1; // message1 used for buttons
+
+    function SaveLoadMenu(window)
+    {
+        this.kag = window;
+        this.page = 0;
+    }
+
+    // Initialize the menu
+    function show(curMode)
+    {
+        this.mode = curMode;
+        
+        // Ensure initial page
+        if (this.page === void) this.page = 0;
+
+        // Setup message layer for buttons
+        var msgLayer = kag.back.messages[messageLayerId];
+        msgLayer.visible = true;
+        msgLayer.opacity = 0; // Invisible container
+        msgLayer.setPos(0, 0);
+        msgLayer.setImageSize(1280, 720);
+        msgLayer.setSize(1280, 720);
+
+        drawBaseLayers();
+        drawPage(this.page);
+    }
+
+    function drawBaseLayers()
+    {
+        // 1. Background Panel (Layer 9)
+        var bgLayer = kag.back.layers[bgLayerId];
+        bgLayer.setPos(0, 0);
+        bgLayer.setImageSize(1280, 720);
+        bgLayer.setSize(1280, 720);
+        bgLayer.type = ltAlpha;
+        bgLayer.face = dfAlpha;
+        bgLayer.fillRect(0, 0, 1280, 720, 0x00000000); // Clear
+        bgLayer.fillRect(50, 100, 1180, 550, 0x40000000); // Semi-transparent background
+        bgLayer.face = dfAuto;
+        bgLayer.visible = true;
+
+        // 2. Text Layer (Layer 18)
+        var textLayer = kag.back.layers[textLayerId];
+        textLayer.setPos(0, 0);
+        textLayer.setImageSize(1280, 720);
+        textLayer.setSize(1280, 720);
+        textLayer.type = ltAlpha;
+        textLayer.face = dfAlpha;
+        textLayer.fillRect(0, 0, 1280, 720, 0x00000000); 
+        textLayer.face = dfAuto;
+        textLayer.visible = true;
+
+        // 3. Highlight Layer (Layer 19)
+        var hlLayer = kag.back.layers[hlLayerId];
+        hlLayer.visible = false;
+        if(kag.fore.layers[hlLayerId]) kag.fore.layers[hlLayerId].visible = false;
+        
+        // Draw Title
+        textLayer.font.height = 48;
+        textLayer.font.face = "黑体";
+        var titleStr = (mode == "save") ? "存档" : "读档";
+        textLayer.drawText(50, 30, titleStr, 0xFFFFFF, 255, true);
+    }
+
+    function drawPage(pageNum)
+    {
+        this.page = pageNum;
+        var textLayer = kag.back.layers[textLayerId];
+        
+        // Clear Text Layer
+        textLayer.fillRect(0, 0, 1280, 720, 0x00000000); 
+
+        // Redraw Title
+        textLayer.font.height = 48;
+        textLayer.font.face = "黑体";
+        var titleStr = (mode == "save") ? "存档" : "读档";
+        textLayer.drawText(50, 30, titleStr, 0xFFFFFF, 255, true);
+        
+        // Clear previous buttons on message layer
+        var msgLayer = kag.back.messages[messageLayerId];
+        
+        // FIX: Reset opacity of buttons before clearing them, 
+        // to prevent recycling invisible buttons to other screens (Title/Config)
+        for(var i=0; i<msgLayer.numLinks; i++) {
+            var mlink = msgLayer.links[i];
+            if(mlink !== void && mlink.object !== void) {
+                mlink.object.opacity = 255;
+            }
+        }
+
+        kag.current = msgLayer;
+        kag.tagHandlers.er(%[]); // Clear text/buttons
+
+        // Draw Tabs (1-10)
+        textLayer.font.height = 24;
+        for(var i=0; i<numPages; i++) {
+            var tx = 300 + i * 80;
+            var ty = 50;
+            
+            // Draw Tab Text
+            var color = (i == pageNum) ? 0xFFDD00 : 0xFFFFFF;
+            textLayer.drawText(tx+10, ty+10, string(i+1), color, 255, true);
+            
+            // Create Tab Button
+            kag.tagHandlers.locate(%[x: tx, y: ty]);
+            var btn = %[
+                graphic: "sys_config_bt_sound_DELETE", 
+                exp: "tf.page=" + i, // Set KS variable
+                target: "*draw_page", // Jump to KS label
+                enterse: "hito_ge_kawaugoki08",
+                clickse: "hito_ge_kawaugoki07"
+            ];
+            kag.tagHandlers.button(btn);
+
+            // Resize button (Hack from original script, cleaner here)
+            var lastLink = msgLayer.links[msgLayer.numLinks-1];
+            if(lastLink !== void && lastLink.object !== void) {
+                var bl = lastLink.object;
+                bl.setImageSize(80, 50);
+                bl.setSize(80, 50);
+                bl.fillRect(0, 0, 80, 50, 0x01000000); // Almost invisible
+                bl.opacity = 0;
+            }
+        }
+
+        // Draw Slots
+        drawSlots();
+        
+        // Draw Return Button
+        kag.tagHandlers.locate(%[x: 1100, y: 650]);
+        kag.tagHandlers.button(%[
+            graphic: "sys_config_bt_sound_DELETE",
+            target: "*back",
+            enterse: "hito_ge_kawaugoki08",
+            clickse: "hito_ge_kawaugoki07",
+            recthit: true
+        ]);
+        textLayer.drawText(1120, 660, "返回", 0xFFFFFF, 255, true);
+    }
+
+    function drawSlots()
+    {
+        var textLayer = kag.back.layers[textLayerId];
+        var start = page * numSlots;
+        var msgLayer = kag.back.messages[messageLayerId];
+
+        for(var i=0; i<numSlots; i++) {
+            var s = start + i;
+            var row = (i < 4) ? 0 : 1;
+            var col = i % 4;
+            
+            var x = 100 + col * 280;
+            var y = 150 + row * 300;
+            
+            // Check Data
+            var dataDate = kag.bookMarkDates[s];
+            var exists = (dataDate != "" && dataDate !== void);
+
+            // Load Thumbnail
+            var thumbLayer = kag.back.layers[thumbStartLayerId + i];
+            thumbLayer.setPos(x, y);
+            thumbLayer.type = ltAlpha;
+            
+            var thumbLoaded = false;
+            var thumbPath = "savedata/data" + s + ".bmp";
+            
+            if(Storages.isExistentStorage(thumbPath)) {
+                thumbLayer.loadImages(%[storage:thumbPath]);
+                thumbLoaded = true;
+            } else {
+                 var noDataImg = "sys_omake_notfound_data_DELETE";
+                 if(Storages.isExistentStorage(noDataImg + ".png")) {
+                     thumbLayer.loadImages(%[storage:noDataImg + ".png"]);
+                     thumbLoaded = true;
+                 } else if(Storages.isExistentStorage(noDataImg)) {
+                     thumbLayer.loadImages(%[storage:noDataImg]);
+                     thumbLoaded = true;
+                 }
+            }
+            thumbLayer.visible = thumbLoaded;
+
+            // Draw Slot Text
+            textLayer.font.height = 18;
+            if (exists) {
+                textLayer.drawText(x, y + 140, "Data " + (s + 1), 0xFFDD00, 255, true);
+                textLayer.font.height = 16;
+                textLayer.drawText(x, y + 165, kag.bookMarkNames[s], 0xFFFFFF, 255, true);
+                textLayer.font.height = 14;
+                textLayer.drawText(x, y + 190, kag.bookMarkDates[s], 0xF0F0F0, 255, true);
+            } else {
+                 textLayer.font.height = 18;
+                 textLayer.drawText(x, y + 140, "No Data", 0x888888, 255, true);
+            }
+
+            // Create Slot Button
+            kag.tagHandlers.locate(%[x: x, y: y]);
+            var btn = %[
+                graphic: "sys_config_bt_sound_DELETE", 
+                exp: "global.saveLoadMenu.onSlotClick(" + s + ", " + exists + ")",
+                enterse: "hito_ge_kawaugoki08",
+                onenter: "global.saveLoadMenu.onHighlight(" + i + ")",
+                onleave: "global.saveLoadMenu.offHighlight()"
+            ];
+            kag.tagHandlers.button(btn);
+
+            // Hack: Resize Slot Button
+            var lastLink = msgLayer.links[msgLayer.numLinks-1];
+            if(lastLink !== void && lastLink.object !== void) {
+                var bl = lastLink.object;
+                bl.setImageSize(240, 200);
+                bl.setSize(240, 200); 
+                bl.fillRect(0, 0, 240, 200, 0x01000000); 
+                bl.opacity = 0; 
+            }
+        }
+    }
+
+    function onHighlight(idx)
+    {
+        var row = (idx < 4) ? 0 : 1;
+        var col = idx % 4;
+        var x = 100 + col * 280;
+        var y = 150 + row * 300;
+        var w = 240;
+        var h = 200;
+
+        var hlLayer = kag.fore.layers[hlLayerId]; // Draw on Fore for immediate feedback
+        if (hlLayer === void) return;
+        
+        hlLayer.setPos(x, y); 
+        hlLayer.type = ltAlpha; 
+        hlLayer.setImageSize(w, h); 
+        hlLayer.setSize(w, h);      
+        hlLayer.face = dfAlpha;
+        hlLayer.fillRect(0, 0, w, h, 0x00000000); 
+        hlLayer.face = dfAuto;
+        
+        var colColor = 0xFFFF00; 
+        var op = 192; var thick = 4;
+        hlLayer.colorRect(0, 0, w, thick, colColor, op); 
+        hlLayer.colorRect(0, h-thick, w, thick, colColor, op); 
+        hlLayer.colorRect(0, 0, thick, h, colColor, op); 
+        hlLayer.colorRect(w-thick, 0, thick, h, colColor, op); 
+        hlLayer.visible = true;
+    }
+
+    function offHighlight()
+    {
+        var hlLayer = kag.fore.layers[hlLayerId];
+        if(hlLayer) hlLayer.visible = false;
+    }
+
+    function onSlotClick(slotNum, exists)
+    {
+        if (mode == 'save') {
+             // SAVE logic
+             kag.tagHandlers.stoptrans(%[]); // Prevent transition errors during save
+             
+             // Mark that we are saving INSIDE the menu, so load should return immediately
+             kag.process("save_load.ks", "*do_save", %[slot:slotNum]);
+        } else {
+            // LOAD logic
+            if (exists) {
+                kag.tagHandlers.stoptrans(%[]);
+                cleanup(); // Clear layers before loading? actually load overwrites everything.
+                kag.restoreBookMark(slotNum); 
+                // Restore happens immediately. 
+            } else {
+                System.inform("此位置没有存档。");
+            }
+        }
+    }
+
+    function cleanup()
+    {
+        // Restore properties for Recycled Message Layer Buttons
+        var targets = [kag.back.messages[messageLayerId], kag.fore.messages[messageLayerId]];
+        
+        for(var k=0; k<targets.count; k++) {
+            var msg = targets[k];
+            if (msg === void) continue;
+
+            // CRITICAL FIX: Reset the MessageLayer's own opacity to 255.
+            // In show(), we set msgLayer.opacity = 0 to make the container invisible.
+            // However, KAG's @position opacity=0 only sets frameOpacity, not Layer opacity.
+            // If we leave Layer opacity at 0, all children (buttons) added later in title.ks
+            // will inherit this 0 opacity and become invisible!
+            msg.opacity = 255;
+            msg.visible = false; // Hide it for now
+
+            var links = msg.links;
+            if(links !== void) {
+                for(var i=0; i<links.count; i++) {
+                    var linkItem = links[i];
+                    if(linkItem !== void && linkItem.object !== void) {
+                        try {
+                            var obj = linkItem.object;
+                            obj.visible = true;
+                            obj.opacity = 255; 
+                            obj.face = dfAuto;
+                        } catch(e) { }
+                    }
+                }
+            }
+        }
+        
+        // Hide all used layers
+        var layersToClear = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+        // Handle Back Layers
+        for(var i=0; i<layersToClear.count; i++) {
+            var lid = layersToClear[i];
+            if(kag.back.layers[lid] !== void) kag.back.layers[lid].visible = false;
+            // Also Fore layers if any
+            if(kag.fore.layers[lid] !== void) kag.fore.layers[lid].visible = false;
+        }
+    }
+}
+
+// Global instance creation
+if(typeof global.saveLoadMenu == "undefined") {
+    global.saveLoadMenu = new SaveLoadMenu(kag);
+}
