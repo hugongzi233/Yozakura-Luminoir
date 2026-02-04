@@ -1,14 +1,20 @@
 ;--------------------------------------------------
 ; title.ks - 标题画面
 ;--------------------------------------------------
-*title
+*title|标题画面
 @stoptrans
 @clearsysvar
 @clickskip enabled=true
 @rclick enabled=false
 
 @freeimage layer=base
-@playbgm storage="mainpage.ogg" loop=true
+; 播放BGM前先判断当前是否已经是该BGM，避免重复播放导致重头开始
+[if exp="kag.bgm.currentStorage != 'mainpage.ogg'"]
+@bgm storage="mainpage.ogg" loop=true
+[endif]
+
+*title_ui
+@rclick enabled=false
 @image layer=base page=back storage="opbg"
 
 ; --------------------------------------------------------------------------
@@ -53,24 +59,27 @@
 ; 功能跳转
 ;--------------------------------------------------
 *func_continue
-@jump target="*func_load"
+@call storage="save.ks" target="*start"
+@jump target="*title_ui"
 
 *func_start
+@rclick enabled=true call="" target="" jump=false
 @layopt layer=message1 page=fore visible=false
 @jump storage="c1-1.ks" target="*c1-1"
 
 *func_load
-@eval exp="tf.mode = 'load'"
-@call storage="save_load.ks" target="*start"
-@jump target="*title"
+; @eval exp="tf.mode = 'load'"
+@call storage="load.ks" target="*start"
+@jump target="*title_ui"
 
 *func_gallery
 @eval exp="System.inform('鉴赏模式尚未实装')"
-@jump target="*title"
+@jump target="*title_ui"
 
 *func_config
 ; 跳转到自定义设置页面
-@jump storage="config.ks" target="*start"
+@call storage="config.ks" target="*start"
+@jump target="*title_ui"
 @s
 
 *func_exit

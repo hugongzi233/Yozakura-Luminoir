@@ -274,7 +274,7 @@ class SaveLoadMenu
              // SAVE logic
              kag.tagHandlers.stoptrans(%[]); // Prevent transition errors during save
              
-             // Check if we are already in save_load.ks to preserve stack
+             // Check if we are already in save.ks to preserve stack
              // We use a global variable or check conductor status
              // Using goToLabel via generic tag handler preserves stack if purely internal
              
@@ -285,11 +285,11 @@ class SaveLoadMenu
              kag.conductor.scripts.eval("tf.targetSlot = " + slotNum);
 
              var cur = kag.conductor.curStorage;
-             if (cur !== void && cur.toLowerCase().indexOf("save_load.ks") != -1) {
+             if (cur !== void && cur.toLowerCase().indexOf("save.ks") != -1) {
                   kag.conductor.goToLabel("*do_save");
              } else {
                  // Usage from outside (e.g. Menu Bar) where we need to CALL, not Process (which resets stack)
-                 kag.tagHandlers.call(%[storage:"save_load.ks", target:"*do_save"]);
+                 kag.tagHandlers.call(%[storage:"save.ks", target:"*do_save"]);
              }
         } else {
             // LOAD logic
