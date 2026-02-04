@@ -746,8 +746,6 @@ class KAGWindow extends Window
     
     function handleOpenDialog() {
 		if (currentDialog !== void) {
-			stopAllTransitions();
-			if(typeof this.cancelSkip != "undefined") cancelSkip();
 			with (currentDialog) {
 				.enabled = true;
 				// .setMode(); // Might crash if super.setMode doesn't exist. Assuming DialogLayer handles it or we fix it there.
@@ -786,6 +784,10 @@ class KAGWindow extends Window
         }
 
 		// if (typeof this.callHook != "undefined") callHook("onOpenDialog", dialog);
+
+        // Stop transitions and skip immediately to stabilize screen
+        stopAllTransitions();
+        if(typeof this.cancelSkip != "undefined") cancelSkip();
         
         // Pause the conductor to prevent script execution (and transitions) while dialog is open
         if (typeof mainConductor != "undefined") mainConductor.interrupted = true;
