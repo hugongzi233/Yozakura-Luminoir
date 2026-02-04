@@ -738,6 +738,93 @@ class KAGWindow extends Window
 		}
 	}
 
+	//------------------------------------------------------ Dialog Management --
+
+    var currentDialog;
+	var currentDialogAbsolute = 9000000;
+	var currentDialogFocusedRestore; 
+    
+    function handleOpenDialog() {
+		if (currentDialog !== void) {
+			stopAllTransitions();
+			if(typeof this.cancelSkip != "undefined") cancelSkip();
+			with (currentDialog) {
+				.enabled = true;
+				// .setMode(); // Might crash if super.setMode doesn't exist. Assuming DialogLayer handles it or we fix it there.
+                // Call it only if it exists on the dialog object (it definitely does on DialogLayer)
+                .setMode();
+				.focus();
+				.onOpen();
+			}
+		}
+		setMenuAccessibleAll();
+    }
+
+    function handleCloseDialog() {
+		if (!this isvalid) return;
+		if (currentDialog !== void) {
+			with (currentDialog) {
+				.removeMode();
+				.visible = false;
+			}
+			invalidate currentDialog;
+			currentDialog = void;
+
+			var restore = currentDialogFocusedRestore;
+			if (typeof restore == "Object" && (restore == null || isvalid restore)) {
+				try   { focusedLayer = restore; }
+				catch { focusedLayer = null; }
+			}
+		}
+		setMenuAccessibleAll() if (this isvalid);
+	}
+
+    function openDialog(dialog, trans) {
+        if (currentDialog !== void &&
+            currentDialog !== dialog) {
+            invalidate currentDialog;
+        }
+
+		// if (typeof this.callHook != "undefined") callHook("onOpenDialog", dialog);
+
+        setMenuAccessibleAll();
+
+		currentDialog = dialog;
+		currentDialogFocusedRestore = focusedLayer;
+		
+		var parentLayer = primaryLayer;
+		if (parentLayer === void) parentLayer = fore.base;
+
+		with (dialog) {
+			.parent   = parentLayer;
+			.absolute = currentDialogAbsolute;
+			.enabled = false;
+			.visible = true;
+		}
+		var trig;
+		if (typeof this.openDialogTrigger != "undefined") {
+			trig = this.openDialogTrigger;
+		} else {
+			trig = this.openDialogTrigger = new AsyncTrigger(handleOpenDialog, '');
+			trig.cached = true;
+		}
+		trig.trigger();
+    }
+
+    function closeDialog(dialog=void) {
+        if (currentDialog !== void && (dialog === void || currentDialog === dialog)) {
+            setMenuAccessibleAll();
+            
+            if (currentDialog !== void) {
+                global.closeDialogTrigger = new AsyncTrigger(handleCloseDialog, '');
+                global.closeDialogTrigger.cached = true;
+                global.closeDialogTrigger.trigger();
+            }
+        } else if (dialog !== void) {
+            dialog.visible = false;
+        }
+    }
+
 	//------------------------------------------------------ tempLayer 関連 --
 
 	property temporaryLayer
@@ -2214,7 +2301,7 @@ class KAGWindow extends Window
 	function goToStartWithAsk()
 	{
 		// 最初に戻る(確認あり)
-		var result = askYesNo("最初に戻ります。よろしいですか ?");
+		var result = askYesNo("要从头开始吗 ?");
 		if(result) goToStart();
 	}
 
