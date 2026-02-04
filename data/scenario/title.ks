@@ -60,8 +60,9 @@
 @jump storage="c1-1.ks" target="*c1-1"
 
 *func_load
-@eval exp="kag.onRestoreMenuClick(kag)"
-@s
+@eval exp="tf.mode = 'load'"
+@call storage="save_load.ks" target="*start"
+@jump target="*title"
 
 *func_gallery
 @eval exp="System.inform('鉴赏模式尚未实装')"

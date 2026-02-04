@@ -223,7 +223,7 @@ class KAGWindow extends Window
 	var currentRecordName = ""; // 現在の記録名 ( trail_ストレージ_ラベル )
 	var autoRecordPageShowing = false; // ラベル通過記録をするか
 
-	var numBookMarks = 10; // メニューに用意する栞のサブメニュー項目の数
+	var numBookMarks = 100; // メニューに用意する栞のサブメニュー項目の数
 	var showBookMarkDate = false; // メニューに栞をはさんだ日付時刻を表示するか
 
 	var bookMarkNames = []; // メニューに設定されている栞の名前

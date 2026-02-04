@@ -76,7 +76,7 @@ function KAGWindow_config()
 // ログボックスが開き、栞を個別のファイルとして保存するモードになります。
 // この場合は 保存可能な栞の個数に制限はありません。また、
 // エクスプローラなどによる栞の管理が容易になります。
-;freeSaveDataMode = true;
+;freeSaveDataMode = false;
 
 
 // ◆サムネイルを保存するか
@@ -85,7 +85,7 @@ function KAGWindow_config()
 // true を指定すると、セーブデータの拡張子は .bmp になり、エクスプローラや
 // 「開く」ダイアログボックスの「縮小版」表示でセーブ時点でのサムネイルを
 // 表示することができるようになります。
-;saveThumbnail = false;
+;saveThumbnail = true;
 
 
 // ◆サムネイルの保存サイズ
@@ -93,7 +93,7 @@ function KAGWindow_config()
 // 設定は意味がありません。
 // 横幅はピクセル単位で指定してください。たて幅は scWidth と scHeight の
 // 比と同じ比で自動的に計算されます。
-;thumbnailWidth = 133;
+;thumbnailWidth = 240;
 
 // ◆サムネイルの保存モード
 // サムネイルの保存モードを指定します。saveThumbnail を true に設定しないとこの
@@ -254,7 +254,7 @@ function KAGWindow_config()
 // 数が多いと速度が低下したりメモリを消費しますので、必要以上に大きな数を指
 // 定しない方が良いでしょう。
 // laycount タグでシナリオ内でも変更できます。
-;numCharacterLayers = 3;
+numCharacterLayers = 24;
 
 
 // ◆ 前景レイヤの左右中心位置指定
@@ -302,7 +302,7 @@ function KAGWindow_config()
 // メニューによる栞の管理を行わない場合 ( ゲーム画面中で全部栞の管理などを
 // 行う場合など ) は、numBookMarks は必要な数に設定し、restoreMenu.visible と
 // storeMenu.visible を false に設定してください。
-;numBookMarks = 10;
+;numBookMarks = 80;
 
 
 // ◆ 栞に日付を併記するか
