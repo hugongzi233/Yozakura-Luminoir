@@ -2,7 +2,7 @@
 // Copyright (C)2001-2009, W.Dee and contributors  改変・配布は自由です
 
 // システムバージョン
-var kagVersion = "3.32 stable rev. 2";
+var kagVersion = "rquee 3.2.2";
 
 /*
 	Debug.message へのショートカット
@@ -116,7 +116,7 @@ function KAGLoadScript(name)
 {
 	var start = System.getTickCount();
 	Scripts.execStorage(name);
-	dm(name + " を読み込みました(" + (System.getTickCount() - start) + "ms)");
+	dm(name + " 加载完成! 耗时" + (System.getTickCount() - start) + "ms");
 }
 
 var loaded_scripts = %[];
@@ -198,6 +198,8 @@ KAGLoadScript("MessageLayer.tjs");
 KAGLoadScript("Menus.tjs");
 KAGLoadScript("DefaultMover.tjs");
 KAGLoadScript("MainWindow.tjs");
+KAGLoadScript("MyYesNoDialog.tjs");
+
 if(Storages.isExistentStorage("Override.tjs"))
 	KAGLoadScript("Override.tjs");
 if(Storages.isExistentStorage(System.exePath + "Override2.tjs"))
@@ -207,7 +209,7 @@ if(Storages.isExistentStorage(System.exePath + "Override2.tjs"))
 /*
 	( デバッグ ) 時間計測
 */
-dm("スクリプトの読み込みに " + (System.getTickCount() - parseStartTick) + "ms かかりました");
+dm("脚本加载完成! 耗时" + (System.getTickCount() - parseStartTick) + "ms");
 parseStartTick = System.getTickCount();
 
 /*

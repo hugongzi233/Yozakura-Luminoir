@@ -49,6 +49,7 @@ global.createSlider = function(x, y, w, h, min, max, pos, onChange) {
 @stoptrans
 @cm
 @clickskip enabled=false
+@rclick enabled=false
 
 ; 绘制背景 (请替换为您自己的背景图片, 这里用黑色填充代替)
 @layopt layer=base page=fore visible=true

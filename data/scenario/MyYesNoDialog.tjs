@@ -1,0 +1,315 @@
+//
+// MyYesNoDialog.tjs - Custom YesNoDialog
+// Ported from KAG3EX3
+//
+
+// Ensure dependencies are loaded
+if (typeof global.AnimKAGLayer == "undefined") {
+	KAGLoadScript("AnimKAGLayer.tjs");
+}
+if (typeof global.DialogLayer == "undefined") {
+	KAGLoadScript("DialogLayer.tjs");
+}
+// Standard YesNoDialog for fallback
+KAGLoadScript("YesNoDialog.tjs");
+
+/**
+ * Check if any movie is playing
+ */
+function isMoviePlaying() {
+    if (typeof kag.movie != "undefined" && kag.movie !== void) {
+        if (typeof kag.movie.status != "undefined" && kag.movie.status == "play") return true;
+    }
+    if (typeof kag.movies != "undefined" && kag.movies !== void) {
+        for (var i = 0; i < kag.movies.count; i++) {
+            var m = kag.movies[i];
+            if (m !== void && typeof m.status != "undefined" && m.status == "play") return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Window-based Dialog (Modal)
+ * Used when movie is playing or when blocking behavior is required.
+ */
+class MyYesNoDialogWindow extends Window
+{
+	var yesButton; 
+	var noButton; 
+
+    var tempLayer; 
+
+    var result = false; // no:false yes:true
+
+	property temporaryLayer
+	{
+		getter()
+		{
+			if(tempLayer === void)
+			{
+				tempLayer = new KAGLayer(this, primaryLayer);
+				tempLayer.name = "WorkLayer";
+			}
+			return tempLayer;
+		}
+	}
+
+    var baseStorage;
+    
+    function MyYesNoDialogWindow(baseStorage)
+	{
+        super.Window();
+
+        this.baseStorage = baseStorage;
+        
+		if(global.Window.mainWindow !== null &&
+			typeof global.Window.mainWindow.cursorDefault != "undefined")
+			this.cursorDefault = global.Window.mainWindow.cursorDefault;
+		if(global.Window.mainWindow !== null &&
+			typeof global.Window.mainWindow.cursorPointed != "undefined")
+			this.cursorPointed = global.Window.mainWindow.cursorPointed;
+
+        borderStyle = bsNone;
+        innerSunken = false;
+		showScrollBars = false;
+
+        add(new Layer(this, null));
+        
+		if(typeof this.cursorDefault !== "undefined")
+			primaryLayer.cursor = cursorDefault;
+
+		if (kag.fullScreen) {
+			if (kag.innerWidth / kag.scWidth < kag.innerHeight / kag.scHeight)
+				setZoom(kag.innerWidth, kag.scWidth);
+			else
+				setZoom(kag.innerHeight, kag.scHeight);
+		} else {
+			setZoom(kag.zoomNumer, kag.zoomDenom);
+		}
+		
+		primaryLayer.loadImages(baseStorage);
+		primaryLayer.setSizeToImageSize();
+		setInnerSize(primaryLayer.width * zoomNumer / zoomDenom,
+					 primaryLayer.height * zoomNumer / zoomDenom);
+        setMaskRegion();
+        
+		if(global.Window.mainWindow !== null && global.Window.mainWindow isvalid)
+		{
+			var win = global.Window.mainWindow;
+			var l, t;
+			l = ((win.width - width)>>1) + win.left;
+			t = ((win.height - height)>>1) + win.top;
+			if(l < 0) l = 0;
+			if(t < 0) t = 0;
+			if(l + width > System.screenWidth) l = System.screenWidth - width;
+			if(t + height > System.screenHeight) t = System.screenHeight - height;
+			setPos(l, t);
+		}
+		else
+		{
+			setPos((System.screenWidth - width)>>1, (System.screenHeight - height)>>1);
+		}
+
+		add(yesButton = new ButtonLayer(this, primaryLayer));
+		yesButton.loadButtons("dialog_yes_normal", "dialog_yes_over", "dialog_yes_over");
+		yesButton.top  = 366;
+		yesButton.left = 520;
+		yesButton.visible = true;
+
+		// No Button
+		add(noButton = new ButtonLayer(this, primaryLayer));
+		noButton.loadButtons("dialog_no_normal", "dialog_no_over", "dialog_no_over");
+		noButton.top  = 366;
+		noButton.left = 658;
+		noButton.visible = true;
+
+	}
+
+	function finalize()
+	{
+		invalidate tempLayer if tempLayer !== void;
+		super.finalize(...);
+	}
+
+	function action(ev)
+	{
+		if(ev.type == "onClick")
+		{
+			if(ev.target == yesButton)
+			{
+				result = true;
+				close();
+			}
+			else if(ev.target == noButton)
+			{
+				result = false;
+				close();
+			}
+		}
+		else if(ev.type == "onKeyDown" && ev.target === this)
+		{
+			switch(ev.key)
+			{
+			case VK_PADLEFT:
+				yesButton.focus();
+				break;
+			case VK_PADRIGHT:
+				noButton.focus();
+				break;
+			case VK_PAD1:
+				if(focusedLayer == yesButton)
+				{
+					result = true;
+					close();
+				}
+				else if(focusedLayer == noButton)
+				{
+					result = false;
+					close();
+				}
+				break;
+			case VK_PAD2:
+				result = false;
+				close();
+				break;
+			}
+		}
+	}
+
+	function onKeyDown(key, shift)
+	{
+		super.onKeyDown(...);
+		if(key == VK_ESCAPE)
+		{
+			result = false;
+			close();
+		}
+	}
+
+	function onMouseDown(x, y, button)
+	{
+        if(button == mbRight) {
+            result = false;
+            close();
+        }
+    }
+}
+
+/**
+ * Layer-based Dialog (Non-modal)
+ * Used when callbacks are provided and movie is not playing.
+ */
+class MyYesNoDialogLayer extends DialogLayer
+{
+    var baseStorage;
+    var result = false;
+
+    var yesFunc;
+    var noFunc;
+    var param;
+    var doneFunc;
+    
+    function MyYesNoDialogLayer(baseStorage, yesFunc, noFunc, param, doneFunc) {
+        super.DialogLayer(kag, kag.primaryLayer, baseStorage);
+
+        this.yesFunc = yesFunc;
+        this.noFunc  = noFunc;
+        this.param   = param;
+        this.doneFunc = doneFunc;
+        this.baseStorage = baseStorage;
+
+        setOption(%[frame : baseStorage]);
+		addButton(%[ x : 520, y : 366, normal:"dialog_yes_normal", over:"dialog_yes_over", on:"dialog_yes_over"]);
+		addButton(%[ x : 658, y : 366, normal:"dialog_no_normal", over:"dialog_no_over",  on:"dialog_no_over"]);
+    }
+
+    function finalize() {
+        super.finalize();
+    }
+
+    function onOpen() {
+        setFocusToLink(1,true);
+    }
+    
+    function processLink(num) {
+        super.processLink(num);
+        if (num == 0) {
+            result = true;
+            if (yesFunc !== void) {
+                yesFunc(param);
+            }
+        } else {
+            if (noFunc !== void) {
+                noFunc(param);
+            }
+        }
+        if (this isvalid) {
+            if (doneFunc !== void) {
+                doneFunc(param);
+            }
+            close();
+        }
+    }
+}
+
+var origAskYesNo = askYesNo;
+var appex_yesno_stub = function(message, caption = "确认", yesFunc, noFunc, param, doneFunc)
+{
+    var msgBase = void;
+    // Detect message types
+    if (message == "要退出游戏吗?") msgBase = "dialog_exit_base";
+    else if (message == "要回到标题页面吗?") msgBase = "dialog_title_base";
+    else if (message.indexOf("要保存?") >= 0) msgBase = "dialog_overwrite_base"; 
+    else if (message.indexOf("要读取?") >= 0) msgBase = "dialog_load_base"; 
+    else if (message.indexOf("要返回?") >= 0) msgBase = "dialogprev";
+    else if (message == "初期化") msgBase = "dialog_configini_base";
+
+    var autoYesFunc = yesFunc;
+    
+    // This allows us to use the Layer (In-Game) dialog instead of the Window (External) dialog
+    if (autoYesFunc === void) {
+        if (msgBase == "dialog_exit_base") {
+            autoYesFunc = function() { kag.shutdown(); };
+        } else if (msgBase == "dialog_title_base") {
+            autoYesFunc = function() { kag.goToStart(); };
+        }
+        // NOTE: Save/Load dialogs cannot be safely hijacked this way without knowing the 'num' parameter,
+        // so they will fall back to Window mode below.
+    }
+
+    // Determine Mode
+    var useModal = true;
+    if (!isMoviePlaying() && (autoYesFunc !== void)) {
+        useModal = false;
+    }
+
+    if (msgBase === void) {
+        return origAskYesNo(message, caption, yesFunc, noFunc, param, doneFunc);
+    }
+    
+    if (useModal) {
+        // Window Mode (Modal/Blocking)
+        var win = new MyYesNoDialogWindow(msgBase);
+        win.showModal();
+        var res = win.result;
+        invalidate win;
+
+        if (res) {
+            if (yesFunc !== void) yesFunc(param);
+        } else {
+            if (noFunc !== void) noFunc(param);
+        }
+        if (doneFunc !== void) doneFunc(param);
+
+        return res;
+    } else {
+        // Layer Mode (Non-Blocking)
+        var dialog = new MyYesNoDialogLayer(msgBase, autoYesFunc, noFunc, param, doneFunc);
+        dialog.open();
+        return false; // Return false to stop immediate execution of the caller (e.g., stop immediate close)
+    }
+};
+
+// Overwrite the global function
+askYesNo = appex_yesno_stub;

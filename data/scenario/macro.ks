@@ -132,16 +132,22 @@
 
 *macro|macro
 [macro name=init_system_settings]
-; 禁止存档
+; 禁止存档 (Title screen generally doesn't need saving)
 @disablestore store=true
-; 关闭右键菜单
+; 关闭右键菜单 (For Title screen)
 @rclick enabled=false
 ; 不可跳过
 @clickskip enabled=false
-; 关闭历史记录功能
-@history enabled=false output=false
+; 开启历史记录功能 (Useful for backlog)
+@history enabled=true output=true
 ; 加载音频播放插件
 @loadplugin module="wuvorbis.dll"
+; 允许回到标题
+@startanchor enabled=true
+[endmacro]
+
+[macro name=reset_logo_state]
+[eval exp="f.seenLogo = false"]
 [endmacro]
 
 
@@ -180,6 +186,7 @@
 [endmacro]
 
 [macro name=set_background]
+@stoptrans
 @backlay
 @image layer=base page=back storage=%background visible=true left=0 top=0 opacity=255
 @trans method=%method|crossfade rule=%rule vague=%vague time=%time|400
@@ -203,6 +210,7 @@
 ; ------------------------------------------------------------------------------
 
 [macro name=show_message_window]
+@stoptrans
 @position layer=message0 left=0 top=&(720-160) width=1280 height=160 marginl=200 margint=0 marginr=70 marginb=16 opacity=0 visible=true frame="frame" page=back
 @trans method=crossfade time=800
 @wt
@@ -250,6 +258,7 @@
 
 [macro name=p]
 @l
+@r
 @_draw_name
 [endmacro]
 

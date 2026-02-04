@@ -5,7 +5,7 @@
 @stoptrans
 @clearsysvar
 @clickskip enabled=true
-@rclick enabled=true
+@rclick enabled=false
 
 @freeimage layer=base
 @playbgm storage="mainpage.ogg" loop=true

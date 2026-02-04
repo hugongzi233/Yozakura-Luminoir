@@ -523,7 +523,7 @@ class KAGWindow extends Window
 	{
 		saveSystemVariables();
 		if(!askOnClose) { super.onCloseQuery(true); return; }
-		super.onCloseQuery(askYesNo("退出游戏吗？"));
+		super.onCloseQuery(askYesNo("要退出游戏吗?"));
 	}
 
 	function close()
@@ -737,6 +737,103 @@ class KAGWindow extends Window
 			}
 		}
 	}
+
+	//------------------------------------------------------ Dialog Management --
+
+    var currentDialog;
+	var currentDialogAbsolute = 9000000;
+	var currentDialogFocusedRestore; 
+    
+    function handleOpenDialog() {
+		if (currentDialog !== void) {
+			with (currentDialog) {
+				.enabled = true;
+				// .setMode(); // Might crash if super.setMode doesn't exist. Assuming DialogLayer handles it or we fix it there.
+                // Call it only if it exists on the dialog object (it definitely does on DialogLayer)
+                .setMode();
+				.focus();
+				.onOpen();
+			}
+		}
+		setMenuAccessibleAll();
+    }
+
+    function handleCloseDialog() {
+		if (!this isvalid) return;
+		if (currentDialog !== void) {
+			with (currentDialog) {
+				.removeMode();
+				.visible = false;
+			}
+			invalidate currentDialog;
+			currentDialog = void;
+
+			var restore = currentDialogFocusedRestore;
+			if (typeof restore == "Object" && (restore == null || isvalid restore)) {
+				try   { focusedLayer = restore; }
+				catch { focusedLayer = null; }
+			}
+		}
+		setMenuAccessibleAll() if (this isvalid);
+	}
+
+    function openDialog(dialog, trans) {
+        if (currentDialog !== void &&
+            currentDialog !== dialog) {
+            invalidate currentDialog;
+        }
+
+		// if (typeof this.callHook != "undefined") callHook("onOpenDialog", dialog);
+
+        // Stop transitions and skip immediately to stabilize screen
+        stopAllTransitions();
+        if(typeof this.cancelSkip != "undefined") cancelSkip();
+        
+        // Pause the conductor to prevent script execution (and transitions) while dialog is open
+        if (typeof mainConductor != "undefined") mainConductor.interrupted = true;
+        if (typeof extraConductor != "undefined") extraConductor.interrupted = true;
+
+        setMenuAccessibleAll();
+
+		currentDialog = dialog;
+		currentDialogFocusedRestore = focusedLayer;
+		
+		var parentLayer = primaryLayer;
+		if (parentLayer === void) parentLayer = fore.base;
+
+		with (dialog) {
+			.parent   = parentLayer;
+			.absolute = currentDialogAbsolute;
+			.enabled = false;
+			.visible = true;
+		}
+		var trig;
+		if (typeof this.openDialogTrigger != "undefined") {
+			trig = this.openDialogTrigger;
+		} else {
+			trig = this.openDialogTrigger = new AsyncTrigger(handleOpenDialog, '');
+			trig.cached = true;
+		}
+		trig.trigger();
+    }
+
+    function closeDialog(dialog=void) {
+        if (currentDialog !== void && (dialog === void || currentDialog === dialog)) {
+            // Resume conductor
+            if (typeof mainConductor != "undefined") mainConductor.interrupted = false;
+            if (typeof extraConductor != "undefined") extraConductor.interrupted = false;
+
+            setMenuAccessibleAll();
+            
+            if (currentDialog !== void) {
+                global.closeDialogTrigger = new AsyncTrigger(handleCloseDialog, '');
+                global.closeDialogTrigger.cached = true;
+                global.closeDialogTrigger.trigger();
+            }
+        } else if (dialog !== void) {
+            dialog.visible = false;
+        }
+    }
 
 	//------------------------------------------------------ tempLayer 関連 --
 
@@ -1063,8 +1160,7 @@ class KAGWindow extends Window
 		}
 		catch(e)
 		{
-			throw new Exception("システム変数データを読み込めないか、"
-				"あるいはシステム変数データが壊れています(" + e.message + ")");
+			throw new Exception("无法读取系统变量数据，或系统变量数据已损坏(" + e.message + ")");
 		}
 	}
 
@@ -1624,7 +1720,7 @@ class KAGWindow extends Window
 		var result;
 		if(ask)
 		{
-			var prompt = "「"+ historyOfStore[0].core.currentPageName + "」まで戻りますか?";
+			var prompt = "要回到「"+ historyOfStore[0].core.currentPageName + "」处吗?";
 			result = askYesNo(prompt);
 		}
 		else
@@ -1705,7 +1801,7 @@ class KAGWindow extends Window
 				{
 					// 栞が存在しない
 					var item = children[i];
-					item.caption = "(未設定)";
+					item.caption = "(空存档位)";
 					item.enabled = false;
 					item.orgEnabled = !bookMarkProtectedStates[i];
 				}
@@ -1732,7 +1828,7 @@ class KAGWindow extends Window
 				else
 				{
 					var item = restoreMenu.children[i];
-					item.caption = "(未設定)";
+					item.caption = "(空存档位)";
 					item.enabled = false;
 					item.orgEnabled = false;
 				}
@@ -1768,7 +1864,7 @@ class KAGWindow extends Window
 		// 栞番号 num のブックマーク名を得る
 		if(bookMarkDates[num] != '') // 空文字列の場合は栞がないということ
 			return bookMarkNames[num];
-		return "(未設定)";
+		return "(空存档位)";
 	}
 
 	function getBookMarkDate(num)
@@ -1804,7 +1900,7 @@ class KAGWindow extends Window
 	{
 		// スナップショットのロックを解除する
 		if(snapshotLockCount == 0)
-			throw new Exception("snapshotLockCount がアンダーフローしました");
+			throw new Exception("snapshotLockCount 发生下溢出");
 		snapshotLockCount --;
 		if(snapshotLockCount == 0)
 		{
@@ -1890,8 +1986,7 @@ class KAGWindow extends Window
 					{
 						invalidate tmp;
 						unlockSnapshot();
-						System.inform("ファイルに保存できません (ファイルを開けないか、"
-							"書き込み禁止です)");
+						System.inform("无法保存文件。");
 						return false;
 					}
 				}
@@ -1918,8 +2013,7 @@ class KAGWindow extends Window
 			}
 			catch(e)
 			{
-				System.inform("ファイルに保存できません (ファイルを開けないか、"
-					"書き込み禁止です)");
+				System.inform("无法保存文件。");
 				return false;
 			}
 		}
@@ -1982,7 +2076,7 @@ class KAGWindow extends Window
 
 			if(data.id != saveDataID)
 			{
-				System.inform("他のシステムのデータを読み込もうとしました", "エラー");
+				System.inform("试图读取其他系统的数据", "错误");
 				return false;
 			}
 
@@ -2002,9 +2096,7 @@ class KAGWindow extends Window
 		}
 		catch(e)
 		{
-			System.inform("栞を読み込めないか、栞が"
-				"壊れているか、あるいは他の形式の栞データ"
-				"です(" + e.message + ")", "エラー");
+			System.inform("无法读取存档，或者存档已损坏，或者是其他格式的存档数据(" + e.message + ")", "错误");
 			return false;
 		}
 
@@ -2024,11 +2116,11 @@ class KAGWindow extends Window
 		// そのとき、設定するかどうかをたずねる
 		if(readOnlyMode) return false;
 		if(bookMarkProtectedStates[num]) return false;
-		var prompt = "栞 ";
+		var prompt = "要保存「" + bookMarkNames[num] + "」到槽位 ";
 		if(num < numBookMarks) prompt += (num + 1);
-		if(bookMarkDates[num] != "") // bookMarkDates が空文字の場合は栞は存在しない
-			prompt += "「" + bookMarkNames[num] + "」";
-		prompt += "に「"+ pcflags.currentPageName + "」をはさみますか?";
+		if(bookMarkDates[num] != ""){
+			prompt += "\n并覆盖原位置「" + bookMarkNames[num] + "」吗?";
+		}
 		var result = askYesNo(prompt);
 		if(result) return saveBookMark(num);
 		return false;
@@ -2040,9 +2132,9 @@ class KAGWindow extends Window
 		// そのとき、読み出すかどうかをたずねる
 		if(num < numBookMarks && bookMarkDates[num] == "") // bookMarkDates が空文字の場合は栞は存在しない
 			return false;
-		var prompt = "栞 ";
+		var prompt = "要读取槽位 ";
 		if(num < numBookMarks) prompt += (num + 1);
-		prompt += "「"+ bookMarkNames[num] + "」をたどりますか?";
+		prompt += "的存档「"+ bookMarkNames[num] + "」吗?";
 		var result = askYesNo(prompt);
 		if(result) return loadBookMark(num);
 		return false;
@@ -2214,7 +2306,7 @@ class KAGWindow extends Window
 	function goToStartWithAsk()
 	{
 		// 最初に戻る(確認あり)
-		var result = askYesNo("最初に戻ります。よろしいですか ?");
+		var result = askYesNo("要回到标题页面吗?");
 		if(result) goToStart();
 	}
 
@@ -2434,7 +2526,7 @@ class KAGWindow extends Window
 		}
 
 
-		dm("処理を開始します");
+		dm("conductor 开始处理");
 		inSleep = false;
 		notifyRun();
 		if(conductor.status != conductor.mRun) conductor.run(immediate); // 実行開始
@@ -2443,7 +2535,7 @@ class KAGWindow extends Window
 	function processGo()
 	{
 		// コンダクタを現在位置から実行開始させる
-		dm("処理を開始します");
+		dm("conductor 开始处理");
 		inSleep = false;
 		notifyRun();
 		conductor.run(false); // 実行開始
@@ -2463,7 +2555,7 @@ class KAGWindow extends Window
 		inSleep = false;
 		notifyRun();
 		conductor.callLabel(label); // 実行開始
-		dm("処理を開始します");
+		dm("conductor 开始处理");
 		if(conductor.status != conductor.mRun) conductor.run();
 	}
 
@@ -2512,9 +2604,9 @@ class KAGWindow extends Window
 		{
 			pushHistoryOfStore();
 			stablePosibility = false;
-			dm(conductor.curStorage + " : ラベル/ページ : " + label + "/" + currentPageName);
-			if(usingExtraConductor) throw new Exception("右クリックサブルーチン内/extraCondutor"
-				"サブルーチン内では保存可能なラベルを記述できません");
+			dm(conductor.curStorage + " : 标签/页面 : " + label + "/" + currentPageName);
+			if(usingExtraConductor) throw new Exception("在右键单击子程序内/extraCondutor"
+				"子程序内无法定义可保存的标签");
 			storeFlags(), storeLabelPassed = true, setMenuAccessibleAll();
 			if(recordHistoryOfStore == 1) // 1 : 保存可能なラベルごと
 				setToRecordHistory();
@@ -2546,7 +2638,7 @@ class KAGWindow extends Window
 			if(conductor.callStackDepth == 1)
 			{
 				// つまり、最終の return が実行されたと言うこと
-				dm("extraConductor サブルーチンから戻ります ...");
+				dm("extraConductor 从子程序返回 ...");
 				var run;
 				if(elm.storage !== void || elm.target !== void) run = true; else run = false;
 				returnExtraConductor(run);
@@ -2623,9 +2715,8 @@ class KAGWindow extends Window
 		}
 		catch(e)
 		{
-			throw new Exception(scriptname + " の 行 " + lineofs + " から始まる"
-				" iscript ブロックでエラーが発生しました。"
-				"\n( 詳細はコンソールを参照してください )\n" + e.message);
+			throw new Exception(scriptname + " 中从第 " + lineofs + " 行开始的"
+				+ "iscript 块中发生错误。\n( 详情请参阅控制台 )\n" + e.message);
 		}
 		return true;
 	}
@@ -2633,7 +2724,7 @@ class KAGWindow extends Window
 	function onConductorUnknownTag(tagname, elm)
 	{
 		// 不明なタグがあった場合
-		throw new Exception("タグ/マクロ \"" + tagname + "\" は存在しません");
+		throw new Exception("未找到标签/宏 \"" + tagname + "\"");
 		return 0; // この戻り値は、各タグハンドラが返す物とおなじ
 	}
 
@@ -4142,9 +4233,8 @@ class KAGWindow extends Window
 
 		if(!current.nodeVisible)
 		{
-			dm("警告 : 非表示になっている" +
-				(currentPage ? "裏" : "表") + "メッセージレイヤ" + currentNum +
-				"で行クリック待ちになりました");
+			dm("警告 : 在隐藏的" + (currentPage ? "裏" : "表") + "消息层" + currentNum +
+	"中进入了行点击等待状态");
 		}
 
 		// conductor を 'click' まで待ち状態に
@@ -4180,9 +4270,8 @@ class KAGWindow extends Window
 
 		if(!current.nodeVisible)
 		{
-			dm("警告 : 非表示になっている" +
-				(currentPage ? "裏" : "表") + "メッセージレイヤ" + currentNum +
-				"でページクリック待ちになりました");
+			dm("警告 : 在隐藏的" + (currentPage ? "裏" : "表") + "消息层" + currentNum +
+	"中进入了页面点击等待状态");
 		}
 
 		// conductor を 'click' まで待ち状態に
@@ -4218,9 +4307,8 @@ class KAGWindow extends Window
 
 		if(!current.nodeVisible)
 		{
-			dm("警告 : 非表示になっている" +
-				(currentPage ? "裏" : "表") + "メッセージレイヤ" + currentNum +
-				"で自動改ページクリック待ちになりました");
+			dm("警告 : 在隐藏的" + (currentPage ? "裏" : "表") + "消息层" + currentNum +
+	"中进入了自动翻页点击等待状态");
 		}
 
 		if(autoMode)
@@ -5102,7 +5190,7 @@ class KAGWindow extends Window
 	{
 		// プラグインの読み込み
 		Plugins.link(elm.module);
-		dm("プラグインを読み込みました : " + elm.module);
+		dm("已加载插件 : " + elm.module);
 		return 0;
 	} incontextof this,
 
@@ -5406,7 +5494,7 @@ class KAGWindow extends Window
 		updateBeforeCh = 1;
 		var start = System.getTickCount();
 		getLayerFromElm(elm).loadImages(elm);
-		dm(elm.storage + " の読み込みに " + (System.getTickCount() - start) + "ms かかりました");
+		dm(elm.storage + " 加载耗时 " + (System.getTickCount() - start) + "ms");
 		return 0;
 	} incontextof this,
 
@@ -5416,7 +5504,7 @@ class KAGWindow extends Window
 		updateBeforeCh = 1;
 		var start = System.getTickCount();
 		getLayerFromElm(elm).loadImages(elm);
-		dm(elm.storage + " の読み込みに " + (System.getTickCount() - start) + "ms かかりました");
+		dm(elm.storage + " 加载耗时 " + (System.getTickCount() - start) + "ms");
 		return 0;
 	} incontextof this,
 
