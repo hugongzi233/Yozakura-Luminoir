@@ -8,18 +8,21 @@
 @nowait
 @backlay
 @current page=back
-吉里吉里２
+吉里吉里２[r]
 [emb exp="System.versionString"]
 @trans method=crossfade time=500
 @wt
-KAG3
+[r]
+KAG3[r]
 [emb exp="kagVersion"]
 @trans method=crossfade time=500
 @wt
-[font size=12]官方首页
+[r]
+[font size=12]官方首页[r]
 [link hint="点击将打开官网页面" exp="System.shellExecute('http://kikyou.info/tvp/')"]http://kikyou.info/tvp/[endlink]
 @trans method=crossfade time=500
 @wt
+[r]
 [link target=*exit]关闭[endlink]
 @trans method=crossfade time=500
 @wt
