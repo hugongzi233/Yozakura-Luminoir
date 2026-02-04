@@ -538,6 +538,31 @@ class __internal_KAGParser
 			this.loadScenario(storage);
 			this.goToLabel(label);
 
+			// restore CurLine, CurPos
+			var val;
+			val = dic.curLine;
+			if (val !== void)
+			{
+				this.curLine = val | 0;
+			}
+			val = dic.curPos;
+			if (val !== void)
+			{
+				this.curPos = val | 0;
+			}
+			
+			// restore LineBuffer
+			val = dic.lineBuffer;
+			if (val !== void)
+			{
+				this.lineBuffer = val;
+			}
+			val = dic.lineBufferUsing;
+			if (val !== void)
+			{
+				this.lineBufferUsing = (val | 0) !== 0;
+			}
+
 			// ExcludeLevel, IfLevel
 			var val = dic.ExcludeLevel;
 			if (val !== void)

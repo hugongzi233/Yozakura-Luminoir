@@ -10,7 +10,7 @@
 @stoptrans
 [iscript]
 // Ensure menu is initialized
-if(typeof global.saveLoadMenu == "undefined") Scripts.execStorage("SaveLoadImpl.tjs");
+if(typeof global.saveLoadMenu == "undefined") Scripts.execStorage("MySaveLoad.tjs");
 
 // Show Menu
 global.saveLoadMenu.show(tf.mode);
@@ -37,13 +37,13 @@ global.saveLoadMenu.drawPage(tf.page);
 
 *do_save
 ; Save Logic
-; We use tf.saving to distinguish between the moment of saving and loading
-[eval exp="tf.saving = true"]
+; We use global.menu_saving to distinguish between the moment of saving and loading
+[eval exp="global.menu_saving = true"]
 [eval exp="tf.slot = mp.slot !== void ? mp.slot : tf.targetSlot"]
 [eval exp="kag.storeBookMark(tf.slot)"]
-[if exp="tf.saving == true"]
+[if exp="global.menu_saving == true"]
     ; Currently saving
-    [eval exp="tf.saving = false"]
+    [eval exp="global.menu_saving = false"]
     ; Refresh UI (Refresh current page)
     [eval exp="global.saveLoadMenu.drawPage(global.saveLoadMenu.page)"]
     @trans method=crossfade time=100

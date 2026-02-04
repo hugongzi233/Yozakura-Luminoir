@@ -258,6 +258,7 @@
 
 [macro name=p]
 @l
+@r
 @_draw_name
 [endmacro]
 
