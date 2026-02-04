@@ -49,7 +49,7 @@ global.createSlider = function(x, y, w, h, min, max, pos, onChange) {
 @stoptrans
 @cm
 @clickskip enabled=false
-@rclick enabled=false
+@rclick target="*exit_config" jump=true enabled=true
 
 ; 绘制背景 (请替换为您自己的背景图片, 这里用黑色填充代替)
 @layopt layer=base page=fore visible=true
@@ -89,10 +89,18 @@ global.createSlider = function(x, y, w, h, min, max, pos, onChange) {
 @locate x=1150 y=650
 @button graphic="sys_config_bt_sound_DELETE" target="*exit_config" enterse="hito_ge_kawaugoki08" clickse="hito_ge_kawaugoki07" recthit=true
 
+@jump target="*render_tabs"
+
+*exit_config
+@rclick call="" target="" jump=false enabled=true
+@eval exp="global.clearSliders()"
+@return
+
 ; --------------------------------------------------------------------------
 ; 显示当前标签页内容
 ; --------------------------------------------------------------------------
 
+*render_tabs
 @eval exp="global.clearSliders()"
 
 ; 根据当前标签跳转
