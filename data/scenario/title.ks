@@ -47,6 +47,9 @@
 @locate x=1000 y=530
 @button graphic="sys_config_bt_sound_DELETE" target="*func_exit" enterse="hito_ge_kawaugoki08" clickse="hito_ge_kawaugoki07" recthit=true
 
+@locate x=800 y=530
+[button normal="dialog_yes_normal" over="dialog_yes_over" on="dialog_no_over" exp="System.inform('本游戏')"]
+
 @trans method=crossfade time=800
 @wt
 
