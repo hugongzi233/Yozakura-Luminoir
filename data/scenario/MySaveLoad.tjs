@@ -186,9 +186,9 @@ class SaveLoadMenu
                 thumbLayer.loadImages(%[storage:thumbPath]);
                 thumbLoaded = true;
             } else {
-                 var noDataImg = "sys_omake_notfound_data_DELETE";
-                 if(Storages.isExistentStorage(noDataImg + ".png")) {
-                     thumbLayer.loadImages(%[storage:noDataImg + ".png"]);
+                 var noDataImg = "nodata";
+                 if(Storages.isExistentStorage(noDataImg + ".jpg")) {
+                     thumbLayer.loadImages(%[storage:noDataImg + ".jpg"]);
                      thumbLoaded = true;
                  } else if(Storages.isExistentStorage(noDataImg)) {
                      thumbLayer.loadImages(%[storage:noDataImg]);

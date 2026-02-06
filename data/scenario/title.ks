@@ -8,7 +8,6 @@
 @rclick enabled=false
 
 @freeimage layer=base
-; 播放BGM前先判断当前是否已经是该BGM，避免重复播放导致重头开始
 [if exp="kag.bgm.currentStorage != 'mainpage.ogg'"]
 @bgm storage="mainpage.ogg" loop=true
 [endif]
