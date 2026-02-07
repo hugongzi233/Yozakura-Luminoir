@@ -7,6 +7,7 @@
 @bgm storage="mitisugara.ogg"
 @set_background background="温泉旅馆入口_未处理.png"
 @show_message_window
+@show_toolbar_window
 
 @nm name="池原"
 今天也是"社畜浓度"超标的一天。

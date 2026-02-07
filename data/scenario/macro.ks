@@ -344,5 +344,57 @@
 @wait time=%time mode=%mode|normal
 [endmacro]
 
+; ------------------------------------------------------------------------------
+; Toolbar Macros
+; ------------------------------------------------------------------------------
+
+[macro name=show_toolbar_window]
+; Set message layer 2 for toolbar
+; Use position to ensure frame is empty and settings are correct. High Z-order (above message0).
+@position layer=message2 page=fore visible=true opacity=0 left=0 top=0 width=1280 height=720 marginl=0 margint=0 marginr=0 marginb=0 frame=""
+@current layer=message2 page=fore
+@er
+
+; qsave
+@locate x=630 y=660
+@button graphic="btn_qsave" exp="kag.onQuickSaveMenuItemClick()" hint="Quick Save"
+; qload
+@locate x=690 y=660
+@button graphic="btn_qload" exp="kag.onQuickLoadMenuItemClick()" hint="Quick Load"
+; save
+@locate x=750 y=660
+@button graphic="btn_save" exp="kag.onShowSaveMenuMenuItemClick()" hint="Save"
+; load
+@locate x=810 y=660
+@button graphic="btn_load" exp="kag.onShowLoadMenuMenuItemClick()" hint="Load"
+; skip
+@locate x=870 y=660
+@button graphic="btn_skip" exp="kag.onSkipToNextStopMenuItemClick()" hint="Skip"
+; auto
+@locate x=930 y=660
+@button graphic="btn_auto" exp="kag.onAutoModeMenuItemClick()" hint="Auto"
+; history
+@locate x=990 y=660
+@button graphic="btn_history" exp="kag.onShowHistoryMenuItemClick()" hint="History"
+; prev
+@locate x=1050 y=660
+@button graphic="btn_caret_left" exp="" hint="Previous"
+; next
+@locate x=1110 y=660
+@button graphic="btn_caret_right" exp="" hint="Next"
+; hide
+@locate x=1170 y=660
+@button graphic="btn_close" exp="kag.hideMessageLayerByUser()" hint="Hide Window"
+
+@current layer=message0 page=fore
+[endmacro]
+
+[macro name=clear_toolbar_window]
+@layopt layer=message2 page=fore visible=false
+@current layer=message2 page=fore
+@er
+@current layer=message0 page=fore
+[endmacro]
+
 @return
 

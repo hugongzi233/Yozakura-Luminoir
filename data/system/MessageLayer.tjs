@@ -1697,11 +1697,68 @@ class MessageLayer extends KAGLayer
 		return -1;
 	}
 
+	function getExistName(storage) {
+		var test;
+		if(!Storages.isExistentStorage(storage)) {
+			if (test = storage + ".png", Storages.isExistentStorage(test))
+				storage = test;
+			else if (test = storage + ".tlg", Storages.isExistentStorage(test))
+				storage = test;
+			else if (test = storage + ".tlg5", Storages.isExistentStorage(test))
+				storage = test;
+			else if (test = storage + ".tlg6", Storages.isExistentStorage(test))
+				storage = test;
+			else if (test = storage + ".bmp", Storages.isExistentStorage(test))
+				storage = test;
+			else
+				storage = void;
+		}
+		return storage;
+	}
+
 	function addButton(elm)
 	{
 		// グラフィカルボタンを配置
 		var object = new LinkButtonLayer(window, this);
-		object.loadImages(elm.graphic, elm.graphickey);
+
+		object.name =  elm.name !== void ? elm.name : "button" + numLinks;
+
+		if (elm.normal !== void) {
+			var over   = elm.over !== void ? elm.over  : getExistName(elm.normal.replace(/_normal/, "_over"));
+			var on     = elm.on   !== void ? elm.on    : getExistName(elm.normal.replace(/_normal/, "_on"));
+			var focus  = elm.over !== void ? elm.focus : getExistName(elm.normal.replace(/_normal/, "_focus"));
+			
+			object.loadButtons(elm.normal, over, on, focus, elm.animcount, elm.animtime);
+			if (elm.trigger || elm.group) {
+				object.loadButtons(elm.on, over, on, focus, elm.animcount, elm.animtime, true);
+				object.groupName = elm.group;
+			}
+		} else {
+			if (elm.graphic === void || elm.graphic == "") {
+				if (elm.name !== void) {
+					var normal = elm.name + "_normal";
+					var over   = elm.over !== void ? elm.over  : getExistName(elm.name + "_over");
+					var on     = elm.on   !== void ? elm.on    : getExistName(elm.name + "_on");
+					var focus  = elm.over !== void ? elm.focus : getExistName(elm.name + "_focus");
+					object.loadButtons(normal, over, on, focus, elm.animcount, elm.animtime);
+					if (elm.trigger || elm.group) {
+						object.loadButtons(elm.on, over, on, focus, elm.animcount, elm.animtime, true);
+						object.groupName = elm.group;
+					}
+				}
+			} else {
+				object.loadImages(elm.graphic, elm.graphickey, elm.animcount, elm.animtime);
+				if (elm.trigger || elm.group != "" && elm.group !== void) {
+					if (elm.graphicon != "" && elm.graphicon !== void) {
+						object.loadImages(elm.graphicon, elm.graphickey, elm.animcount, elm.animtime, true);
+					} else {
+						object.makeToggle();
+					}
+					object.groupName = elm.group;
+				}
+			}
+		}
+
 		object.linkNum = numLinks;
 		object.setPos(x, y);
 		object.hint = elm.hint;
@@ -1710,6 +1767,13 @@ class MessageLayer extends KAGLayer
 		object.onleave = createSoundExpression(elm.onleave, elm.leavese, elm.leavesebuf);
 		object.hitThreshold =
 			(elm.recthit === void || +elm.recthit) ? 0 : 64;
+
+		if (elm.enabled !== void) {
+			object.enabled = !!elm.enabled;
+		} else if (elm.disabled !== void && elm.disabled) {
+			object.enabled = false;
+		}
+		object.halftone = elm.halftone if elm.halftone !== void;
 
 		links[numLinks] = %[
 			type :			ltButton,
